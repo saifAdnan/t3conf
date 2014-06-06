@@ -1,0 +1,33 @@
+{
+  "name": "webrtc-over-nodejs",
+  "preferGlobal": true,
+  "version": "0.0.1",
+  "author": {
+    "name": "Saif Adnan",
+    "email": "saif.mowefak@gmail.com"
+  },
+  "contributors": [
+    {
+      "name": "Saif Adnan",
+      "email": "saif.mowefak@gmail.com"
+    }
+  ],
+  "scripts": {
+    "start": "node app.js"
+  },
+  "main": "app.js",
+  "engines": {
+    "node": ">=0.6"
+  },
+  "dependencies": {
+    "express": "3.*",
+    "websocket": "1.0.x",
+    "socket.io": "0.*",
+    "mongoose": "*",
+    "connect-mongo": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "passport-local-mongoose": "*",
+    "hogan-express": "*"
+  }
+}

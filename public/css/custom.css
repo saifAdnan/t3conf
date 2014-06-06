@@ -1,0 +1,177 @@
+body {
+    padding: 20px;
+    font: 14px/20px Arial, Tahoma;
+}
+
+label {
+    font-weight: normal;
+}
+
+.important {
+    color: #f85e5d;
+    font-weight: bold;
+}
+
+.mainController {
+    margin-top: 50px;
+}
+
+#videos-container {
+    margin-top: 20px;
+}
+
+.navbar img {
+    height: 22px;
+}
+
+.table-users {
+    max-height: 220px;
+}
+.table th {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: normal;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.table-users th i {
+    font-size: 10px;
+}
+
+.table-users td {
+    font-size: 12px;
+}
+
+.panel-heading a:after {
+    font-family: 'Glyphicons Halflings';
+    content: "\e114";
+    float: right;
+    color: black;
+}
+.panel-heading a.collapsed:after {
+    content: "";
+}
+
+.repeater.ng-enter,
+.repeater.ng-move {
+    -webkit-transition: 0.2s linear all;
+    -moz-transition: 0.2s linear all;
+    -ms-transition: 0.2s linear all;
+    -o-transition: 0.2s linear all;
+    transition: 0.2s linear all;
+
+    opacity: 0;
+}
+
+.repeater.ng-enter.ng-enter-active,
+.repeater.ng-move.ng-move-active {
+    opacity: 1;
+}
+
+.repeater.ng-leave {
+    -webkit-transition: 0.1s linear all;
+    -moz-transition: 0.1s linear all;
+    -ms-transition: 0.1s linear all;
+    -o-transition: 0.1s linear all;
+    transition: 0.1s linear all;
+
+    opacity: 1;
+}
+
+.repeater.ng-leave.ng-leave-active {
+    opacity: 0;
+}
+
+
+.message-spot {
+    height: 400px;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.message-spot .messages {
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    position: relative;
+    height: 100%;
+}
+
+.message-spot .messages-container {
+    position: relative;
+    float: left;
+}
+
+.message-spot .messages  p {
+    border-radius: 3px;
+    box-shadow: 0 3px 3px #E3E4E6;
+    font-size: 13px;
+    color: #637277;
+    display: inline-block;
+    clear: both;
+    float: left;
+    line-height: 1.4;
+    margin-bottom: 4px;
+    margin-left: 20px;
+    max-width: 510px;
+    padding: 2px 8px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+
+.message-spot .messages  p span:first-child {
+    font-weight: bold;
+}
+
+.message-spot .local {
+    font-weight: bold!important;
+}
+
+.room_users li {
+    cursor: pointer;
+}
+.messages-container .active {
+    background-color: yellowgreen!important;
+}
+
+#user-tag {
+    position: absolute;
+    left: 22px;
+    top: 2px;
+}
+
+.remove i {
+    cursor: pointer;
+}
+
+.remove i:hover {
+    opacity: 0.7;
+}
+
+.b-video {
+    position: relative;
+}
+
+.b-video .btn {
+    position: absolute;
+    top: 0;
+}
+
+.b-video .btn-mute {
+    left: 0;
+}
+.b-video .btn-hide {
+    right: 0;
+}
+.b-video .btn-false {
+    background: #B92C28!important;
+}
+
+.b-video .btn-true {
+    background: #5CB85C!important;
+}

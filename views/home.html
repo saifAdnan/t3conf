@@ -1,0 +1,84 @@
+<div class="mainController">
+    <div class="row">
+        <div class="col-sm-9">
+            <div class="col-sm-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            Create new conference
+                        </h4>
+                    </div>
+                    <div class="panel-body" id="conference">
+                        <form action="#" role="form" method="GET" id="setup-new-room" ng-submit="submit($event)">
+                            <div class="form-group {%(isExist ? 'has-error' : '')%}">
+                                <label class="control-label" for="name">Conference name <span class="important">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name" ng-keyup="updateFormAction($event)"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="conf_pass">Conference password ( optional )</label>
+                                <input type="password" name="conf_pass" id="conf_pass" class="form-control"/>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-default"> Create </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            Conferences
+                        </h4>
+                    </div>
+                    <div class="panel-body" id="rooms">
+                        <table class="table table-rooms" ng-show="rooms.length">
+                            <thead>
+                            <th>Name</th>
+                            <th>Join</th>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="room in rooms" class="repeater">
+                                <td class="col-sm-10">
+                                    <strong><span ng-bind="$parent.roomName(room.roomName)"></span></strong>
+                                    <ul class="list-styled">
+                                        <li ng-repeat="user in room.users" ng-bind="user"></li>
+                                    </ul>
+                                </td>
+                                <td>
+                                        <span class="btn btn-default btn-sm btn-join"
+                                              data-href="/room/join/{%room.roomName%}"
+                                              data-broadcaster="{%room.broadcaster%}"
+                                              data-roomToken="{%room.broadcaster%}"
+                                              ng-click="join($event)"
+                                                >JOIN</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="help-block" ng-show="!rooms.length">
+                            <p>No conference found!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+
+            <div class="row-fluid video_container">
+                <div class="col-sm-12" id="videos-container"></div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-3">
+
+            <users-approval></users-approval>
+
+        </div>
+    </div>
+</div>

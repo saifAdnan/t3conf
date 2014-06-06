@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html lang="en" ng-app="t3confApp">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>T3 Conf - {{title}}</title>
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/public/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/public/css/custom.css"/>
+    <script>
+        var USERNAME = "{{username}}";
+    </script>
+</head>
+<body>
+
+<nav role="navigation" class="navbar navbar-top navbar-inverse">
+    <div class="">
+        <div class="navbar-header">
+            <button data-target=".navbar-ex1-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+                <img src="public/img/logo.png" alt="Sora Conference" />
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav nav-right pull-right">
+                <li>
+                    <a href="">
+                        Username: {{username}}
+                    </a>
+                </li>
+                <li>
+
+                    <a href="/logout">logout</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+<div ng-view></div>
+
+<!-- load scripts -->
+<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>-->
+<!--<script>
+    if (!window.jQuery) {
+        document.write('<script src="/public/js/lib/jquery.min.js"><\/script>');
+    }
+</script>-->
+<script src="/public/js/lib/jquery.min.js"></script>
+<script src="/public/js/lib/jquery-scrollo.min.js"></script>
+<script src="/public/js/lib/angular.min.js"></script>
+<script src="/public/js/lib/angular-route.min.js"></script>
+<script src="/public/js/lib/angular-animate.min.js"></script>
+<script src="/public/js/lib/ui-bootstrap-tpls-0.10.0.min.js"></script>
+<script src="/public/js/lib/bootstrap.min.js"></script>
+
+<script src="/public/js/lib/socket.io.js"></script>
+<script src="/public/js/lib/RTCPeerConnection-v1.5.js"></script>
+
+
+<script src="/public/js/angular/t3confApp.js"></script>
+<script src="/public/js/angular/controllers/mainController.js"></script>
+<script src="/public/js/angular/controllers/createController.js"></script>
+<script src="/public/js/angular/controllers/joinController.js"></script>
+<script src="/public/js/angular/controllers/chatController.js"></script>
+<script src="/public/js/angular/controllers/usersController.js"></script>
+<script src="/public/js/angular/directives/usersApproval.js"></script>
+<script src="/public/js/angular/services/watchService.js"></script>
+<script src="/public/js/angular/services/socketService.js"></script>
+<script src="/public/js/angular/services/conferenceService.js"></script>
+<script src="/public/js/angular/services/stunService.js"></script>
+<script src="/public/js/angular/services/roomService.js"></script>
+
+<script>
+    (function($) {
+        /*var myEvent = window.attachEvent || window.addEventListener;
+        var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; /// make IE7, IE8 compitable
+
+        myEvent(chkevent, function(e) { // For >=IE7, Chrome, Firefox
+            var confirmationMessage = 'Are you sure to leave the page?';  // a space
+            (e || window.event).returnValue = confirmationMessage;
+            return confirmationMessage;
+        });*/
+    }(jQuery));
+</script>
+</body>
+</html>
