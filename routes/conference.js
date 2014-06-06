@@ -72,8 +72,6 @@ module.exports = function (socket, rooms, usernames) {
         }
     });
 
-
-
     /**
      * Conference remove
      * remove room if users in room ===1
@@ -84,13 +82,16 @@ module.exports = function (socket, rooms, usernames) {
             roomName = data.roomName;
 
         if (roomName && roomName.length > 0) {
+            if (rooms.length === 0) return false;
             for (var j =0; j < rooms.length; j = j + 1) {
-                if (rooms[j].roomName && rooms[j].roomName == roomName) {
-                    rooms.splice(j, 1);
-                    delete conferences[roomName];
-                    socket.broadcast.emit("rooms:update", {
-                        users: [data.username]
-                    });
+                if (rooms[j]) {
+                    if (rooms[j].roomName && rooms[j].roomName == roomName) {
+                        rooms.splice(j, 1);
+                        delete conferences[roomName];
+                        socket.broadcast.emit("rooms:update", {
+                            users: [data.username]
+                        });
+                    }
                 }
             }
             for (var i = 0; i < rooms.length; i = i + 1) {
@@ -98,21 +99,7 @@ module.exports = function (socket, rooms, usernames) {
                     rooms.splice(i, 1);
                     delete conferences[roomName];
                     //console.log(roomName + " - Conference has been removed!");
-                }/* else {
-                    *//**
-                     * if users count > 1 then we remove the leaver
-                     *//*
-                    if (rooms[i].users) {
-                        for (var j = 0; j < rooms[i].users.length; j++) {
-                            if (rooms[socket.id] == username) {
-                                delete rooms[j].users[socket.id];
-                                socket.broadcast.emit("rooms:update", {
-                                    users: rooms[j].users
-                                });
-                            }
-                        }
-                    }
-                }*/
+                }
             }
         }
     });
@@ -159,12 +146,16 @@ module.exports = function (socket, rooms, usernames) {
      */
     socket.on('disconnect', function () {
         if (!rooms.length) return false;
-        for (var i = 0; i < rooms.length; i = i + 1) {
-            delete rooms[i].users[socket.id];
-            break;
+
+        for (var s = 0; s < rooms.length; s = s + 1) {
+            if (rooms[s]) {
+                delete rooms[s].users[socket.id];
+                if (objectLength(rooms[s].users) < 1) {
+                    rooms.splice(s, 1);
+                }
+            }
         }
-        socket.broadcast.emit("rooms:update", {
-           users: rooms[i].users
-        });
+        socket.broadcast.emit("rooms:update",{});
     });
+
 };

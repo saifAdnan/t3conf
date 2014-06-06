@@ -9,6 +9,7 @@ function mainController($scope, $http, $location, watchService) {
 
     watchService.on("rooms:update", function () {
         $http.get('/rooms').success(function (data) {
+            console.log(data);
             $scope.rooms = data;
         });
     });

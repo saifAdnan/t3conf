@@ -9,7 +9,7 @@
                         </h4>
                     </div>
                     <div class="panel-body" id="conference">
-                        <form action="#" role="form" method="GET" id="setup-new-room" ng-submit="submit($event)">
+                        <form action="#" role="form" method="GET" id="setup-new-room" ng-submit="submit($event)" autocomplete='off'>
                             <div class="form-group {%(isExist ? 'has-error' : '')%}">
                                 <label class="control-label" for="name">Conference name <span class="important">*</span></label>
                                 <input type="text" class="form-control" id="name" name="name" ng-keyup="updateFormAction($event)"/>

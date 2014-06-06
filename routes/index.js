@@ -33,6 +33,7 @@ module.exports = function (app, rooms) {
      */
     app.get('/rooms', function (req, res) {
         var rooms_arr = rooms;
+        console.log(rooms);
         res.json(rooms_arr);
     });
 
