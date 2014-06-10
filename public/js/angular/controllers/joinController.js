@@ -18,7 +18,9 @@ function joinController($scope, $http, $routeParams, conferenceService, watchSer
                 keyboard: false
             });
         }
+
         console.log(data);
+
         if (data.roomIsSecure) {
             $scope.secure = true;
             authModal.modal({
@@ -31,7 +33,8 @@ function joinController($scope, $http, $routeParams, conferenceService, watchSer
                     conferenceUI.joinRoom({
                         roomToken: data.roomToken,
                         joinUser:  data.broadcaster,
-                        users: data.users
+                        users: data.users,
+                        joinUserName: USERNAME
                     });
                     roomService.getUsers();
                 });

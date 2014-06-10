@@ -25,6 +25,7 @@ var app             = express(),
     channels        = {},
     rooms           = [],
     usernames       = {},
+    conferences     = {},
     server          = https.createServer(app),
     io              = require('socket.io').listen(server, {log: false,'transports': ['websocket', 'flashsocket', 'xhr-polling']}),
     session_conf    = {
@@ -42,7 +43,7 @@ io.set('origins', '*:*');
  * Express configuration
  */
 app.configure(function() {
-    app.set('port', 1855);
+    app.set('port', 1088);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'html');
     app.use(express.static(__dirname ));
@@ -68,26 +69,21 @@ passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
-/**
- * Mongo DB
- */
+// Mongo DB
+
 mongoose.connect('mongodb://localhost/t3conf');
 
-/**
- * Require routes
- */
+// Require routes
 require("./routes")(app, rooms);
 
-/**
- * server listent o port
- */
+//server listent o port
+
 server.listen(app.get("port")); //1855
-/**
- * Socket.io
- */
+
+//Socket.io
 io.sockets.on('connection', function (socket) {
 
-    require("./routes/conference.js")(socket, rooms, usernames);
+    require("./routes/conference.js")(socket, rooms, usernames, conferences);
 
     var initiatorChannel = '';
     if (!io.isConnected) {

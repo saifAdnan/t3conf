@@ -9,7 +9,6 @@ function mainController($scope, $http, $location, watchService) {
 
     watchService.on("rooms:update", function () {
         $http.get('/rooms').success(function (data) {
-            console.log(data);
             $scope.rooms = data;
         });
     });
@@ -71,12 +70,12 @@ function mainController($scope, $http, $location, watchService) {
      */
     $scope.submit = function (e) {
         e = e || form;
-        var conf_name = $("#name");
-        var conf_pass = $("#password");
+        var conf_name = $("#conf_name").val();
+        var conf_pass = $("#conf_pass").val();
 
         watchService.emit("conference:new", {
-            roomName: conf_name.val(),
-            roomPass: conf_pass.val()
+            roomName: conf_name,
+            roomPass: conf_pass
         });
 
         e.preventDefault();

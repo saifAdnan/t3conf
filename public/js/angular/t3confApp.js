@@ -1,5 +1,5 @@
 var current_username = USERNAME;
-var SIGNALING_SERVER = "http://192.168.0.88:1855/";
+var SIGNALING_SERVER = "https://trafficdestination.net:1088/";
 
 var app = angular.module('t3confApp', ['ui.bootstrap', 'ngAnimate', 'ngRoute'], ['$interpolateProvider', function($interpolateProvider) {
     $interpolateProvider.startSymbol('{%');

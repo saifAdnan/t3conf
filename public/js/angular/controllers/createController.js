@@ -5,7 +5,6 @@ function createController($scope, $routeParams, conferenceService, watchService,
     watchService.emit("conference:get", {roomName: roomName});
 
     watchService.on("conference:get", function (data) {
-
         conferenceService.captureUserMedia(function () {
             conferenceUI.createRoom({
                 roomName: $routeParams.name,

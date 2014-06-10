@@ -85,7 +85,6 @@ app.factory('conferenceService',
             },
             onRemoteStream: function(stream) {
                 if (!stream) return;
-
                 video[moz ? 'mozSrcObject' : 'src'] = moz ? stream : webkitURL.createObjectURL(stream);
                 video.play();
 
@@ -113,10 +112,13 @@ app.factory('conferenceService',
             if (!(video.readyState <= HTMLMediaElement.HAVE_CURRENT_DATA || video.paused || video.currentTime <= 0)) {
                 gotstream = true;
 
+                console.log(_config);
+
                 if (config.onRemoteStream)
                     config.onRemoteStream({
                         video: video,
-                        stream: _config.stream
+                        stream: _config.stream,
+                        id: _config.joinUserName
                     });
 
                 if (isbroadcaster && channels.split('--').length > 3) {
@@ -127,7 +129,9 @@ app.factory('conferenceService',
                     });
                 }
 
-            } else setTimeout(onRemoteStreamStartsFlowing, 50);
+            } else {
+                setTimeout(onRemoteStreamStartsFlowing, 50);
+            }
         }
 
         function sendsdp(sdp) {
@@ -202,7 +206,7 @@ app.factory('conferenceService',
             roomName: self.roomName,
             broadcaster: self.userToken
         });
-        setTimeout(startBroadcasting, 3000);
+        /*setTimeout(startBroadcasting, 3000);*/
     }
 
     function onNewParticipant(channel) {
@@ -230,6 +234,14 @@ app.factory('conferenceService',
     }
 
     openDefaultSocket();
+
+    watchService.on("rooms:update", function (data) {
+        $("#videos-container video").each(function () {
+           /*if ($(this).attr("id") === data.deleted) {
+               $(this).remove();
+           }*/
+        });
+    });
 
     return {
         createRoom: function(_config) {
@@ -275,7 +287,8 @@ app.factory('conferenceService',
             defaultSocket.send({
                 participant: true,
                 userToken: self.userToken,
-                joinUser: _config.joinUser
+                joinUser: _config.joinUser,
+                joinUserName: USERNAME
             });
         },
         leaveRoom: leave,
@@ -313,7 +326,6 @@ app.factory('conferenceService',
             video.style.visibility = "visible";
 
             container.append(video);
-
             container.append(mute);
             container.append(hide);
 
@@ -326,6 +338,17 @@ app.factory('conferenceService',
                     $scope.controls = stream;
                     video.setAttribute('muted', true);
                     callback();
+                }
+            }, true, function (e) {
+                if (e.name === "DevicesNotFoundError") {
+                    getUserMedia({
+                        video: video,
+                        onsuccess: function (stream) {
+                            stunService.attachStream = stream;
+                            $scope.controls = stream;
+                            video.setAttribute('muted', true);
+                        }
+                    }, false);
                 }
             });
         }

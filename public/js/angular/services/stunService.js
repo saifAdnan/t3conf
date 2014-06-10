@@ -3,12 +3,11 @@ app.factory('stunService', ['$http', '$rootScope', '$routeParams', function ($ht
         table_container = $(".table-rooms");
 
     var channel = defaultChannel;
-    var sender = Math.round(Math.random() * 999999999) + 999999999;
+    var sender = USERNAME;
 
     return {
         openSocket: function (config) {
             var channel = config.channel || defaultChannel;
-            var sender = Math.round(Math.random() * 999999999) + 999999999;
 
             io.connect(SIGNALING_SERVER).emit('new-channel', {
                 channel: channel,
@@ -32,11 +31,13 @@ app.factory('stunService', ['$http', '$rootScope', '$routeParams', function ($ht
             socket.on('message', config.onmessage);
         },
         onRemoteStream: function (media) {
-            console.log("stream remote");
             var container = $("<li></li>").addClass("b-video");
             var video = media.video;
 
-            video.setAttribute('id', media.stream.id);
+            console.log(media);
+
+            video.setAttribute("id", "new");
+
             video.setAttribute("controls", true);
             video.style.height = "160px";
             video.style.width = "240px";
@@ -48,7 +49,7 @@ app.factory('stunService', ['$http', '$rootScope', '$routeParams', function ($ht
             video.play();
         },
         onRemoteStreamEnded: function (stream) {
-            var video = document.getElementById(stream.id);
+            var video = document.getElementById(stream.getAudioTrack().id);
             if (video) video.parentNode.removeChild(video);
         },
         onRoomFound: function (room) {

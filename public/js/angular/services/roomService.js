@@ -18,7 +18,8 @@ app.factory('roomService', ['$rootScope', '$routeParams', '$http', function ($ro
             $rootScope.$broadcast('handleBroadcast');
         },
         getUsers: function () {
-            $http.get('/action/roomInfo', {roomName: $routeParams.name}).success(function(data) {
+            $http.get('/action/roomInfo', {
+                roomName: $routeParams.name}).success(function(data) {
                 this.room.users = data.users;
                 this.broadcastItem();
             }.bind(this));

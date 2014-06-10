@@ -1,9 +1,9 @@
-"use strict";
-
 var passport = require('passport');
 var Users = require('../models/users');
 
 module.exports = function (app, rooms) {
+    "use strict";
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Get Requests
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,6 +110,19 @@ module.exports = function (app, rooms) {
         res.redirect('/login');
     });
 
+    /**
+     * /action/roomInfo
+     * return room info JSON
+     */
+    app.get('/action/roomInfo', function (req, res) {
+        var roomName = req.body.roomName;
+        var rooms_arr = rooms;
+        for (var i = 0; i < rooms_arr.length; i++) {
+            if (rooms_arr[i].name == roomName) {
+                res.json(rooms_arr[i]);
+            }
+        }
+    });
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Post Requests
@@ -205,19 +218,9 @@ module.exports = function (app, rooms) {
     });
 
     /**
-     * /action/roomInfo
-     * return room info JSON
+     * route /action/removeUser
+     * Remove user
      */
-    app.get('/action/roomInfo', function (req, res) {
-        var roomName = req.body.roomName;
-        var rooms_arr = rooms;
-        for (var i = 0; i < rooms_arr.length; i++) {
-            if (rooms_arr[i].name == roomName) {
-                res.json(rooms_arr[i]);
-            }
-        }
-    });
-
     app.post('/action/removeUser', function (req, res) {
         var _id = req.body.id;
 

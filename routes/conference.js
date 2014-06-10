@@ -1,32 +1,29 @@
-"use strict";
+module.exports = function (socket, rooms, usernames, conferences) {
 
-/**
- * Array for rooms names
- * @type {Array}
- */
-var conferences = {};
-
-function objectLength(obj) {
-    var len = obj.length ? --obj.length : 0;
-    for (var k in obj) {
-        len++;
+    "use strict";
+    /**
+     * Object length
+     * @param obj
+     * @returns {number}
+     */
+    function objectLength(obj) {
+        var len = obj.length ? --obj.length : 0;
+        for (var k in obj) {
+            len++;
+        }
+        return len;
     }
-    return len;
-}
-
-module.exports = function (socket, rooms, usernames) {
     /**
      * Check if room already exists
      * @param roomName
      * @returns {Boolean}
      */
-    var roomIsExist = function(roomName) {
+    function roomIsExist (roomName) {
         for (var i = 0; i < rooms.length; i = i + 1) {
             return rooms[i].roomName === roomName;
         }
         return false;
     };
-
     /**
      * Conference new
      */
@@ -42,6 +39,9 @@ module.exports = function (socket, rooms, usernames) {
         }
     });
 
+    /**
+     * Conference get
+     */
     socket.on("conference:get", function(data) {
         if (data.roomName) {
             var isSecure = false;
@@ -64,6 +64,9 @@ module.exports = function (socket, rooms, usernames) {
         }
     });
 
+    /**
+     * Conference enter
+     */
     socket.on("conference:enter", function(data) {
         if (conferences[data.roomName] === data.roomPass) {
             socket.emit("conference:enter", { enter: true });
@@ -78,8 +81,7 @@ module.exports = function (socket, rooms, usernames) {
      * remove user if users in room > 1
      */
     socket.on("conference:remove", function(data) {
-        var username = data.username,
-            roomName = data.roomName;
+        var roomName = data.roomName;
 
         if (roomName && roomName.length > 0) {
             if (rooms.length === 0) return false;
@@ -87,18 +89,11 @@ module.exports = function (socket, rooms, usernames) {
                 if (rooms[j]) {
                     if (rooms[j].roomName && rooms[j].roomName == roomName) {
                         rooms.splice(j, 1);
-                        delete conferences[roomName];
+                        //delete conferences[roomName];
                         socket.broadcast.emit("rooms:update", {
                             users: [data.username]
                         });
                     }
-                }
-            }
-            for (var i = 0; i < rooms.length; i = i + 1) {
-                if (rooms[i].roomName && rooms[i].roomName == roomName) { //&& rooms[i].users && rooms[i].users.length === 1
-                    rooms.splice(i, 1);
-                    delete conferences[roomName];
-                    //console.log(roomName + " - Conference has been removed!");
                 }
             }
         }
@@ -147,15 +142,19 @@ module.exports = function (socket, rooms, usernames) {
     socket.on('disconnect', function () {
         if (!rooms.length) return false;
 
+        var deleted = null;
+
         for (var s = 0; s < rooms.length; s = s + 1) {
             if (rooms[s]) {
+                deleted = rooms[s].users[socket.id];
                 delete rooms[s].users[socket.id];
                 if (objectLength(rooms[s].users) < 1) {
                     rooms.splice(s, 1);
                 }
             }
         }
-        socket.broadcast.emit("rooms:update",{});
+        socket.broadcast.emit("rooms:update",{
+            deleted: deleted
+        });
     });
-
 };

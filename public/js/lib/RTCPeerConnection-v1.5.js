@@ -106,6 +106,7 @@ function RTCPeerConnection(options) {
             if (options.onRemoteStreamEnded) options.onRemoteStreamEnded(remoteMediaStream);
         };
 
+
         // onRemoteStream(MediaStream)
         if (options.onRemoteStream) options.onRemoteStream(remoteMediaStream);
 
@@ -301,22 +302,24 @@ var video_constraints = {
 function getUserMedia(options, isVideo, callback) {
     var t = {};
     t.users = [];
-
     var n = navigator,
         media;
     n.getMedia = n.webkitGetUserMedia || n.mozGetUserMedia;
     n.getMedia(options.constraints || {
         audio: true,
-        video: isVideo ? video_constraints : false
+        video: isVideo ? video_constraints : isVideo
     }, streaming, options.onerror || function(e) {
-        if (e) {
-            callback(e);
+        if (e.name === "DevicesNotFoundError") {
+            if (callback && typeof(callback) === "function") {
+                callback(e);
+            }
         }
     });
 
     function streaming(stream) {
         var video = options.video;
         if (video) {
+            video.setAttribute("id", stream.id);
             video[moz ? 'mozSrcObject' : 'src'] = moz ? stream : window.webkitURL.createObjectURL(stream);
             video.play();
         }
