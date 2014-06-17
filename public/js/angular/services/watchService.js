@@ -1,7 +1,10 @@
-app.factory('watchService', ['$rootScope', '$routeParams', function ($rootScope, $routeParams) {
+app.factory('watchService', ['$rootScope', function ($rootScope) {
     var socket = io.connect(SIGNALING_SERVER);
 
     return {
+        socketId: function () {
+          return socket.socket.sessionid;
+        },
         on: function (eventName, callback) {
             socket.on(eventName, function () {
                 var args = arguments;

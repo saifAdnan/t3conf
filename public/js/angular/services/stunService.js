@@ -1,22 +1,23 @@
-app.factory('stunService', ['$http', '$rootScope', '$routeParams', function ($http, $rootScope, $routeParams) {
-    var defaultChannel = $routeParams.name,
+app.factory('stunService', ['$http', '$rootScope', function ($http, $rootScope) {
+    var defaultChannel = ROOM_NAME,
         table_container = $(".table-rooms");
 
-    var channel = defaultChannel;
     var sender = USERNAME;
 
     return {
+        socket: function () {
+            return io.connect(SIGNALING_SERVER + channel);
+        },
         openSocket: function (config) {
-            var channel = config.channel || defaultChannel;
+            channel = config.channel || defaultChannel;
 
             io.connect(SIGNALING_SERVER).emit('new-channel', {
                 channel: channel,
                 sender: sender
             });
 
-            var socket = io.connect(SIGNALING_SERVER + channel);
+            var socket = this.socket();
             socket.channel = channel;
-
             socket.on('connect', function () {
                 if (config.callback) config.callback(socket);
             });
@@ -34,9 +35,6 @@ app.factory('stunService', ['$http', '$rootScope', '$routeParams', function ($ht
             var container = $("<li></li>").addClass("b-video");
             var video = media.video;
 
-            console.log(media);
-
-            video.setAttribute("id", "new");
 
             video.setAttribute("controls", true);
             video.style.height = "160px";
@@ -47,11 +45,10 @@ app.factory('stunService', ['$http', '$rootScope', '$routeParams', function ($ht
 
             $("#videos-container").prepend(container);
             video.play();
-        },
-        onRemoteStreamEnded: function (stream) {
-            var video = document.getElementById(stream.getAudioTrack().id);
-            if (video) video.parentNode.removeChild(video);
-        },
+        }/*,
+        onRemoveStream: function (stream) {
+            console.log("ended", stream);
+        }*/,
         onRoomFound: function (room) {
             var alreadyExist = table_container.find('.col-sm-10 span:first-child').html();
             if (alreadyExist === room.roomName) return;
@@ -59,4 +56,5 @@ app.factory('stunService', ['$http', '$rootScope', '$routeParams', function ($ht
             $rootScope.$apply();
         }
     };
+
 }]);

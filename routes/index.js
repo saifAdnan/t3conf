@@ -1,7 +1,7 @@
 var passport = require('passport');
 var Users = require('../models/users');
 
-module.exports = function (app, rooms) {
+module.exports = function (app, rooms, socket) {
     "use strict";
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -15,6 +15,9 @@ module.exports = function (app, rooms) {
     app.get('/', function(req, res) {
         if (req.session.passport.user && req.user.approved) {
             res.render("index", {
+                partials: {
+                    yield: 'home.html'
+                },
                 title: "Home",
                 username: req.user.username
             });
@@ -25,6 +28,7 @@ module.exports = function (app, rooms) {
                 res.redirect("/login");
             }
         }
+
     });
 
     /**
@@ -235,17 +239,49 @@ module.exports = function (app, rooms) {
      * render room.html
      */
     app.post('/room/:name', function (req, res) {
-        var roomId = req.body.name,
+        var roomName = req.body.conf_name,
+            roomPass = req.body.conf_pass,
             username = req.user.username;
 
         res.render("index", {
-            title: 'Room ' + roomId,
-            isCreateRoom: true,
-            roomName: roomId,
+            title: 'Room ' + roomName,
+            isPost: true,
+            roomName: roomName,
+            roomPass: roomPass,
             username: username,
             partials: {
                 yield: 'room.html'
             }
+        });
+
+    });
+
+    app.get('/room/:name', function (req, res) {
+        var roomName = req.params.name,
+            username = req.user.username;
+
+        res.render("index", {
+            title: 'Room ' + roomName,
+            isPost: false,
+            roomName: roomName,
+            username: username,
+            partials: {
+                yield: 'room.html'
+            }
+        });
+
+
+    });
+
+    app.post("/conference/save", function (req, res) {
+        rooms.push(req.body);
+
+        socket.emit("rooms:update", {
+            users: [req.body.username]
+        });
+
+        socket.broadcast.emit("rooms:update", {
+            users: [req.body.username]
         });
     });
 };

@@ -49,9 +49,12 @@ var userNames = (function () {
     };
 }());
 
+
 // export function for listening to the socket
-module.exports = function (socket, usernames, io, channel) {
+module.exports = function (socket, io, channel, rooms) {
     var name = userNames.get();
+
+    socket.channel = channel;
 
     // send the new user their name and a list of users
     socket.emit('init', {

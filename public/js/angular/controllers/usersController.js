@@ -8,7 +8,9 @@ function usersController($scope, roomService, watchService) {
     });
 
     watchService.on("rooms:update", function(data) {
-        roomService.prepForUsers(data.users);
+        if (data && data.users) {
+            roomService.prepForUsers(data.users);
+        }
     });
 }
 

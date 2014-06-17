@@ -1,3 +1,8 @@
+<script>
+    var IS_POST = {{isPost}};
+    var ROOM_NAME = "{{roomName}}";
+    var ROOM_PASS = "{{roomPass}}";
+</script>
 <div class="clearfix"></div>
 <div class="modal" id="auth">
     <div class="modal-dialog">
@@ -35,10 +40,10 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div ng-show="!secure">
+<div ng-show="!secure" ng-controller="roomController">
 
-    <div class="row-fluid" ng-controller="chatController">
-        <div class="col-sm-9" >
+    <div class="row-fluid">
+        <div class="col-sm-9" ng-controller="chatController" >
             <div class="chat" >
                 <div class="well message-spot" id="messages">
                     <div class="messages">
@@ -81,12 +86,12 @@
                     </h4>
                 </div>
                 <div class="panel-body" >
-                    <ul class="list-unstyled room_users" ng-controller="usersController">
+                    <!--<ul class="list-unstyled room_users" ng-controller="usersController">
                         <li ng-repeat="user in users" data-ng-click="mention(user)">
                             <i class="glyphicon glyphicon-user"></i>
                             <span ng-bind="user"></span>
                         </li>
-                    </ul>
+                    </ul>-->
                 </div>
             </div>
         </div>

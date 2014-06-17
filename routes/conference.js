@@ -1,6 +1,6 @@
-module.exports = function (socket, rooms, usernames, conferences) {
-
+module.exports = function (socket, rooms) {
     "use strict";
+
     /**
      * Object length
      * @param obj
@@ -13,6 +13,7 @@ module.exports = function (socket, rooms, usernames, conferences) {
         }
         return len;
     }
+
     /**
      * Check if room already exists
      * @param roomName
@@ -29,7 +30,6 @@ module.exports = function (socket, rooms, usernames, conferences) {
      */
     socket.on("conference:new", function(data) {
         if (!roomIsExist(data.roomName)) {
-            conferences[data.roomName] = data.roomPass;
             socket.emit("conference:roomIsExist", {
                 isExist: false,
                 roomName: data.roomName
@@ -46,17 +46,6 @@ module.exports = function (socket, rooms, usernames, conferences) {
         if (data.roomName) {
             var isSecure = false;
 
-            if (objectLength(conferences) === 0) {
-                socket.emit("conference:get", {
-                    notFound: true
-                });
-                return false;
-            }
-
-            if (conferences[data.roomName]) {
-                isSecure = true;
-            }
-
             socket.emit("conference:get", {
                 roomName: data.roomName,
                 roomIsSecure: isSecure
@@ -68,11 +57,11 @@ module.exports = function (socket, rooms, usernames, conferences) {
      * Conference enter
      */
     socket.on("conference:enter", function(data) {
-        if (conferences[data.roomName] === data.roomPass) {
+        /*if (conferences[data.roomName] === data.roomPass) {
             socket.emit("conference:enter", { enter: true });
         } else {
             socket.emit("conference:enter", { enter: false});
-        }
+        }*/
     });
 
     /**
@@ -106,7 +95,6 @@ module.exports = function (socket, rooms, usernames, conferences) {
     socket.on("conference:save", function (data) {
         data.users = {};
         data.users[socket.id] = data.username;
-        usernames[data.username] = socket.id;
         rooms.push(data);
 
         socket.emit("rooms:update", {
@@ -125,7 +113,6 @@ module.exports = function (socket, rooms, usernames, conferences) {
         for (var i = 0; i < rooms.length; i = i + 1) {
             if (rooms[i].roomName === data.roomName) {
                 rooms[i].users[socket.id] = data.username;
-                usernames[data.username] = socket.id;
                 //console.log("user - " + data.username + " has joined the room " + data.roomName);
                 socket.broadcast.emit("rooms:update", {
                     users: rooms[i].users
@@ -142,19 +129,22 @@ module.exports = function (socket, rooms, usernames, conferences) {
     socket.on('disconnect', function () {
         if (!rooms.length) return false;
 
-        var deleted = null;
-
-        for (var s = 0; s < rooms.length; s = s + 1) {
-            if (rooms[s]) {
-                deleted = rooms[s].users[socket.id];
-                delete rooms[s].users[socket.id];
-                if (objectLength(rooms[s].users) < 1) {
-                    rooms.splice(s, 1);
+        for (var i = 0; i < rooms.length; i = i + 1) {
+            if (objectLength(rooms[i].users) === 1 && rooms[i].users[socket.id]) {
+                rooms.splice(i, 1);
+                break;
+            } else {
+                if (rooms[i].users[socket.id]) {
+                    delete rooms[i].users[socket.id];
+                    break;
                 }
             }
         }
-        socket.broadcast.emit("rooms:update",{
-            deleted: deleted
-        });
+
+        socket.broadcast.emit("user:left", {socketid: socket.id});
+
+        var users = rooms[i] ? rooms[i].users : {};
+
+        socket.broadcast.emit("rooms:update", {users: users});
     });
 };

@@ -1,15 +1,15 @@
 /**
  * Load dependencies
  */
-var fs              = require('fs'),
-    path            = require('path'),
-    express         = require('express'),
-    mongoose        = require('mongoose'),
-    mongoStore      = require('connect-mongo')(express),
-    LocalStrategy   = require('passport-local').Strategy,
-    https           = require('http'),
-    passport        = require('passport'),
-    Account         = require('./models/users');
+var fs = require('fs'),
+    path = require('path'),
+    express = require('express'),
+    mongoose = require('mongoose'),
+    mongoStore = require('connect-mongo')(express),
+    LocalStrategy = require('passport-local').Strategy,
+    https = require('http'),
+    passport = require('passport'),
+    Account = require('./models/users');
 
 var options = {
     key: fs.readFileSync(__dirname + '/trafficdestination_net.key'),
@@ -21,14 +21,15 @@ var options = {
 /**
  * Set variables
  */
-var app             = express(),
-    channels        = {},
-    rooms           = [],
-    usernames       = {},
-    conferences     = {},
-    server          = https.createServer(app),
-    io              = require('socket.io').listen(server, {log: false,'transports': ['websocket', 'flashsocket', 'xhr-polling']}),
-    session_conf    = {
+var app = express(),
+    channels = {},
+    rooms = [],
+    server = https.createServer(app),
+    io = require('socket.io').listen(server, {
+        log: false,
+        'transports': ['websocket', 'flashsocket', 'xhr-polling']
+    }),
+    session_conf = {
         db: {
             db: 't3conf',
             host: 'localhost',
@@ -46,7 +47,7 @@ app.configure(function() {
     app.set('port', 1088);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'html');
-    app.use(express.static(__dirname ));
+    app.use(express.static(__dirname));
     app.use(express.json());
     app.use(express.urlencoded());
     app.use(express.methodOverride());
@@ -81,16 +82,16 @@ require("./routes")(app, rooms);
 server.listen(app.get("port")); //1855
 
 //Socket.io
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', function(socket) {
 
-    require("./routes/conference.js")(socket, rooms, usernames, conferences);
+    require("./routes/conference.js")(socket, rooms, app);
 
     var initiatorChannel = '';
     if (!io.isConnected) {
         io.isConnected = true;
     }
 
-    socket.on('new-channel', function (data) {
+    socket.on('new-channel', function(data) {
         if (!channels[data.channel]) {
             initiatorChannel = data.channel;
         }
@@ -98,35 +99,36 @@ io.sockets.on('connection', function (socket) {
         onNewNamespace(data.channel, data.sender);
     });
 
-    socket.on('presence', function (channel) {
+    socket.on('presence', function(channel) {
         var isChannelPresent = !! channels[channel];
         socket.emit('presence', isChannelPresent);
     });
 
-    socket.on('disconnect', function (channel) {
-        if (initiatorChannel) {
-            delete channels[initiatorChannel];
-        }
-        socket.emit('leave', true);
+    socket.on('disconnect', function(channel) {
+        /*if (initiatorChannel) {
+         delete channels[initiatorChannel];
+         }
+         socket.emit('leave', true);*/
     });
 });
 
 function onNewNamespace(channel, sender) {
-    io.of('/' + channel).on('connection', function (socket) {
+    io.of('/' + channel).on('connection', function(socket) {
 
         if (io.isConnected) {
-            require('./routes/chat.js')(socket, usernames, io, channel);
+            //require('./routes/chat.js')(socket, usernames, io, channel);
             io.isConnected = false;
             socket.emit('connect', true);
         }
 
-        socket.on('message', function (data) {
+        socket.on('message', function(data) {
             if (data.sender == sender)
                 socket.broadcast.emit('message', data.data);
         });
+
     });
 }
 
-app.listen(app.get('port') + 1, function(){ //1857
+app.listen(app.get('port') + 1, function() { //1857
     console.log(("Express server listening on port " + app.get('port')))
 });

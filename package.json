@@ -28,6 +28,10 @@
     "passport": "*",
     "passport-local": "*",
     "passport-local-mongoose": "*",
-    "hogan-express": "*"
+    "hogan-express": "*",
+    "method-override": "^2.0.2",
+    "cookie": "^0.1.2",
+    "session.socket.io": "^0.1.6",
+    "connect": "^2.19.6"
   }
 }

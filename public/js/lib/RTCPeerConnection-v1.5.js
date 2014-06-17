@@ -1,5 +1,5 @@
-window.moz = !!navigator.mozGetUserMedia;
-var chromeVersion = !!navigator.mozGetUserMedia ? 0 : parseInt(navigator.userAgent.match( /Chrom(e|ium)\/([0-9]+)\./ )[2]);
+window.moz = !! navigator.mozGetUserMedia;
+var chromeVersion = !! navigator.mozGetUserMedia ? 0 : parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
 
 function RTCPeerConnection(options) {
     var w = window,
@@ -163,21 +163,21 @@ function RTCPeerConnection(options) {
     var bandwidth = options.bandwidth;
 
     function setBandwidth(sdp) {
-        if (moz || !bandwidth /* || navigator.userAgent.match( /Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i ) */) return sdp;
+        if (moz || !bandwidth /* || navigator.userAgent.match( /Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i ) */ ) return sdp;
 
         // remove existing bandwidth lines
-        sdp = sdp.replace( /b=AS([^\r\n]+\r\n)/g , '');
+        sdp = sdp.replace(/b=AS([^\r\n]+\r\n)/g, '');
 
         if (bandwidth.audio) {
-            sdp = sdp.replace( /a=mid:audio\r\n/g , 'a=mid:audio\r\nb=AS:' + bandwidth.audio + '\r\n');
+            sdp = sdp.replace(/a=mid:audio\r\n/g, 'a=mid:audio\r\nb=AS:' + bandwidth.audio + '\r\n');
         }
 
         if (bandwidth.video) {
-            sdp = sdp.replace( /a=mid:video\r\n/g , 'a=mid:video\r\nb=AS:' + bandwidth.video + '\r\n');
+            sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + bandwidth.video + '\r\n');
         }
 
         if (bandwidth.data) {
-            sdp = sdp.replace( /a=mid:data\r\n/g , 'a=mid:data\r\nb=AS:' + bandwidth.data + '\r\n');
+            sdp = sdp.replace(/a=mid:data\r\n/g, 'a=mid:data\r\nb=AS:' + bandwidth.data + '\r\n');
         }
 
         return sdp;
@@ -203,7 +203,7 @@ function RTCPeerConnection(options) {
     }
 
     function _openOffererChannel() {
-        channel = peer.createDataChannel(options.channel || 'RTCDataChannel', moz ? { } : {
+        channel = peer.createDataChannel(options.channel || 'RTCDataChannel', moz ? {} : {
             reliable: false // Deprecated
         });
 
@@ -258,8 +258,7 @@ function RTCPeerConnection(options) {
         console.error('Error in fake:true');
     }
 
-    function onSdpSuccess() {
-    }
+    function onSdpSuccess() {}
 
     function onSdpError(e) {
         var message = JSON.stringify(e, null, '\t');
@@ -295,7 +294,7 @@ function RTCPeerConnection(options) {
 
 // getUserMedia
 var video_constraints = {
-    mandatory: { },
+    mandatory: {},
     optional: []
 };
 
@@ -305,10 +304,10 @@ function getUserMedia(options, isVideo, callback) {
     var n = navigator,
         media;
     n.getMedia = n.webkitGetUserMedia || n.mozGetUserMedia;
-    n.getMedia(options.constraints || {
+    n.getMedia({
         audio: true,
         video: isVideo ? video_constraints : isVideo
-    }, streaming, options.onerror || function(e) {
+    }, streaming, function(e) {
         if (e.name === "DevicesNotFoundError") {
             if (callback && typeof(callback) === "function") {
                 callback(e);
@@ -319,7 +318,6 @@ function getUserMedia(options, isVideo, callback) {
     function streaming(stream) {
         var video = options.video;
         if (video) {
-            video.setAttribute("id", stream.id);
             video[moz ? 'mozSrcObject' : 'src'] = moz ? stream : window.webkitURL.createObjectURL(stream);
             video.play();
         }
