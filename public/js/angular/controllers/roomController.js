@@ -1,4 +1,4 @@
-function roomController($scope, $http, conferenceService, stunService, watchService) {
+function roomController($scope, $rootScope, $http, conferenceService, stunService, watchService) {
     $scope.isPost = IS_POST;
     $scope.roomName = ROOM_NAME;
     $scope.roomPass = ROOM_PASS;
@@ -10,6 +10,8 @@ function roomController($scope, $http, conferenceService, stunService, watchServ
                 roomPass: $scope.roomPass,
                 joinSocket: watchService.socketId()
             });
+            watchService.chatEmit("init", {});
+            $rootScope.enableChat = true;
         });
     } else {
         $http.get("/action/roomInfo", {
@@ -22,6 +24,8 @@ function roomController($scope, $http, conferenceService, stunService, watchServ
                     joinUser: data.broadcaster,
                     joinSocket: watchService.socketId()
                 });
+                watchService.chatEmit("init", {});
+                $rootScope.enableChat = true;
             });
         });
     }
@@ -32,4 +36,4 @@ function roomController($scope, $http, conferenceService, stunService, watchServ
     });
 }
 
-app.controller("roomController", ['$scope', '$http', 'conferenceService', 'stunService','watchService', 'chatService', roomController]);
+app.controller("roomController", ['$scope', '$rootScope', '$http', 'conferenceService', 'stunService','watchService', 'chatService', roomController]);

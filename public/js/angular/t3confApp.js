@@ -18,6 +18,7 @@ var PATH = "/public/js/angular/";
 app.run(['$rootScope', '$http',
     function($rootScope, $http) {
         $rootScope.username = USERNAME;
+        $rootScope.enableChat = false;
 
         $http.get("/rooms").success(function(data) {
             $rootScope.rooms = data;

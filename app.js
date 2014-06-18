@@ -23,6 +23,7 @@ var options = {
  */
 var app = express(),
     channels = {},
+    usernames = {},
     rooms = [],
     server = https.createServer(app),
     io = require('socket.io').listen(server, {
@@ -116,7 +117,7 @@ function onNewNamespace(channel, sender) {
     io.of('/' + channel).on('connection', function(socket) {
 
         if (io.isConnected) {
-            //require('./routes/chat.js')(socket, usernames, io, channel);
+            require('./routes/chat.js')(socket, io, channel, rooms);
             io.isConnected = false;
             socket.emit('connect', true);
         }

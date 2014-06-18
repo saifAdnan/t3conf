@@ -1,6 +1,8 @@
 module.exports = function (socket, rooms) {
     "use strict";
 
+    console.log("main socket", socket.id);
+
     /**
      * Object length
      * @param obj
@@ -114,6 +116,9 @@ module.exports = function (socket, rooms) {
             if (rooms[i].roomName === data.roomName) {
                 rooms[i].users[socket.id] = data.username;
                 //console.log("user - " + data.username + " has joined the room " + data.roomName);
+                socket.emit("rooms:update", {
+                    users: rooms[i].users
+                });
                 socket.broadcast.emit("rooms:update", {
                     users: rooms[i].users
                 });
@@ -132,19 +137,19 @@ module.exports = function (socket, rooms) {
         for (var i = 0; i < rooms.length; i = i + 1) {
             if (objectLength(rooms[i].users) === 1 && rooms[i].users[socket.id]) {
                 rooms.splice(i, 1);
+                socket.broadcast.emit("rooms:update", {});
                 break;
             } else {
                 if (rooms[i].users[socket.id]) {
                     delete rooms[i].users[socket.id];
+                    socket.broadcast.emit("rooms:update", {users: rooms[i].users});
                     break;
                 }
             }
         }
 
-        socket.broadcast.emit("user:left", {socketid: socket.id});
-
         var users = rooms[i] ? rooms[i].users : {};
 
-        socket.broadcast.emit("rooms:update", {users: users});
+        socket.broadcast.emit("user:left", {socketid: socket.id});
     });
 };

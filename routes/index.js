@@ -121,11 +121,14 @@ module.exports = function (app, rooms, socket) {
     app.get('/action/roomInfo', function (req, res) {
         var roomName = req.body.roomName;
         var rooms_arr = rooms;
+        var json;
         for (var i = 0; i < rooms_arr.length; i++) {
             if (rooms_arr[i].name == roomName) {
-                res.json(rooms_arr[i]);
+                json = rooms_arr[i];
+                break;
             }
         }
+        res.json(json);
     });
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -257,18 +260,23 @@ module.exports = function (app, rooms, socket) {
     });
 
     app.get('/room/:name', function (req, res) {
-        var roomName = req.params.name,
-            username = req.user.username;
+        if (req.session.passport.user) {
 
-        res.render("index", {
-            title: 'Room ' + roomName,
-            isPost: false,
-            roomName: roomName,
-            username: username,
-            partials: {
-                yield: 'room.html'
-            }
-        });
+            var roomName = req.params.name,
+                username = req.user.username;
+
+            res.render("index", {
+                title: 'Room ' + roomName,
+                isPost: false,
+                roomName: roomName,
+                username: username,
+                partials: {
+                    yield: 'room.html'
+                }
+            });
+        } else {
+            res.redirect("/login");
+        }
 
 
     });

@@ -1,19 +1,30 @@
-function chatController($scope, chatService) {
+function chatController($scope, $rootScope, $http, watchService, roomService) {
     var roomName = ROOM_NAME;
+
+    $scope.enableChat = $rootScope.enableChat;
+
+    $scope.users = null;
+
+    $http.get("/action/roomInfo", {
+        roomName: ROOM_NAME
+    }).success(function (data) {
+        $scope.users = data.users;
+    });
+
+    $scope.$on('handleBroadcast', function () {
+        $scope.users = roomService.room.users;
+    });
+
+    watchService.on("rooms:update", function(data) {
+        if (data && data.users) {
+            roomService.prepForUsers(data.users);
+        }
+    });
 
     $scope.private = false;
     $scope.to = null;
 
-    chatService.emit("change:name", {
-        name: USERNAME
-    });
-
-    chatService.on('init', function (data) {
-        current_username = USERNAME;
-        $scope.name = USERNAME;
-    });
-
-    chatService.on('send:message', function (message) {
+    watchService.chatOn('send:message', function (message) {
         var mention;
         mention = message.private;
         var message = {
@@ -34,9 +45,10 @@ function chatController($scope, chatService) {
         }, 10);
     });
 
-    chatService.on('user:join', function (data) {
+    watchService.chatOn('user:join', function (data) {
+        if (data.name === undefined) return false;
         $scope.messages.push({
-            user: ROOM_NAME,
+            user: 'chatroom',
             text: 'User ' + data.name + ' has joined.'
         });
 
@@ -48,11 +60,14 @@ function chatController($scope, chatService) {
     });
 
     // add a message to the conversation when a user disconnects or leaves the room
-    chatService.on('chat:user:left', function (data) {
+    watchService.chatOn('chat:user:left', function (data) {
+        if (data.name === undefined) return false;
         $scope.messages.push({
             user: 'chatroom',
             text: 'User ' + data.name + ' has left.'
         });
+        var to = $(".messages-container").height();
+
 
         setTimeout(function() {
             $("#messages").scrollTo(to);
@@ -82,7 +97,7 @@ function chatController($scope, chatService) {
 
     $scope.sendMessage = function () {
 
-        chatService.emit('send:message', {
+        watchService.chatEmit('send:message', {
             message: $scope.message,
             roomName: roomName,
             private: $scope.private,
@@ -90,7 +105,7 @@ function chatController($scope, chatService) {
         });
 
         var messages = {
-            user: $scope.name,
+            user: USERNAME,
             text: $scope.message,
             local: true
         };
@@ -119,4 +134,4 @@ function chatController($scope, chatService) {
     };
 }
 
-app.controller("chatController", ['$scope', 'chatService', chatController]);
+app.controller("chatController", ['$scope', '$rootScope', '$http', 'watchService', 'roomService', chatController]);
