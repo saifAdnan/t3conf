@@ -43,7 +43,7 @@ module.exports = function (socket, io, channel, rooms) {
             var id = 0;
 
             for (var sk in usernames) {
-                if (usernames[sk] == data.to) {
+                if (usernames[sk].username == data.to) {
                     id = sk;
                     break;
                 }

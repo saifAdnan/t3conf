@@ -1,8 +1,6 @@
 module.exports = function (socket, rooms) {
     "use strict";
 
-    console.log("main socket", socket.id);
-
     /**
      * Object length
      * @param obj
@@ -21,16 +19,17 @@ module.exports = function (socket, rooms) {
      * @param roomName
      * @returns {Boolean}
      */
-    function roomIsExist (roomName) {
+    function roomIsExist(roomName) {
         for (var i = 0; i < rooms.length; i = i + 1) {
             return rooms[i].roomName === roomName;
         }
         return false;
-    };
+    }
+
     /**
      * Conference new
      */
-    socket.on("conference:new", function(data) {
+    socket.on("conference:new", function (data) {
         if (!roomIsExist(data.roomName)) {
             socket.emit("conference:roomIsExist", {
                 isExist: false,
@@ -44,7 +43,7 @@ module.exports = function (socket, rooms) {
     /**
      * Conference get
      */
-    socket.on("conference:get", function(data) {
+    socket.on("conference:get", function (data) {
         if (data.roomName) {
             var isSecure = false;
 
@@ -58,12 +57,12 @@ module.exports = function (socket, rooms) {
     /**
      * Conference enter
      */
-    socket.on("conference:enter", function(data) {
+    socket.on("conference:enter", function (data) {
         /*if (conferences[data.roomName] === data.roomPass) {
-            socket.emit("conference:enter", { enter: true });
-        } else {
-            socket.emit("conference:enter", { enter: false});
-        }*/
+         socket.emit("conference:enter", { enter: true });
+         } else {
+         socket.emit("conference:enter", { enter: false});
+         }*/
     });
 
     /**
@@ -71,12 +70,12 @@ module.exports = function (socket, rooms) {
      * remove room if users in room ===1
      * remove user if users in room > 1
      */
-    socket.on("conference:remove", function(data) {
+    socket.on("conference:remove", function (data) {
         var roomName = data.roomName;
 
         if (roomName && roomName.length > 0) {
             if (rooms.length === 0) return false;
-            for (var j =0; j < rooms.length; j = j + 1) {
+            for (var j = 0; j < rooms.length; j = j + 1) {
                 if (rooms[j]) {
                     if (rooms[j].roomName && rooms[j].roomName == roomName) {
                         rooms.splice(j, 1);
@@ -96,7 +95,11 @@ module.exports = function (socket, rooms) {
      */
     socket.on("conference:save", function (data) {
         data.users = {};
-        data.users[socket.id] = data.username;
+        data.users[socket.id] = {
+            username: data.username,
+            roomToken: data.roomToken,
+            broadcaster: data.broadcaster
+        };
         rooms.push(data);
 
         socket.emit("rooms:update", {
@@ -112,16 +115,45 @@ module.exports = function (socket, rooms) {
      * Add user to room's users
      */
     socket.on("user:join", function (data) {
+        /*
+         {
+         roomName: 'ROOM NAME',
+         username: 'USERNAME',
+         roomToken: '4db1b4bf-8b08-186d-a311-87402cb7d80d',
+         broadcaster: 'c7c3af0-e86b-cdf9-5b26-4cd41be706a'
+         }
+         */
         for (var i = 0; i < rooms.length; i = i + 1) {
             if (rooms[i].roomName === data.roomName) {
-                rooms[i].users[socket.id] = data.username;
-                //console.log("user - " + data.username + " has joined the room " + data.roomName);
+                rooms[i].users[socket.id] = {
+                    username: data.username,
+                    roomToken: data.roomToken,
+                    broadcaster: data.broadcaster
+                };
                 socket.emit("rooms:update", {
                     users: rooms[i].users
                 });
                 socket.broadcast.emit("rooms:update", {
                     users: rooms[i].users
                 });
+                socket.broadcast.emit("user:join", {
+
+                    username: data.username,
+                    roomToken: data.roomToken,
+                    broadcaster: data.broadcaster,
+                    joinSocket: data.joinSocket
+
+                });
+                break;
+            }
+        }
+    });
+
+    socket.on("change:broadcaster", function (data) {
+        for (var i = 0; i < rooms.length; i = i + 1) {
+            if (rooms[i].users[data.socket]) {
+                rooms[i].roomToken = rooms[i].users[data.socket].roomToken;
+                rooms[i].broadcaster = rooms[i].users[data.socket].broadcaster;
                 break;
             }
         }
@@ -143,6 +175,7 @@ module.exports = function (socket, rooms) {
                 if (rooms[i].users[socket.id]) {
                     delete rooms[i].users[socket.id];
                     socket.broadcast.emit("rooms:update", {users: rooms[i].users});
+                    socket.broadcast.emit("change:broadcaster", {});
                     break;
                 }
             }

@@ -48,8 +48,8 @@ function chatController($scope, $rootScope, $http, watchService, roomService) {
     watchService.chatOn('user:join', function (data) {
         if (data.name === undefined) return false;
         $scope.messages.push({
-            user: 'chatroom',
-            text: 'User ' + data.name + ' has joined.'
+            user: {username: 'chatroom'},
+            text: 'User ' + data.name.username + ' has joined.'
         });
 
         var to = $(".messages-container").height();
@@ -63,8 +63,8 @@ function chatController($scope, $rootScope, $http, watchService, roomService) {
     watchService.chatOn('chat:user:left', function (data) {
         if (data.name === undefined) return false;
         $scope.messages.push({
-            user: 'chatroom',
-            text: 'User ' + data.name + ' has left.'
+            user: {username: 'chatroom'},
+            text: 'User ' + data.name.username + ' has left.'
         });
         var to = $(".messages-container").height();
 
@@ -105,7 +105,7 @@ function chatController($scope, $rootScope, $http, watchService, roomService) {
         });
 
         var messages = {
-            user: USERNAME,
+            user: {username: USERNAME},
             text: $scope.message,
             local: true
         };

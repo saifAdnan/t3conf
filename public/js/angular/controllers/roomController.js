@@ -34,6 +34,10 @@ function roomController($scope, $rootScope, $http, conferenceService, stunServic
         console.log(data);
         $("#" + data.socketid).parent().remove();
     });
+
+    watchService.on("change:broadcaster", function () {
+        watchService.emit("change:broadcaster", {socket: watchService.socketId()});
+    });
 }
 
 app.controller("roomController", ['$scope', '$rootScope', '$http', 'conferenceService', 'stunService','watchService', 'chatService', roomController]);

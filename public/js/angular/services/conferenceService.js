@@ -30,9 +30,15 @@ app.factory('conferenceService', [
         }
 
         function onDefaultSocketResponse(response) {
+            /*
+             joinSocket     "PWlQz1LZiIclR3ZRBxQq"
 
-            console.log("red", response);
+             joinUser       "1d3cda79-826e-ebdd-2d3f-489bcfe57fa5"
 
+             participant    true
+
+             userToken      "2b51ebf2-90c5-bf6e-330b-998bc8e613f5"
+             */
             joinSocket = response.joinSocket;
             if (response.joinSocket) self.joinSocket = response.joinSocket;
 
@@ -120,8 +126,6 @@ app.factory('conferenceService', [
 
                 if ((video.readyState <= HTMLMediaElement.HAVE_CURRENT_DATA || video.paused )) {
                     gotstream = true;
-
-                    console.log("new part onRemoteStreamStartsFlowing", _config);
 
                     if (config.onRemoteStream)
                         config.onRemoteStream({
@@ -249,6 +253,26 @@ app.factory('conferenceService', [
             leave();
         };
 
+        watchService.on("user:join", function (data) {
+            console.log(data, "join:on");
+
+            self.joinedARoom = true;
+            self.broadcasterid = data.joinUser;
+            self.joinSocket = data.joinSocket;
+
+            // send old participants
+            openSubSocket({
+                channel: self.userToken
+            });
+
+            defaultSocket.send({
+                participant: true,
+                userToken: data.broadcaster,
+                joinUser: data.joinUser,
+                joinSocket: data.joinSocket
+            });
+        });
+
         openDefaultSocket();
 
         return {
@@ -287,10 +311,23 @@ app.factory('conferenceService', [
 
                 watchService.emit("user:join", {
                     roomName: _config.roomName,
-                    username: USERNAME
+                    username: USERNAME,
+                    roomToken: self.roomToken,
+                    broadcaster: self.userToken,
+                    joinSocket: _config.joinSocket
                 });
 
-                self.joinedARoom = true;
+                /*
+                 self.userToken     = broadcaster
+                 _config.joinUser   =
+
+                 */
+
+
+
+                console.log(self.userToken, _config.joinUser, _config.joinSocket);
+
+                /*self.joinedARoom = true;
                 self.broadcasterid = _config.joinUser;
                 self.joinSocket = _config.joinSocket;
 
@@ -304,7 +341,7 @@ app.factory('conferenceService', [
                     userToken: self.userToken,
                     joinUser: _config.joinUser,
                     joinSocket: _config.joinSocket
-                });
+                });*/
             },
             leaveRoom: leave,
             /**

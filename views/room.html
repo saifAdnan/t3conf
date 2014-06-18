@@ -49,7 +49,7 @@
                     <div class="messages">
                         <div class="messages-container" ng-show ="$parent.enableChat">
                             <p ng-repeat='message in messages' class="{%(message.local ? 'local': '')%}" ng-class='message.me'>
-                                <span ng-bind="message.user" ng-class=""></span>
+                                <span ng-bind="message.user.username" ng-class=""></span>
                                 <span ng-bind-template="to {%message.to%}" ng-show="message.private"></span>:
                                 <span ng-bind="message.text"></span>
                             </p>
@@ -87,9 +87,9 @@
                 </div>
                 <div class="panel-body" >
                     <ul class="list-unstyled room_users">
-                        <li ng-repeat="user in users" data-ng-click="mention(user)">
+                        <li ng-repeat="user in users" data-ng-click="mention(user.username)">
                             <i class="glyphicon glyphicon-user"></i>
-                            <span ng-bind="user"></span>
+                            <span ng-bind="user.username"></span>
                         </li>
                     </ul>
                 </div>
