@@ -332,9 +332,9 @@ module.exports = function (app, rooms, ami) {
         var conferences = fs.createWriteStream("asterisk/conferences.conf");
         conferences.write("[someuser]\n");
         conferences.write("exten => "+req.body.conf_number+",1,Goto("+req.body.conf_name+",1)\n");
-        conferences.write("exten => "+req.body.conf_name+",1,Answer");
-        conferences.write("exten => "+req.body.conf_name+",n,ConfBridge("+req.body.conf_name+",test.common,test.user,test.menu)");
-        conferences.write("exten => "+req.body.conf_name+",n,Hangup()");
+        conferences.write("exten => "+req.body.conf_name+",1,Answer\n");
+        conferences.write("exten => "+req.body.conf_name+",n,ConfBridge("+req.body.conf_name+",test.common,test.user,test.menu)\n");
+        conferences.write("exten => "+req.body.conf_name+",n,Hangup()\n");
         conferences.end();
         setTimeout(function () {
             ami.send({action: 'Reload'});
