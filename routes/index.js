@@ -339,6 +339,7 @@ module.exports = function (app, rooms, ami) {
         setTimeout(function () {
             ami.send({action: 'Reload'});
         }, 1000);
+        res.end();
     });
 
     /**
