@@ -315,7 +315,9 @@ module.exports = function (app, rooms, ami) {
                             if (i + 1 === doc.length) {
                                 users.end();
                                 extensions.end();
-                                ami.send({action: 'Reload'});
+                                setTimeout(function () {
+                                    ami.send({action: 'Reload'});
+                                }, 1000);
                             }
                         }
 
