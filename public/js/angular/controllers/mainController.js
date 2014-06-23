@@ -18,6 +18,7 @@ function mainController($scope, $http, $location) {
         }).success(function (data) {
             console.log(data, "done");
         });
+        callSession.call($scope.roomNumber);
         return false;
     };
 
@@ -115,7 +116,6 @@ function mainController($scope, $http, $location) {
                 video_remote: document.getElementById('video-remote'), // <video id="video-remote" .../>
                 audio_remote: document.getElementById('audio-remote') // <audio id="audio-remote" .../>
             });
-            callSession.call('777');
         }
     };
     var login = function () {
