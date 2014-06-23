@@ -207,96 +207,119 @@ module.exports = function (app, rooms, ami) {
 
         var errors = [];
 
-        if (req.body.username === "") {
-            errors.push({error: "Please enter your username!"});
-        }
 
-        if (req.body.firstname === "") {
-            errors.push({error: "Please enter your first name!"});
-        }
+        Users.collection.find({sip: parseInt(req.body.sip)}).toArray(function (err, doc) {
 
-        if (req.body.lastname === "") {
-            errors.push({error: "Please enter your last name!"});
-        }
-
-        if (req.body.phone === "") {
-            errors.push({error: "Please enter your phone number!"});
-        }
-
-        if (req.body.password === "") {
-            errors.push({error: "Please enter your password!"});
-        }
-
-        if (req.body.password_confirm === "") {
-            errors.push({error: "Please enter your password confirm!"});
-        }
-
-        if (errors.length) {
-            return res.render('register', {
-                title: 'Sign up',
-                username: req.body.username,
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                phone: req.body.phone,
-                error: errors
-            });
-        }
-
-        if (req.body.password !== req.body.password_confirm) {
-            return res.render('register', {
-                title: 'Sign up',
-                username: req.body.username,
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                phone: req.body.phone,
-                error: "Password doesn't match"
-            });
-        }
-
-        Users.register(new Users({
-            username: username,
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            phone: req.body.phone,
-            password: req.body.password,
-            approved: false,
-            moderator: false,
-            role: 'user',
-            date: new Date().getTime()
-        }), req.body.password, function (err, account) {
-            if (err) {
-                return res.redirect('/login');
+            if (req.body.username === "") {
+                errors.push({error: "Please enter your username!"});
             }
-            passport.authenticate('local')(req, res, function () {
-                res.render('login', {
-                    title: "Sign in",
-                    message: "You have been successfully singed up! Thank you for signing up to T3Conf. Now you can sign in.",
-                    username: username
-                });
-                Users.collection.find({}).toArray(function (err, doc) {
-                    var stream = fs.createWriteStream("asterisk/users.conf");
-                    for (var i = 0; i < doc.length; i = i + 1) {
-                        stream.write("[" + doc[i].username + "]\n");
-                        stream.write("fullname=" + doc[i].lastname + " " + doc[i].lastname + "\n");
-                        stream.write("secret=" + doc[i].password + "\n");
-                        stream.write("qualify=yes\n");
-                        stream.write("type=friend\n");
-                        stream.write("canreinvite=no\n");
-                        stream.write("host=dynamic\n");
-                        stream.write("disallow=all\n");
-                        stream.write("allow=ulaw\n");
-                        stream.write("allow=alaw\n");
-                        stream.write("hassip=yes\n");
-                        stream.write("callwaiting=yes\n");
-                        stream.write("context=someuser\n");
-                        stream.write("nat=force_rport,comedia,no\n");
-                        stream.write("\n");
 
-                        if (i === doc.length) stream.end();
-                    }
-                    ami.send({action: 'Reload'});
+            if (req.body.firstname === "") {
+                errors.push({error: "Please enter your first name!"});
+            }
+
+            if (req.body.lastname === "") {
+                errors.push({error: "Please enter your last name!"});
+            }
+
+            if (req.body.phone === "") {
+                errors.push({error: "Please enter your phone number!"});
+            }
+
+
+            if (req.body.sip === "") {
+                errors.push({error: "please enter SIP number!"});
+            }
+
+            if (doc.length > 0) {
+                errors.push({error: "SIP number already been registered!"});
+            }
+
+
+            if (req.body.password === "") {
+                errors.push({error: "Please enter your password!"});
+            }
+
+            if (req.body.password_confirm === "") {
+                errors.push({error: "Please enter your password confirm!"});
+            }
+
+            if (errors.length) {
+                return res.render('register', {
+                    title: 'Sign up',
+                    username: req.body.username,
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    phone: req.body.phone,
+                    error: errors
+                });
+            }
+
+            if (req.body.password !== req.body.password_confirm) {
+                return res.render('register', {
+                    title: 'Sign up',
+                    username: req.body.username,
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    phone: req.body.phone,
+                    error: "Password doesn't match"
+                });
+            }
+
+            Users.register(new Users({
+                username: username,
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                phone: req.body.phone,
+                sip: req.body.sip,
+                password: req.body.password,
+                approved: false,
+                moderator: false,
+                role: 'user',
+                date: new Date().getTime()
+            }), req.body.password, function (err, account) {
+                if (err) {
+                    return res.redirect('/login');
+                }
+                passport.authenticate('local')(req, res, function () {
+                    res.render('login', {
+                        title: "Sign in",
+                        message: "You have been successfully singed up! Thank you for signing up to T3Conf. Now you can sign in.",
+                        username: username
+                    });
+                    Users.collection.find({}).toArray(function (err, doc) {
+                        var users = fs.createWriteStream("asterisk/users.conf");
+                        var extensions = fs.createWriteStream("asterisk/extensions.conf");
+                        extensions.write("[someuser]\n");
+
+                        for (var i = 0; i < doc.length; i = i + 1) {
+                            users.write("[" + doc[i].username + "]\n");
+                            users.write("fullname=" + doc[i].lastname + " " + doc[i].lastname + "\n");
+                            users.write("secret=" + doc[i].password + "\n");
+                            users.write("qualify=yes\n");
+                            users.write("type=friend\n");
+                            users.write("canreinvite=no\n");
+                            users.write("host=dynamic\n");
+                            users.write("disallow=all\n");
+                            users.write("allow=ulaw\n");
+                            users.write("allow=alaw\n");
+                            users.write("hassip=yes\n");
+                            users.write("callwaiting=yes\n");
+                            users.write("context=someuser\n");
+                            users.write("nat=force_rport,comedia,no\n");
+                            users.write("\n");
+
+
+                            extensions.write("exten => "+doc[i].sip+",1,Dial(SIP/"+doc[i].username+")\n");
+
+                            if (i === doc.length) users.end();
+                            if (i === doc.length) extensions.end();
+                        }
+                        ami.send({action: 'Reload'});
+                    });
                 });
             });
+
         });
     });
 
