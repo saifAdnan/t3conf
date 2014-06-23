@@ -25,6 +25,16 @@
                                        ng-keyup="updateFormAction()"/>
                             </div>
 
+                            <div class="form-group {%(isExist ? 'has-error' : '')%}">
+                                <label class="control-label" for="conf_number">Conference sip number <span class="important">*</span></label>
+                                <input type="text"
+                                       class="form-control"
+                                       ng-model="roomNumber"
+                                       id="conf_number"
+                                       name="conf_number"
+                                       ng-keyup="updateFormAction()"/>
+                            </div>
+
                             <!--<div class="form-group">
                                 <label for="conf_pass">Conference password ( optional )</label>
                                 <input type="password" name="conf_pass" id="conf_pass" class="form-control"/>

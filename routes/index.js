@@ -329,7 +329,16 @@ module.exports = function (app, rooms, ami) {
     });
 
     app.post('/action/newConference', function (req, res) {
-        console.log(req.body.conf_name);
+        var conferences = fs.createWriteStream("asterisk/conferences.conf");
+        conferences.write("[someuser]\n");
+        conferences.write("exten => "+req.body.conf_number+",1,Goto("+req.body.conf_name+",1)\n");
+        conferences.write("exten => "+req.body.conf_name+",1,Answer");
+        conferences.write("exten => "+req.body.conf_name+",n,ConfBridge("+req.body.conf_name+",test.common,test.user,test.menu)");
+        conferences.write("exten => "+req.body.conf_name+",n,Hangup()");
+        conferences.end();
+        setTimeout(function () {
+            ami.send({action: 'Reload'});
+        }, 1000);
     });
 
     /**

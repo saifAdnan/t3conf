@@ -1,26 +1,10 @@
 function mainController($scope, $http, $location) {
     $scope.roomName = null;
+    $scope.roomNumber = null;
     $scope.isExist = false;
     $http.get('/rooms').success(function (data) {
         $scope.rooms = data;
     });
-/*
-
-    watchService.on("rooms:update", function () {
-        $http.get('/rooms').success(function (data) {
-            $scope.rooms = data;
-        });
-    });
-
-    watchService.on("conference:roomIsExist", function(data) {
-        if (!data.isExist) {
-            $location.url("/room/" + data.roomName);
-        } else {
-            $scope.isExist = true;
-        }
-    });
-*/
-
 
     /**
      * before form submit
@@ -29,7 +13,8 @@ function mainController($scope, $http, $location) {
         /*$("#setup-new-room").attr("action", "/room/" + $scope.roomName);*/
         e.preventDefault();
         $http.post("/action/newConference", {
-            conf_name: $scope.roomName
+            conf_name: $scope.roomName,
+            conf_number: $scope.roomNumber
         }).success(function (data) {
             console.log(data, "done");
         });
