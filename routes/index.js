@@ -328,6 +328,10 @@ module.exports = function (app, rooms, ami) {
         });
     });
 
+    app.post('/action/newConference', function (req, res) {
+        console.log(req.body.conf_name);
+    });
+
     /**
      * route /action/removeUser
      * Remove user

@@ -26,7 +26,12 @@ function mainController($scope, $http, $location) {
      * before form submit
      */
     $scope.submit = function () {
-        $("#setup-new-room").attr("action", "/room/" + $scope.roomName);
+        /*$("#setup-new-room").attr("action", "/room/" + $scope.roomName);*/
+        $http.post("/action/newConference", {
+            conf_name: $scope.roomName
+        }).success(function (data) {
+            console.log(data, "done");
+        });
     };
 
 
@@ -36,7 +41,6 @@ function mainController($scope, $http, $location) {
      * @returns {String}
      */
     $scope.roomName = function (name) {
-        console.log(name);
         if (name) {
             return name.replace("%20", " ");
         }
