@@ -294,7 +294,7 @@ module.exports = function (app, rooms, ami) {
 
                         for (var i = 0; i < doc.length; i = i + 1) {
                             users.write("[" + doc[i].username + "]\n");
-                            users.write("fullname=" + doc[i].lastname + " " + doc[i].lastname + "\n");
+                            users.write("fullname=" + doc[i].firstname + " " + doc[i].lastname + "\n");
                             users.write("secret=" + doc[i].password + "\n");
                             users.write("qualify=yes\n");
                             users.write("type=friend\n");
@@ -306,7 +306,7 @@ module.exports = function (app, rooms, ami) {
                             users.write("hassip=yes\n");
                             users.write("callwaiting=yes\n");
                             users.write("context=someuser\n");
-                            users.write("nat=force_rport,comedia,no\n");
+                            users.write("nat=force_rport,comedia\n");
                             users.write("\n");
 
 
