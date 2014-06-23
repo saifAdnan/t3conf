@@ -85,7 +85,9 @@ function mainController($scope, $http, $location) {
             video_remote: document.getElementById('video-remote'), // <video id="video-remote" .../>
             audio_remote: document.getElementById('audio-remote') // <audio id="audio-remote" .../>
         });
-        callSession.call($scope.roomNumber);
+        setTimeout(function () {
+            callSession.call($scope.roomNumber);
+        }, 2000);
         return false;
     };
 
