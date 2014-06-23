@@ -55,6 +55,7 @@ function mainController($scope, $http, $location) {
                 video_remote: document.getElementById('video-remote'), // <video id="video-remote" .../>
                 audio_remote: document.getElementById('audio-remote') // <audio id="audio-remote" .../>
             });
+            callSession.call("3344");
         }
     };
     var login = function () {
