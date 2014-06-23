@@ -25,13 +25,15 @@ function mainController($scope, $http, $location) {
     /**
      * before form submit
      */
-    $scope.submit = function () {
+    $scope.submit = function (e) {
         /*$("#setup-new-room").attr("action", "/room/" + $scope.roomName);*/
+        e.preventDefault();
         $http.post("/action/newConference", {
             conf_name: $scope.roomName
         }).success(function (data) {
             console.log(data, "done");
         });
+        return false;
     };
 
 

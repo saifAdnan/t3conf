@@ -12,7 +12,7 @@
                         <form action="#"
                               id="setup-new-room"
                               role="form"
-                              ng-submit="submit()"
+                              ng-submit="submit($event)"
                               method="POST"
                               autocomplete='off'>
                             <div class="form-group {%(isExist ? 'has-error' : '')%}">
