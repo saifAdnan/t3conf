@@ -20,7 +20,10 @@ module.exports = function (app, rooms, ami) {
                     yield: 'home.html'
                 },
                 title: "Home",
-                username: req.user.username
+                username: req.user.username,
+                password: req.user.password,
+                firstname: req.user.firstname,
+                lastname: req.user.lastname
             });
         } else {
             if (req.user) {

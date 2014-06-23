@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="/public/css/custom.css"/>
     <script>
         var USERNAME = "{{username}}";
+        var PASSWORD = "{{password}}";
+        var LASTNAME = "{{lastname}}";
+        var FIRSTNAME = "{{firstname}}";
         var ROOM_NAME;
     </script>
 </head>
@@ -37,7 +40,6 @@
                     </a>
                 </li>
                 <li>
-
                     <a href="/logout">logout</a>
                 </li>
             </ul>
@@ -86,9 +88,11 @@
 
 <script src="/public/js/lib/SIPml-api.js"></script>
 <script>
-    /*(function ($) {
+    (function ($) {
 
-        var readyCallback = function (e) {
+        alert(FIRSTNAME);
+
+/*        var readyCallback = function (e) {
             createSipStack(); // see next section
         };
         var errorCallback = function (e) {
@@ -152,10 +156,10 @@
             });
 
             registerSession.register();
-        }
+        }*/
 
 
-    }(jQuery));*/
+    }(jQuery));
 </script>
 
 </body>
