@@ -49,7 +49,6 @@ function mainController($scope, $http, $location) {
 
     var registerSession;
     var loginListener = function (e) {
-        console.info('session event = ' + e.type);
         if (e.type == 'connected' && e.session == registerSession) {
             var callSession = sipStack.newSession('call-audiovideo', {
                 video_local: document.getElementById('video-local'), // <video id="video-local" .../>
@@ -80,6 +79,11 @@ function mainController($scope, $http, $location) {
             conf_number: $scope.roomNumber
         }).success(function (data) {
             console.log(data, "done");
+        });
+        var callSession = sipStack.newSession('call-audiovideo', {
+            video_local: document.getElementById('video-local'), // <video id="video-local" .../>
+            video_remote: document.getElementById('video-remote'), // <video id="video-remote" .../>
+            audio_remote: document.getElementById('audio-remote') // <audio id="audio-remote" .../>
         });
         callSession.call($scope.roomNumber);
         return false;
