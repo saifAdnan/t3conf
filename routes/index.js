@@ -291,6 +291,7 @@ module.exports = function (app, rooms, ami) {
                         var users = fs.createWriteStream("asterisk/users.conf");
                         var extensions = fs.createWriteStream("asterisk/extensions.conf");
                         extensions.write("[someuser]\n");
+                        extensions.write("#include /var/www/t3conf/asterisk/conferences.conf");
 
                         for (var i = 0; i < doc.length; i = i + 1) {
                             users.write("[" + doc[i].username + "]\n");
@@ -311,6 +312,7 @@ module.exports = function (app, rooms, ami) {
 
 
                             extensions.write("exten => "+doc[i].sip+",1,Dial(SIP/"+doc[i].username+")\n");
+
 
                             if (i + 1 === doc.length) {
                                 users.end();
