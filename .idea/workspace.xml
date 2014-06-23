@@ -59,7 +59,7 @@
         <entry file="file://$PROJECT_DIR$/routes/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.14794216" vertical-offset="6020" max-vertical-offset="8820">
-              <caret line="293" column="34" selection-start-line="293" selection-start-column="34" selection-end-line="293" selection-end-column="34" />
+              <caret line="293" column="96" selection-start-line="293" selection-start-column="96" selection-end-line="293" selection-end-column="96" />
               <folding />
             </state>
           </provider>
@@ -929,7 +929,7 @@
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.14794216" vertical-offset="6020" max-vertical-offset="8820">
-          <caret line="293" column="34" selection-start-line="293" selection-start-column="34" selection-end-line="293" selection-end-column="34" />
+          <caret line="293" column="96" selection-start-line="293" selection-start-column="96" selection-end-line="293" selection-end-column="96" />
           <folding />
         </state>
       </provider>
