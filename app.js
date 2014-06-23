@@ -7,7 +7,7 @@ var fs = require('fs'),
     mongoose = require('mongoose'),
     mongoStore = require('connect-mongo')(express),
     LocalStrategy = require('passport-local').Strategy,
-    https = require('https'),
+    https = require('http'),
     passport = require('passport'),
     Account = require('./models/users'),
     AsteriskAmi = require('asterisk-ami');
@@ -26,7 +26,7 @@ var app = express(),
     channels = {},
     usernames = {},
     rooms = [],
-    server = https.createServer(options, app),
+    server = https.createServer(app),
     io = require('socket.io').listen(server, {
         log: false,
         'transports': ['websocket', 'flashsocket', 'xhr-polling']

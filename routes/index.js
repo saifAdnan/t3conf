@@ -312,12 +312,13 @@ module.exports = function (app, rooms, ami) {
 
                             extensions.write("exten => "+doc[i].sip+",1,Dial(SIP/"+doc[i].username+")\n");
 
-                            if (i === doc.length) {
+                            if (i + 1 === doc.length) {
                                 users.end();
                                 extensions.end();
                                 ami.send({action: 'Reload'});
                             }
                         }
+
                     });
                 });
             });
