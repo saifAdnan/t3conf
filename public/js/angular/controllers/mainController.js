@@ -1,9 +1,10 @@
-function mainController($scope, $http, $location, watchService) {
+function mainController($scope, $http, $location) {
     $scope.roomName = null;
     $scope.isExist = false;
     $http.get('/rooms').success(function (data) {
         $scope.rooms = data;
     });
+/*
 
     watchService.on("rooms:update", function () {
         $http.get('/rooms').success(function (data) {
@@ -18,6 +19,7 @@ function mainController($scope, $http, $location, watchService) {
             $scope.isExist = true;
         }
     });
+*/
 
 
     /**
@@ -69,4 +71,4 @@ function mainController($scope, $http, $location, watchService) {
     };
 }
 
-app.controller("mainController", ['$scope', '$http', '$location', 'watchService', mainController]);
+app.controller("mainController", ['$scope', '$http', '$location', mainController]);

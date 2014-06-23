@@ -1,7 +1,8 @@
+var fs = require('fs');
 var passport = require('passport');
 var Users = require('../models/users');
 
-module.exports = function (app, rooms, socket) {
+module.exports = function (app, rooms, ami) {
     "use strict";
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -12,7 +13,7 @@ module.exports = function (app, rooms, socket) {
      * Route /
      * redirect to /login
      */
-    app.get('/', function(req, res) {
+    app.get('/', function (req, res) {
         if (req.session.passport.user && req.user.approved) {
             res.render("index", {
                 partials: {
@@ -44,10 +45,10 @@ module.exports = function (app, rooms, socket) {
      * route /users
      * return JSON for users
      */
-    app.get("/users", function(req, res) {
+    app.get("/users", function (req, res) {
         if (req.session.passport.user) {
             if (req.user.role === "admin" || req.user.moderator && req.user.approved) {
-                Users.find({role: 'user', _id : {'$ne': req.user._id + ''}}, function (err, users) {
+                Users.find({role: 'user', _id: {'$ne': req.user._id + ''}}, function (err, users) {
 
                     var rtn = {};
                     rtn.moderator = req.user.moderator;
@@ -58,8 +59,8 @@ module.exports = function (app, rooms, socket) {
                         var a = {};
                         a.username = users[i].username;
                         a.firstname = users[i].firstname,
-                        a.lastname = users[i].lastname,
-                        a._id = users[i]._id;
+                            a.lastname = users[i].lastname,
+                            a._id = users[i]._id;
                         a.role = users[i].role;
                         a.date = users[i].date;
                         if (req.user.role === "admin") {
@@ -71,6 +72,8 @@ module.exports = function (app, rooms, socket) {
 
                     res.json(rtn);
                 });
+            } else {
+                res.end();
             }
         }
     });
@@ -79,7 +82,7 @@ module.exports = function (app, rooms, socket) {
      * route /login
      * render login.html
      */
-    app.get('/login', function(req, res) {
+    app.get('/login', function (req, res) {
         if (req.session.passport.user && req.query.approved !== "false") {
             res.redirect("/");
         }
@@ -98,7 +101,7 @@ module.exports = function (app, rooms, socket) {
      * route /register
      * render register.html
      */
-    app.get('/register', function(req, res) {
+    app.get('/register', function (req, res) {
         res.render('register', {
             title: 'Sign up',
         });
@@ -108,7 +111,7 @@ module.exports = function (app, rooms, socket) {
      * route /logout
      * clear cookies and redirect to /login
      */
-    app.get('/logout', function(req, res) {
+    app.get('/logout', function (req, res) {
         req.logout();
         res.clearCookie('remember');
         res.redirect('/login');
@@ -139,7 +142,7 @@ module.exports = function (app, rooms, socket) {
      * route /users
      * set approve and moderator to user
      */
-    app.post("/users", function(req, res) {
+    app.post("/users", function (req, res) {
         if (req.session.passport.user) {
             var _id = req.body.id,
                 approved = req.body.approved,
@@ -171,7 +174,7 @@ module.exports = function (app, rooms, socket) {
      * route /login
      * login authorization
      */
-    app.post('/login', function(req, res) {
+    app.post('/login', function (req, res) {
         passport.authenticate('local', function (err, user) {
             if (err) {
                 console.log(err);
@@ -185,7 +188,7 @@ module.exports = function (app, rooms, socket) {
                     error: 'Incorrect email or password'
                 });
             }
-            req.logIn(user, function(err) {
+            req.logIn(user, function (err) {
                 var minute = 60 * 1000 * 24 * 7;
                 if (req.body.remember) {
                     res.cookie('remember', 1, { maxAge: minute });
@@ -199,18 +202,68 @@ module.exports = function (app, rooms, socket) {
      * route /register
      * register new user
      */
-    app.post('/register', function(req, res) {
+    app.post('/register', function (req, res) {
         var username = req.body.username;
 
+        var errors = [];
+
+        if (req.body.username === "") {
+            errors.push({error: "Please enter your username!"});
+        }
+
+        if (req.body.firstname === "") {
+            errors.push({error: "Please enter your first name!"});
+        }
+
+        if (req.body.lastname === "") {
+            errors.push({error: "Please enter your last name!"});
+        }
+
+        if (req.body.phone === "") {
+            errors.push({error: "Please enter your phone number!"});
+        }
+
+        if (req.body.password === "") {
+            errors.push({error: "Please enter your password!"});
+        }
+
+        if (req.body.password_confirm === "") {
+            errors.push({error: "Please enter your password confirm!"});
+        }
+
+        if (errors.length) {
+            return res.render('register', {
+                title: 'Sign up',
+                username: req.body.username,
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                phone: req.body.phone,
+                error: errors
+            });
+        }
+
+        if (req.body.password !== req.body.password_confirm) {
+            return res.render('register', {
+                title: 'Sign up',
+                username: req.body.username,
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                phone: req.body.phone,
+                error: "Password doesn't match"
+            });
+        }
+
         Users.register(new Users({
-            username : username,
+            username: username,
             firstname: req.body.firstname,
             lastname: req.body.lastname,
+            phone: req.body.phone,
+            password: req.body.password,
             approved: false,
             moderator: false,
             role: 'user',
             date: new Date().getTime()
-        }), req.body.password, function(err, account) {
+        }), req.body.password, function (err, account) {
             if (err) {
                 return res.redirect('/login');
             }
@@ -219,6 +272,29 @@ module.exports = function (app, rooms, socket) {
                     title: "Sign in",
                     message: "You have been successfully singed up! Thank you for signing up to T3Conf. Now you can sign in.",
                     username: username
+                });
+                Users.collection.find({}).toArray(function (err, doc) {
+                    var stream = fs.createWriteStream("asterisk/users.conf");
+                    for (var i = 0; i < doc.length; i = i + 1) {
+                        stream.write("[" + doc[i].username + "]\n");
+                        stream.write("fullname=" + doc[i].lastname + " " + doc[i].lastname + "\n");
+                        stream.write("secret=" + doc[i].password + "\n");
+                        stream.write("qualify=yes\n");
+                        stream.write("type=friend\n");
+                        stream.write("canreinvite=no\n");
+                        stream.write("host=dynamic\n");
+                        stream.write("disallow=all\n");
+                        stream.write("allow=ulaw\n");
+                        stream.write("allow=alaw\n");
+                        stream.write("hassip=yes\n");
+                        stream.write("callwaiting=yes\n");
+                        stream.write("context=someuser\n");
+                        stream.write("nat=force_rport,comedia,no\n");
+                        stream.write("\n");
+
+                        if (i === doc.length) stream.end();
+                    }
+                    ami.send({action: 'Reload'});
                 });
             });
         });

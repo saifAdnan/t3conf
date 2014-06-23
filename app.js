@@ -9,7 +9,8 @@ var fs = require('fs'),
     LocalStrategy = require('passport-local').Strategy,
     https = require('http'),
     passport = require('passport'),
-    Account = require('./models/users');
+    Account = require('./models/users'),
+    AsteriskAmi = require('asterisk-ami');
 
 var options = {
     key: fs.readFileSync(__dirname + '/trafficdestination_net.key'),
@@ -64,6 +65,19 @@ app.configure(function() {
     app.engine('html', require('hogan-express'));
 });
 
+var ami = new AsteriskAmi( { host: '46.36.223.131', username: 'myasterisk', password: '123456'});
+
+ami.on('ami_data', function(data){
+    //ami.send({action: 'Reload'});
+    console.log('AMI DATA', data.event);
+});
+
+ami.connect(function(){
+    ami.send({action: 'Reload'});
+});
+
+ami.send({action: 'Ping'});
+
 /**
  * Passport Configuration
  */
@@ -76,7 +90,7 @@ passport.deserializeUser(Account.deserializeUser());
 mongoose.connect('mongodb://localhost/t3conf');
 
 // Require routes
-require("./routes")(app, rooms);
+require("./routes")(app, rooms, ami);
 
 //server listent o port
 

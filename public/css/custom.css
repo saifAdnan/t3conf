@@ -175,3 +175,7 @@ label {
 .b-video .btn-true {
     background: #5CB85C!important;
 }
+
+#signupform .text-danger {
+    padding: 10px;
+}

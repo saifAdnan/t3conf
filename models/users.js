@@ -7,6 +7,7 @@ var Users = new Schema({
     firstname: String,
     lastname: String,
     password: String,
+    phonoe: String,
     approved: Boolean,
     moderator: Boolean,
     role: String,
