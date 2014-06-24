@@ -2,7 +2,8 @@ function mainController($scope, $http, $location) {
     $scope.roomName = null;
     $scope.roomNumber = null;
     $scope.isExist = false;
-  /*  var readyCallback = function (e) {
+
+    var readyCallback = function (e) {
         createSipStack(); // see next section
     };
     var errorCallback = function (e) {
@@ -34,7 +35,7 @@ function mainController($scope, $http, $location) {
             impu: 'sip:'+USERNAME+'@46.36.223.131', // mandatory: valid SIP Uri (IMS Public Identity)
             password: PASSWORD, // optional
             display_name: FIRSTNAME + ' ' + LASTNAME, // optional
-            //websocket_proxy_url: 'ws://ns313841.ovh.net:10062', // optional
+            websocket_proxy_url: 'wss://ns313841.ovh.net:10062', // optional
             //                outbound_proxy_url: 'udp://198.27.90.199:5060', // optional
             enable_rtcweb_breaker: true, // optional
             events_listener: { events: '*', listener: eventsListener}, // optional: '*' means all events
@@ -55,7 +56,6 @@ function mainController($scope, $http, $location) {
                 video_remote: document.getElementById('video-remote'), // <video id="video-remote" .../>
                 audio_remote: document.getElementById('audio-remote') // <audio id="audio-remote" .../>
             });
-            callSession.call("3344");
         }
     };
     var login = function () {
@@ -64,7 +64,7 @@ function mainController($scope, $http, $location) {
         });
 
         registerSession.register();
-    };*/
+    };
 
     $http.get('/rooms').success(function (data) {
         $scope.rooms = data;

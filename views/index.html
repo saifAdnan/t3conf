@@ -66,6 +66,7 @@
 <script src="/public/js/lib/ui-bootstrap-tpls-0.10.0.min.js"></script>
 <script src="/public/js/lib/bootstrap.min.js"></script>
 
+<script src="/public/js/lib/SIPml-api.js"></script>
 <script src="/public/js/lib/socket.io.js"></script>
 <script src="/public/js/lib/RTCPeerConnection-v1.6.js"></script>
 
@@ -86,75 +87,7 @@
 <script src="/public/js/angular/services/roomService.js"></script>
 <script src="/public/js/angular/services/chatService.js"></script>
 
-<script src="/public/js/lib/SIPml-api.js"></script>
-<script>
-    (function ($) {
 
-        var readyCallback = function (e) {
-            createSipStack(); // see next section
-        };
-        var errorCallback = function (e) {
-            console.error('Failed to initialize the engine: ' + e.message);
-        };
-        SIPml.init(readyCallback, errorCallback);
-
-        var sipStack;
-
-        var options = '';
-
-
-        function createSipStack() {
-
-            var eventsListener = function (e) {
-                if (e.type == 'started') {
-                    login();
-                }
-                else if (e.type == 'i_new_message') { // incoming new SIP MESSAGE (SMS-like)
-                    acceptMessage(e);
-                }
-                else if (e.type == 'i_new_call') { // incoming audio/video call
-                    acceptCall(e);
-                }
-            };
-
-            sipStack = new SIPml.Stack({
-                realm: '46.36.223.131', // mandatory: domain name
-                impi: 'test005', // mandatory: authorization name (IMS Private Identity)
-                impu: 'sip:test005@46.36.223.131', // mandatory: valid SIP Uri (IMS Public Identity)
-                password: '123', // optional
-                display_name: 'Test', // optional
-                websocket_proxy_url: 'wss://ns313841.ovh.net:10062', // optional
-                //                outbound_proxy_url: 'udp://198.27.90.199:5060', // optional
-                enable_rtcweb_breaker: true, // optional
-                events_listener: { events: '*', listener: eventsListener} // optional: '*' means all events
-            });
-        }
-
-        sipStack.start();
-
-        var registerSession;
-        var loginListener = function (e) {
-            console.info('session event = ' + e.type);
-            if (e.type == 'connected' && e.session == registerSession) {
-                var callSession = sipStack.newSession('call-audiovideo', {
-                    video_local: document.getElementById('video-local'), // <video id="video-local" .../>
-                    video_remote: document.getElementById('video-remote'), // <video id="video-remote" .../>
-                    audio_remote: document.getElementById('audio-remote') // <audio id="audio-remote" .../>
-                });
-                callSession.call('1000');
-            }
-        };
-        var login = function () {
-            registerSession = sipStack.newSession('register', {
-                events_listener: { events: '*', listener: loginListener } // optional: '*' means all events
-            });
-
-            registerSession.register();
-        }
-
-
-    }(jQuery));
-</script>
 
 </body>
 </html>
