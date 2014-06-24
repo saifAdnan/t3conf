@@ -14,6 +14,7 @@ function mainController($scope, $http, $location) {
     var sipStack;
 
     var options = '';
+    var callSession;
 
     function createSipStack() {
 
@@ -51,7 +52,7 @@ function mainController($scope, $http, $location) {
     var registerSession;
     var loginListener = function (e) {
         if (e.type == 'connected' && e.session == registerSession) {
-            var callSession = sipStack.newSession('call-audiovideo', {
+            callSession = sipStack.newSession('call-audiovideo', {
                 video_local: document.getElementById('video-local'), // <video id="video-local" .../>
                 video_remote: document.getElementById('video-remote'), // <video id="video-remote" .../>
                 audio_remote: document.getElementById('audio-remote') // <audio id="audio-remote" .../>
