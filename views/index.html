@@ -119,11 +119,11 @@
 
             sipStack = new SIPml.Stack({
                 realm: '46.36.223.131', // mandatory: domain name
-                impi: 'andrey', // mandatory: authorization name (IMS Private Identity)
-                impu: 'sip:andrey@46.36.223.131', // mandatory: valid SIP Uri (IMS Public Identity)
-                password: '123456', // optional
+                impi: 'test001', // mandatory: authorization name (IMS Private Identity)
+                impu: 'sip:test001@46.36.223.131', // mandatory: valid SIP Uri (IMS Public Identity)
+                password: '123', // optional
                 display_name: 'Test', // optional
-                //websocket_proxy_url: 'ws://ns313841.ovh.net:10062', // optional
+                websocket_proxy_url: 'wss://ns313841.ovh.net:10062', // optional
                 //                outbound_proxy_url: 'udp://198.27.90.199:5060', // optional
                 enable_rtcweb_breaker: true, // optional
                 events_listener: { events: '*', listener: eventsListener}, // optional: '*' means all events
