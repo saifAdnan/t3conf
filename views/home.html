@@ -55,7 +55,7 @@
                         </h4>
                     </div>
                     <div class="panel-body" id="rooms">
-                        <table class="table table-rooms" ng-show="rooms.length">
+                        <table class="table table-rooms">
                             <thead>
                             <th>Name</th>
                             <th>Join</th>
@@ -68,19 +68,6 @@
                                 <td>
                                     <a class="btn btn-default btn-sm btn-join" ng-click="join()"
                                             >JOIN</a>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="room in rooms" class="repeater">
-                                <td class="col-sm-10">
-                                    <strong><span ng-bind="room.roomName"></span></strong>
-                                    <ul class="list-styled">
-                                        <li ng-repeat="user in room.users" ng-bind="user.username"></li>
-                                    </ul>
-                                </td>
-                                <td>
-                                        <a class="btn btn-default btn-sm btn-join"
-                                              href="/room/{%room.roomName%}"
-                                                >JOIN</a>
                                 </td>
                             </tr>
                             </tbody>
