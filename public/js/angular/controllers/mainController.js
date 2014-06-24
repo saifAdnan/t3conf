@@ -1,8 +1,12 @@
-function mainController($scope, $http, $location) {
+function mainController($scope, $http, $location, watchService) {
     $scope.roomName = null;
     $scope.roomNumber = null;
     $scope.isExist = false;
 
+
+    $http.get("/action/confs").success(function (data) {
+        console.log(data);
+    });
 
     /**
      * Room name - replace %20 to whitespace
@@ -15,18 +19,22 @@ function mainController($scope, $http, $location) {
         }
     };
 
+    watchService.on("user:join", function(data) {
+        console.log(data);
+    });
+
     /**
      * Join conference
      * @param e
      * @returns {Function}
      */
     /*$scope.join = function (e) {
-        var el = $(e.target);
-        $location.url(el.attr('data-href'));
-        return false;
-    };*/
+     var el = $(e.target);
+     $location.url(el.attr('data-href'));
+     return false;
+     };*/
 
-    $scope.removeUser = function(id) {
+    $scope.removeUser = function (id) {
 
         if (confirm("Are you sure to delete this user ?")) {
             $http.post("/action/removeUser", {
@@ -46,4 +54,4 @@ function mainController($scope, $http, $location) {
 
 }
 
-app.controller("mainController", ['$scope', '$http', '$location', mainController]);
+app.controller("mainController", ['$scope', '$http', '$location', 'watchService', mainController]);

@@ -7,7 +7,7 @@ var fs = require('fs'),
     mongoose = require('mongoose'),
     mongoStore = require('connect-mongo')(express),
     LocalStrategy = require('passport-local').Strategy,
-    https = require('https'),
+    https = require('http'),
     passport = require('passport'),
     Account = require('./models/users'),
     AsteriskAmi = require('asterisk-ami');
@@ -23,10 +23,10 @@ var options = {
  * Set variables
  */
 var app = express(),
+    conferences = {},
     channels = {},
-    usernames = {},
     rooms = [],
-    server = https.createServer(options, app),
+    server = https.createServer(app),
     io = require('socket.io').listen(server, {
         log: false,
         'transports': ['websocket', 'flashsocket', 'xhr-polling']
@@ -45,7 +45,7 @@ io.set('origins', '*:*');
 /**
  * Express configuration
  */
-app.configure(function() {
+app.configure(function () {
     app.set('port', 2156);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'html');
@@ -65,19 +65,6 @@ app.configure(function() {
     app.engine('html', require('hogan-express'));
 });
 
-var ami = new AsteriskAmi( { host: '46.36.223.131', username: 'myasterisk', password: '123456'});
-
-ami.on('ami_data', function(data){
-    //ami.send({action: 'Reload'});
-    console.log('AMI DATA', data.event);
-});
-
-ami.connect(function(){
-    ami.send({action: 'Reload'});
-});
-
-ami.send({action: 'Ping'});
-
 /**
  * Passport Configuration
  */
@@ -90,45 +77,107 @@ passport.deserializeUser(Account.deserializeUser());
 mongoose.connect('mongodb://localhost/t3conf');
 
 // Require routes
-require("./routes")(app, rooms, ami);
+require("./routes")(app, rooms, ami, conferences);
 
 //server listent o port
 
 server.listen(app.get("port")); //1855
 
+var ami = new AsteriskAmi({ host: '46.36.223.131', username: 'myasterisk', password: '123456'});
+
+
+
 //Socket.io
-io.sockets.on('connection', function(socket) {
+io.sockets.on('connection', function (socket) {
 
-    require("./routes/conference.js")(socket, rooms, app);
+    //require("./routes/conference.js")(socket, rooms, app);
 
-    var initiatorChannel = '';
-    if (!io.isConnected) {
-        io.isConnected = true;
-    }
+    ami.on('ami_data', function (data) {
+        console.log(conferences);
 
-    socket.on('new-channel', function(data) {
-        if (!channels[data.channel]) {
-            initiatorChannel = data.channel;
+        if (data.event === "ConfbridgeJoin") {
+
+            /*
+             { event: 'ConfbridgeJoin',
+             privilege: 'call,all',
+             channel: 'SIP/saif-000000cf',
+             uniqueid: '1403612248.303',
+             conference: 'saif',
+             calleridnum: '999',
+             calleridname: 'Sergey' }
+             */
+            var con = {
+                User: data.calleridname,
+                UserSip: data.calleridnum,
+                unId: data.uniqueid
+            };
+
+            if (!conferences[data.conference]) conferences[data.conference] = [];
+            conferences[data.conference].push(con);
+            socket.broadcast.emit("user:join", {confs: conferences});
+
+            console.log('\n\nJOIN', JSON.stringify(conferences));
+        } else if (data.event === 'ConfbridgeLeave') {
+            /*
+             { event: 'ConfbridgeLeave',
+             privilege: 'call,all',
+             channel: 'SIP/test001-000000e2',
+             uniqueid: '1403613127.332',
+             conference: 'saif',
+             calleridnum: 'test001',
+             calleridname: 'saif adnan' }
+             */
+            if (conferences[data.conference] && conferences[data.conference].length) {
+                for (var i = 0; i < conferences[data.conference].length; i++) {
+                    if (conferences[data.conference][i].UserSip === data.calleridnum) {
+                        console.log('\n\nLEFT', JSON.stringify(conferences));
+                        if (conferences[data.conference].length === 1) {
+                            delete conferences[data.conference];
+                            break;
+                        } else {
+                            conferences[data.conference].splice(i, 1);
+                        }
+                    }
+                }
+            }
+        } else if (data.event === 'ConfbridgeListRooms') {
+            /*
+             { event: 'ConfbridgeListRooms',
+             actionid: '32054852577857670',
+             conference: 'confc',
+             parties: '1',
+             marked: '0',
+             locked: 'No' }
+             */
+            ami.send({Action: 'ConfbridgeList', ActionID: data.actionid, conference: data.conference});
+            conferences[data.conference] = [];
+        } else if (data.event === 'ConfbridgeList') {
+            /*
+             { event: 'ConfbridgeList',
+             actionid: '52277654083445670',
+             conference: 'confc',
+             calleridnum: '999',
+             calleridname: 'Sergey',
+             channel: 'SIP/saif-00000104',
+             admin: 'No',
+             markeduser: 'No',
+             muted: 'No' }
+             */
+
+            conferences[data.conference]
         }
-        channels[data.channel] = data.channel;
-        onNewNamespace(data.channel, data.sender);
+
     });
 
-    socket.on('presence', function(channel) {
-        var isChannelPresent = !! channels[channel];
-        socket.emit('presence', isChannelPresent);
-    });
-
-    socket.on('disconnect', function(channel) {
-        /*if (initiatorChannel) {
-         delete channels[initiatorChannel];
-         }
-         socket.emit('leave', true);*/
+    ami.connect(function () {
+        ami.send({
+            action: ' ConfbridgeListRooms'
+        });
     });
 });
 
 function onNewNamespace(channel, sender) {
-    io.of('/' + channel).on('connection', function(socket) {
+    io.of('/' + channel).on('connection', function (socket) {
 
         if (io.isConnected) {
             require('./routes/chat.js')(socket, io, channel, rooms);
@@ -136,7 +185,7 @@ function onNewNamespace(channel, sender) {
             socket.emit('connect', true);
         }
 
-        socket.on('message', function(data) {
+        socket.on('message', function (data) {
             if (data.sender == sender)
                 socket.broadcast.emit('message', data.data);
         });
@@ -144,6 +193,6 @@ function onNewNamespace(channel, sender) {
     });
 }
 
-app.listen(app.get('port') + 1, function() { //1857
+app.listen(app.get('port') + 1, function () { //1857
     console.log(("Express server listening on port " + app.get('port')))
 });

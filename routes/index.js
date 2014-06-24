@@ -2,7 +2,7 @@ var fs = require('fs');
 var passport = require('passport');
 var Users = require('../models/users');
 
-module.exports = function (app, rooms, ami) {
+module.exports = function (app, rooms, ami, confs) {
     "use strict";
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -345,6 +345,10 @@ module.exports = function (app, rooms, ami) {
             ami.send({action: 'Reload'});
         }, 1000);
         res.end();
+    });
+
+    app.get('/action/confs', function (req, res) {
+        res.json(confs);
     });
 
     /**
