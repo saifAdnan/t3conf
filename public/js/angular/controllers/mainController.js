@@ -70,6 +70,10 @@ function mainController($scope, $http, $location) {
         $scope.rooms = data;
     });
 
+    $scope.join = function () {
+        callSession.call("333");
+    };
+
     /**
      * before form submit
      */
