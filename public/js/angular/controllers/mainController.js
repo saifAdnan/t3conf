@@ -114,11 +114,11 @@ function mainController($scope, $http, $location) {
      * @param e
      * @returns {Function}
      */
-    $scope.join = function (e) {
+    /*$scope.join = function (e) {
         var el = $(e.target);
         $location.url(el.attr('data-href'));
         return false;
-    };
+    };*/
 
     $scope.removeUser = function(id) {
 
