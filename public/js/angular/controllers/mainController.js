@@ -2,7 +2,7 @@ function mainController($scope, $http, $location) {
     $scope.roomName = null;
     $scope.roomNumber = null;
     $scope.isExist = false;
-    var readyCallback = function (e) {
+  /*  var readyCallback = function (e) {
         createSipStack(); // see next section
     };
     var errorCallback = function (e) {
@@ -64,7 +64,8 @@ function mainController($scope, $http, $location) {
         });
 
         registerSession.register();
-    }
+    };*/
+
     $http.get('/rooms').success(function (data) {
         $scope.rooms = data;
     });
