@@ -46,7 +46,7 @@ io.set('origins', '*:*');
  * Express configuration
  */
 app.configure(function() {
-    app.set('port', 1088);
+    app.set('port', 2156);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'html');
     app.use(express.static(__dirname));
