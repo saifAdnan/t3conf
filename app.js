@@ -46,6 +46,7 @@ var app = express(),
     server = https.createServer(options, app),
     io = require('socket.io').listen(server, {
         log: false,
+        secure: true,
         'transports': ['websocket', 'flashsocket', 'xhr-polling']
     }),
     session_conf = {
