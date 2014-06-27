@@ -1,4 +1,4 @@
-var SIGNALING_SERVER = "http://localhost:2156/";
+var SIGNALING_SERVER = "http://46.36.223.131:2156/";
 
 var app = angular.module('t3confApp', ['ui.bootstrap', 'ngAnimate', 'ngRoute'], ['$interpolateProvider',
     function($interpolateProvider) {
