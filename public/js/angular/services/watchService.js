@@ -1,5 +1,5 @@
 app.factory('watchService', ['$rootScope', function ($rootScope) {
-    var socket = io.connect(SIGNALING_SERVER);
+    var socket = io.connect(SIGNALING_SERVER, {secure: true});
     var ROOM_NAME = 'confc';
 
     return {
