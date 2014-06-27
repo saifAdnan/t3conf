@@ -23,7 +23,7 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams) {
         username: USERNAME
     });
 
-    watchService.chatOn('send:message', function (message) {
+    watchService.chatOn('send:message', roomName, function (message) {
         console.warn(message);
         var mention;
         mention = message.private;
@@ -104,7 +104,7 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams) {
             private: $scope.private,
             from: USERNAME,
             to: $scope.to
-        });
+        }, roomName);
 
         var messages = {
             from: USERNAME,
