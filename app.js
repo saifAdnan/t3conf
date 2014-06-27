@@ -7,9 +7,10 @@ var fs = require('fs'),
     mongoose = require('mongoose'),
     mongoStore = require('connect-mongo')(express),
     LocalStrategy = require('passport-local').Strategy,
-    https = require('http'),
+    https = require('https'),
     passport = require('passport'),
     Account = require('./models/users'),
+    Conferences = require('./models/conferences.js'),
     AsteriskAmi = require('asterisk-ami');
 
 var options = {
@@ -19,14 +20,30 @@ var options = {
     requestCert: true,
     rejectUnauthorized: false
 };
+
+var files_arr = [];
+
+
+fs.readdir(__dirname + '/asterisk/monitor', function (err, files) { // '/' denotes the root folder
+    if (err) throw err;
+
+    files.forEach( function (file) {
+        files_arr.push(file);
+    });
+
+});
+
+
 /**
  * Set variables
  */
 var app = express(),
     conferences = {},
+    web_users = {},
+    web_users_for_names= {},
     channels = {},
     rooms = [],
-    server = https.createServer(app),
+    server = https.createServer(options, app),
     io = require('socket.io').listen(server, {
         log: false,
         'transports': ['websocket', 'flashsocket', 'xhr-polling']
@@ -77,119 +94,139 @@ passport.deserializeUser(Account.deserializeUser());
 mongoose.connect('mongodb://localhost/t3conf');
 
 // Require routes
-require("./routes")(app, rooms, ami, conferences);
 
 //server listent o port
 
 server.listen(app.get("port")); //1855
 
 var ami = new AsteriskAmi({ host: '46.36.223.131', username: 'myasterisk', password: '123456'});
+ami.on('ami_data', function (data) {
 
+    if (data.event === "ConfbridgeJoin") {
+        console.log(data);
+        /*
+         { event: 'ConfbridgeJoin',
+         privilege: 'call,all',
+         channel: 'SIP/saif-000000cf',
+         uniqueid: '1403612248.303',
+         conference: 'saif',
+         calleridnum: '999',
+         calleridname: 'Sergey' }
+         */
 
+        Account.collection.find({username: data.calleridnum}).toArray(function (err, doc) {
+            if (doc.length) {
+                var user = {
+                    username: data.calleridnum,
+                    sip: doc[0].sip
+                };
+                if (!conferences[data.conference]) conferences[data.conference] = {};
+                if (!conferences[data.conference].users) conferences[data.conference].users = [];
 
-//Socket.io
-io.sockets.on('connection', function (socket) {
-
-    //require("./routes/conference.js")(socket, rooms, app);
-
-    ami.on('ami_data', function (data) {
-        console.log(conferences);
-
-        if (data.event === "ConfbridgeJoin") {
-
-            /*
-             { event: 'ConfbridgeJoin',
-             privilege: 'call,all',
-             channel: 'SIP/saif-000000cf',
-             uniqueid: '1403612248.303',
-             conference: 'saif',
-             calleridnum: '999',
-             calleridname: 'Sergey' }
-             */
-            var con = {
-                User: data.calleridname,
-                UserSip: data.calleridnum,
-                unId: data.uniqueid
-            };
-
-            if (!conferences[data.conference]) conferences[data.conference] = [];
-            conferences[data.conference].push(con);
-            socket.broadcast.emit("user:join", {confs: conferences});
-
-            console.log('\n\nJOIN', JSON.stringify(conferences));
-        } else if (data.event === 'ConfbridgeLeave') {
-            /*
-             { event: 'ConfbridgeLeave',
-             privilege: 'call,all',
-             channel: 'SIP/test001-000000e2',
-             uniqueid: '1403613127.332',
-             conference: 'saif',
-             calleridnum: 'test001',
-             calleridname: 'saif adnan' }
-             */
-            if (conferences[data.conference] && conferences[data.conference].length) {
-                for (var i = 0; i < conferences[data.conference].length; i++) {
-                    if (conferences[data.conference][i].UserSip === data.calleridnum) {
-                        console.log('\n\nLEFT', JSON.stringify(conferences));
-                        if (conferences[data.conference].length === 1) {
-                            delete conferences[data.conference];
-                            break;
-                        } else {
-                            conferences[data.conference].splice(i, 1);
-                        }
+                Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
+                   if (doc.length > 0) {
+                       conferences[doc[0].name].name = doc[0].name;
+                       conferences[doc[0].name].sip = doc[0].sip;
+                   }
+                    conferences[data.conference].users.push(user);
+                    io.sockets.emit('user:join', conferences);
+                    console.log('\n\nJOIN', conferences);
+                });
+            }
+        });
+    } else if (data.event === 'ConfbridgeLeave') {
+        /*
+         { event: 'ConfbridgeLeave',
+         privilege: 'call,all',
+         channel: 'SIP/test001-000000e2',
+         uniqueid: '1403613127.332',
+         conference: 'saif',
+         calleridnum: 'test001',
+         calleridname: 'saif adnan' }
+         */
+        if (conferences[data.conference] && conferences[data.conference].users && conferences[data.conference].users.length) {
+            if (conferences[data.conference].users.length === 1) {
+                delete conferences[data.conference];
+                io.sockets.emit('user:join', conferences);
+                console.log('\n\nCONF DELETED', conferences);
+            } else {
+                for (var i = 0; i < conferences[data.conference].users.length; i++) {
+                    if (conferences[data.conference].users[i].username === data.calleridnum) {
+                        conferences[data.conference].users.splice(i, 1);
+                        io.sockets.emit('user:join', conferences);
+                        console.log('\n\nLEFT', conferences);
+                        break;
                     }
                 }
             }
-        } else if (data.event === 'ConfbridgeListRooms') {
-            /*
-             { event: 'ConfbridgeListRooms',
-             actionid: '32054852577857670',
-             conference: 'confc',
-             parties: '1',
-             marked: '0',
-             locked: 'No' }
-             */
-            ami.send({Action: 'ConfbridgeList', ActionID: data.actionid, conference: data.conference});
-            conferences[data.conference] = [];
-        } else if (data.event === 'ConfbridgeList') {
-            /*
-             { event: 'ConfbridgeList',
-             actionid: '52277654083445670',
-             conference: 'confc',
-             calleridnum: '999',
-             calleridname: 'Sergey',
-             channel: 'SIP/saif-00000104',
-             admin: 'No',
-             markeduser: 'No',
-             muted: 'No' }
-             */
 
-            conferences[data.conference]
         }
+    } else if (data.event === 'ConfbridgeListRooms') {
+        /*
+         { event: 'ConfbridgeListRooms',
+         actionid: '32054852577857670',
+         conference: 'confc',
+         parties: '1',
+         marked: '0',
+         locked: 'No' }
+         */
+        if (!conferences[data.conference]) conferences[data.conference] = {};
+        Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
+            if (doc.length > 0) {
+                conferences[doc[0].name].name = doc[0].name;
+                conferences[doc[0].name].sip = doc[0].sip;
+            }
+        });
+    }
+});
 
+ami.connect(function () {
+    ami.send({
+        action: ' ConfbridgeListRooms'
+    });
+});
+
+require("./routes")(app, rooms, ami, conferences, files_arr);
+
+//Socket.io
+io.sockets.on('connection', function(socket) {
+    require("./routes")(app, rooms, ami, conferences);
+
+    var initiatorChannel = '';
+    if (!io.isConnected) {
+        io.isConnected = true;
+    }
+
+    socket.on('new-channel', function(data) {
+        if (!channels[data.channel]) {
+            initiatorChannel = data.channel;
+        }
+        web_users[data.sender] = socket.id;
+        web_users_for_names[socket.id] = data.sender;
+        channels[data.channel] = data.channel;
+        onNewNamespace(data.channel, data.sender);
     });
 
-    ami.connect(function () {
-        ami.send({
-            action: ' ConfbridgeListRooms'
-        });
+    socket.on('presence', function(channel) {
+        var isChannelPresent = !! channels[channel];
+        socket.emit('presence', isChannelPresent);
+    });
+
+    socket.on('disconnect', function(channel) {
+        /*if (initiatorChannel) {
+         delete channels[initiatorChannel];
+         }
+         socket.emit('leave', true);*/
     });
 });
 
 function onNewNamespace(channel, sender) {
-    io.of('/' + channel).on('connection', function (socket) {
-
+    io.of('/' + channel).on('connection', function(socket) {
         if (io.isConnected) {
-            require('./routes/chat.js')(socket, io, channel, rooms);
+            require('./routes/chat.js')(socket, io, channel, conferences, web_users, web_users_for_names);
             io.isConnected = false;
             socket.emit('connect', true);
         }
-
-        socket.on('message', function (data) {
-            if (data.sender == sender)
-                socket.broadcast.emit('message', data.data);
-        });
-
     });
 }
 

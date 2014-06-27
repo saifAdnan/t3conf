@@ -1,9 +1,13 @@
 app.factory('watchService', ['$rootScope', function ($rootScope) {
-    var socket = io.connect(SIGNALING_SERVER);
+    var socket;
+    var ROOM_NAME = 'confc';
 
     return {
         socketId: function () {
           return socket.socket.sessionid;
+        },
+        connect: function () {
+            socket = io.connect(SIGNALING_SERVER);
         },
         on: function (eventName, callback) {
             socket.on(eventName, function () {
@@ -40,6 +44,10 @@ app.factory('watchService', ['$rootScope', function ($rootScope) {
                     callback.apply(socket, args);
                 });
             });
+        },
+        disconnect: function() {
+            if (socket)
+                socket.disconnect();
         }
     };
 }]);

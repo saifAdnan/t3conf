@@ -4,8 +4,10 @@ function adminController($scope, $http) {
     $scope.moderator = null;
 
     $http.get("/users").success(function(data) {
+        if (!data) return false;
         $scope.users = data.users;
         $scope.moderator = data.moderator;
+
         $scope.isAdmin = data.isAdmin;
 
         $.each($scope.users, function(index, user) {
@@ -41,6 +43,28 @@ function adminController($scope, $http) {
         }).error(function (err) {
             console.log(err || 'A problem has been occurred!');
         });
+    };
+
+    /**
+     * remove user
+     * @param id
+     * @param e
+     */
+    $scope.removeUser = function (id) {
+
+        if (confirm("Are you sure to delete this user ?")) {
+            $http.post("/action/removeUser", {
+                id: id
+            }).success(function () {
+                for (var i = 0; i < $scope.users.length; i = i + 1) {
+                    if ($scope.users[i]._id == id) {
+                        $scope.users.splice(i, 1);
+                    }
+                }
+            });
+        } else {
+            return false;
+        }
     };
 }
 

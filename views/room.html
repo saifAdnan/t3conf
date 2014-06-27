@@ -1,27 +1,32 @@
-<script>
-    var IS_POST = {{isPost}};
-    var ROOM_NAME = "{{roomName}}";
-    var ROOM_PASS = "{{roomPass}}";
-</script>
 <div class="clearfix"></div>
-<div class="modal" id="auth">
+<div class="modal" id="keypad">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Conference</h4>
+                <h4 class="modal-title">
+                    Conference
+                    <div class="btn btn-danger pull-right" ng-click="closeKeyPad()">
+                        Close
+                    </div>
+                </h4>
             </div>
-            <form  ng-submit="enter()">
-                <div class="modal-body">
-                    <form role="form" ng-submit="enter()">
-                        <div class="form-group {% (error ? 'has-error' : '') %}">
-                            <label class="control-label" for="conf_pass">Please enter conference's password...</label>
-                            <input class="form-control" type="password" id="conf_pass" ng-model="pass"/>
-                        </div>
-                    </form>
-                    <input type="submit" value="Enter" class="btn btn-primary btn-sm"/>
-                </div>
+            <div class="dialPad">
+                <ul class="list-unstyled">
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('1')">1</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('2')">2</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('3')">3</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('4')">4</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('5')">5</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('6')">6</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('7')">7</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('8')">8</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('9')">9</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('*')">*</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('0')">0</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('#')">#</li>
+                </ul>
+            </div>
 
-            </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
@@ -40,7 +45,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div ng-show="!secure" ng-controller="roomController">
+<div>
 
     <div class="row-fluid" ng-controller="chatController">
         <div class="col-sm-9">
@@ -49,7 +54,7 @@
                     <div class="messages">
                         <div class="messages-container" ng-show ="$parent.enableChat">
                             <p ng-repeat='message in messages' class="{%(message.local ? 'local': '')%}" ng-class='message.me'>
-                                <span ng-bind="message.user.username" ng-class=""></span>
+                                <span ng-bind="message.from" ng-class=""></span>
                                 <span ng-bind-template="to {%message.to%}" ng-show="message.private"></span>:
                                 <span ng-bind="message.text"></span>
                             </p>

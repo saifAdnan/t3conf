@@ -1,4 +1,3 @@
-var current_username = USERNAME;
 var SIGNALING_SERVER = "http://localhost:2156/";
 
 var app = angular.module('t3confApp', ['ui.bootstrap', 'ngAnimate', 'ngRoute'], ['$interpolateProvider',
@@ -7,6 +6,21 @@ var app = angular.module('t3confApp', ['ui.bootstrap', 'ngAnimate', 'ngRoute'], 
         $interpolateProvider.endSymbol('%}');
     }
 ]);
+
+function getValues(hash) {
+    var values = [];
+    for (var key in hash) {
+        if (hash.hasOwnProperty(key)) {
+            var ar = {
+                name: key,
+                sip: hash[key].sip,
+                users: hash[key].users
+            };
+            values.push(ar);
+        }
+    }
+    return values;
+}
 
 /**
  * Path to angular directory
@@ -18,33 +32,30 @@ var PATH = "/public/js/angular/";
 app.run(['$rootScope', '$http',
     function($rootScope, $http) {
         $rootScope.username = USERNAME;
-        $rootScope.enableChat = false;
+        $rootScope.enableChat = true;
 
         $http.get("/rooms").success(function(data) {
             $rootScope.rooms = data;
         });
     }
 ]);
-/*
 
 app.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
         $routeProvider
             .when('/', {
                 templateUrl: '/views/home.html',
-                controller: 'mainController'
+                controller: 'mainController',
+                animation: 'slide'
             })
-            .when('/room/:name', {
+            .when('/conference/:name', {
                 templateUrl: '/views/room.html',
-                controller: 'createController'
-            })
-            .when('/room/join/:name', {
-                templateUrl: '/views/room.html',
-                controller: 'joinController'
+                controller: 'conferenceController',
+                animation: 'slide'
             });
 
         $locationProvider
             .html5Mode(false)
             .hashPrefix('!');
     }
-]);*/
+]);

@@ -1,8 +1,9 @@
 var fs = require('fs');
 var passport = require('passport');
 var Users = require('../models/users');
+var Conferences = require('../models/conferences');
 
-module.exports = function (app, rooms, ami, confs) {
+module.exports = function (app, rooms, ami, confs, files) {
     "use strict";
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +22,7 @@ module.exports = function (app, rooms, ami, confs) {
                 },
                 title: "Home",
                 username: req.user.username,
+                sip: req.user.sip,
                 password: req.user.password,
                 firstname: req.user.firstname,
                 lastname: req.user.lastname
@@ -314,7 +316,7 @@ module.exports = function (app, rooms, ami, confs) {
                             users.write("\n");
 
 
-                            extensions.write("exten => "+doc[i].sip+",1,Dial(SIP/"+doc[i].username+")\n");
+                            extensions.write("exten => " + doc[i].sip + ",1,Dial(SIP/" + doc[i].username + ")\n");
 
 
                             if (i + 1 === doc.length) {
@@ -334,21 +336,65 @@ module.exports = function (app, rooms, ami, confs) {
     });
 
     app.post('/action/newConference', function (req, res) {
-        var conferences = fs.createWriteStream("asterisk/conferences.conf");
-        conferences.write("[someuser]\n");
-        conferences.write("exten => "+req.body.conf_number+",1,Goto("+req.body.conf_name+",1)\n");
-        conferences.write("exten => "+req.body.conf_name+",1,Answer\n");
-        conferences.write("exten => "+req.body.conf_name+",n,ConfBridge("+req.body.conf_name+",test.common,test.user,test.menu)\n");
-        conferences.write("exten => "+req.body.conf_name+",n,Hangup()\n");
-        conferences.end();
-        setTimeout(function () {
-            ami.send({action: 'Reload'});
-        }, 1000);
-        res.end();
+        var name = req.body.name;
+        var sip = req.body.sip;
+        var pin = req.body.pin;
+
+        Conferences.collection.find({sip: sip}).toArray(function (err, doc) {
+            if (doc.length > 0) {
+                res.end('false');
+                return false;
+            }
+
+            Conferences.collection.insert({
+                name: name,
+                sip: sip,
+                pin: pin,
+                date: new Date()
+            }, function (err) {
+                Conferences.collection.find({}).toArray(function (err, doc) {
+                    var conferences = fs.createWriteStream("asterisk/conferences.conf");
+
+                    conferences.write("[someuser]\n");
+
+                    for (var i = 0; i < doc.length; i = i + 1) {
+                        if (doc[i].pin) {
+                            conferences.write("exten => " + doc[i].sip + ",1,Authenticate(" + doc[i].pin + ")\n");
+                        }
+                        conferences.write("exten => " + doc[i].sip + ",1,Answer\n");
+                        conferences.write("exten => " + doc[i].sip + ",n,ConfBridge(" + doc[i].sip + ",test.common,test.user,test.menu)\n");
+                        conferences.write("exten => " + doc[i].sip + ",n,Hangup()\n\n");
+
+                        if (i + 1 === doc.length) {
+                            conferences.end();
+                            setTimeout(function () {
+                                ami.send({action: 'Reload'});
+                            }, 1000);
+                        }
+                    }
+
+                });
+            });
+
+        });
+
+        res.end("done");
     });
 
     app.get('/action/confs', function (req, res) {
         res.json(confs);
+    });
+
+    app.get('/action/getFiles', function (req, res) {
+        res.json(files);
+    });
+
+    app.post('/action/conf_users', function (req, res) {
+        if (confs[req.body.conference]) {
+            res.json(confs[req.body.conference].users);
+        } else {
+            res.end();
+        }
     });
 
     /**
