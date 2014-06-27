@@ -25,6 +25,7 @@ app.factory('watchService', ['$rootScope', '$routeParams', function ($rootScope,
             });
         },
         chatEmit: function (eventName, data, callback) {
+            console.warn(ROOM_NAME, 'room name');
             socket.of("/" + ROOM_NAME).emit(eventName, data, function () {
                 var args = arguments;
                 $rootScope.$apply(function () {
