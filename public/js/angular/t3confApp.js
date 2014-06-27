@@ -12,7 +12,7 @@ function getValues(hash) {
     for (var key in hash) {
         if (hash.hasOwnProperty(key)) {
             var ar = {
-                name: key,
+                name: hash[key].name,
                 sip: hash[key].sip,
                 users: hash[key].users
             };
