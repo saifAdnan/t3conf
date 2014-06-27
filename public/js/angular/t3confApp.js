@@ -8,6 +8,7 @@ var app = angular.module('t3confApp', ['ui.bootstrap', 'ngAnimate', 'ngRoute'], 
 ]);
 
 function getValues(hash) {
+    console.log(hash);
     var values = [];
     for (var key in hash) {
         if (hash.hasOwnProperty(key)) {
