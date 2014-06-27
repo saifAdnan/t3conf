@@ -16,6 +16,7 @@ module.exports = function (socket, io, channel, confs, web_users, web_users_for_
 
     // broadcast a user's message to other users
     socket.on('send:message', function (data) {
+        console.log("send", data)
         if (data.private && data.to && data.roomName) {
             var socket_id = web_users[data.to];
             if (io.of("/" + channel).sockets[socket_id]) {
