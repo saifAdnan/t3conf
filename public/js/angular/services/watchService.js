@@ -1,13 +1,10 @@
 app.factory('watchService', ['$rootScope', function ($rootScope) {
-    var socket;
+    var socket = io.connect(SIGNALING_SERVER, {secure: true});
     var ROOM_NAME = 'confc';
 
     return {
         socketId: function () {
           return socket.socket.sessionid;
-        },
-        connect: function () {
-            socket = io.connect(SIGNALING_SERVER, {secure: true});
         },
         on: function (eventName, callback) {
             socket.on(eventName, function () {

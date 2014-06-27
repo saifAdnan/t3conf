@@ -1,6 +1,5 @@
 function mainController($scope, $http, $location, watchService, sipService, $rootScope) {
-    watchService.disconnect();
-    watchService.connect();
+    //watchService.disconnect();
     $rootScope.isCalling = false;
     $scope.rooms = null;
     $scope.roomNumber = null;
