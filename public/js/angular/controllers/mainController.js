@@ -12,7 +12,6 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     });
 
     $http.get("/action/getFiles").success(function (data) {
-        console.warn(data);
         $scope.files = data;
     });
 
