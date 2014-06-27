@@ -222,6 +222,7 @@ io.sockets.on('connection', function(socket) {
 });
 
 function onNewNamespace(channel, sender) {
+    console.log(channel, 'channel');
     io.of('/' + channel).on('connection', function(socket) {
         if (io.isConnected) {
             require('./routes/chat.js')(socket, io, channel, conferences, web_users, web_users_for_names);
