@@ -65,7 +65,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
                 $scope.sipImportant = true;
                 $scope.error = "SIP number is already exists. Please choose another SIP number."
             } else {
-                $location.url("/conference/" + $scope.conf_name);
+                $location.url("/conference/" + $scope.conf_sip);
             }
         });
 
