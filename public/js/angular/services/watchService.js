@@ -7,7 +7,7 @@ app.factory('watchService', ['$rootScope', function ($rootScope) {
           return socket.socket.sessionid;
         },
         connect: function () {
-            socket = io.connect(SIGNALING_SERVER);
+            socket = io.connect(SIGNALING_SERVER, {secure: true});
         },
         on: function (eventName, callback) {
             socket.on(eventName, function () {
