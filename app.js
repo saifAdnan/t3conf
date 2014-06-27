@@ -198,6 +198,7 @@ io.sockets.on('connection', function(socket) {
     }
 
     socket.on('new-channel', function(data) {
+        console.log(data.channel, data.sender, 'saif');
         if (!channels[data.channel]) {
             initiatorChannel = data.channel;
         }
