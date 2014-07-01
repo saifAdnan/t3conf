@@ -158,7 +158,7 @@ ami.on('ami_data', function (data) {
          locked: 'No' }
          */
         if (!conferences[data.conference]) conferences[data.conference] = {};
-        if (Conferences.collection.find({name: data.conference}))
+        
             Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
                 if (doc.length > 0) {
                     console.log(doc[0], 'doc[0]');
