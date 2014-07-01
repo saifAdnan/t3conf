@@ -392,12 +392,9 @@ module.exports = function (app, rooms, ami, confs) {
 
             console.log(files);
             //if (err) throw err;
-
-            if (files) {
-                files.forEach(function (file) {
-                    files_arr.push(file);
-                });
-            }
+            files.forEach(function (file) {
+                files_arr.push(file);
+            });
 
         });
         res.json(files_arr);
