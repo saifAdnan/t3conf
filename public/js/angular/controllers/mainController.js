@@ -12,6 +12,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     });
 
     $http.get("/action/getFiles").success(function (data) {
+        if (!data.length) $scope.no_files_message = "No records found.";
         $scope.files = data;
     });
 

@@ -111,6 +111,9 @@
                         </h4>
                     </div>
                     <div class="panel-body" id="rooms">
+                        <div class="help-block" ng-show="no_files_message.length > 0">
+                            <p class="" ng-bind="no_files_message"></p>
+                        </div>
                         <ul>
                             <li ng-repeat="file in files">
                                 <a href="/asterisk/monitor/{%file%}">{%file%}</a>
