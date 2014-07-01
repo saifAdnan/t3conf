@@ -109,6 +109,7 @@ ami.on('ami_data', function (data) {
                 if (!conferences[data.conference].users) conferences[data.conference].users = [];
 
                 Conferences.collection.find({sip: data.conference}).toArray(function (err, doc) {
+                    console.log(1, doc);
                    if (doc.length > 0) {
                        conferences[doc[0].name].name = doc[0].name;
                        conferences[doc[0].name].sip = doc[0].sip;
