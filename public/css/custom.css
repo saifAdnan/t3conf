@@ -208,3 +208,7 @@ label {
     position: relative;
     top: 8px;
 }
+
+.m-links a:after {
+    display: none;
+}
