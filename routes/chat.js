@@ -38,7 +38,7 @@ module.exports = function (socket, io, channel, confs, web_users, web_users_for_
     socket.on("kick", function (data) {
         ami.send({
             action: 'Hangup',
-            Channel: '/^SIP/'+data.username+'-.*$/',
+            Channel: /^SIP/'+data.username+'-.*$/,
 
         });
         var socket_id = web_users[data.username];
