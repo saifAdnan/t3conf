@@ -191,3 +191,16 @@ label {
 #video_local {
     display: none;
 }
+
+.nav-num  p {
+    color: #fff;
+    height: 40px;
+    line-height: 54px;
+}
+
+.nav-num .icon-usa {
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    background: url("../img/usa.png") no-repeat;
+}
