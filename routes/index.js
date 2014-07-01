@@ -4,8 +4,6 @@ var Users = require('../models/users');
 var Conferences = require('../models/conferences');
 
 module.exports = function (app, rooms, ami, confs) {
-    Conferences
-    console.log(confs);
     "use strict";
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -384,6 +382,14 @@ module.exports = function (app, rooms, ami, confs) {
     });
 
     app.get('/action/confs', function (req, res) {
+        for (var i = 0; i < confs.length; i++) {
+            Conferences.collection.find({name: confs[i].name}).toArray(function (err, doc) {
+                if (doc.length > 0) {
+                    confs[i].sip= doc[0].sip;
+                }
+            });
+        }
+
         res.json(confs);
     });
 
