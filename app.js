@@ -108,16 +108,8 @@ ami.on('ami_data', function (data) {
                 if (!conferences[data.conference]) conferences[data.conference] = {};
                 if (!conferences[data.conference].users) conferences[data.conference].users = [];
 
-                console.log(data.conference, typeof data.conference);
-
-                Conferences.collection.find({}).toArray(function(err, doc) {
-                    console.log(doc, "doc 112");
-                });
-
-                Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
-                    console.log(1, doc, data.conference);
+                Conferences.collection.find({sip: data.conference}).toArray(function (err, doc) {
                    if (doc.length > 0) {
-                       console.log(2);
                        conferences[doc[0].name].name = doc[0].name;
                        conferences[doc[0].name].sip = doc[0].sip;
                    }
