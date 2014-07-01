@@ -108,9 +108,9 @@ ami.on('ami_data', function (data) {
                 if (!conferences[data.conference]) conferences[data.conference] = {};
                 if (!conferences[data.conference].users) conferences[data.conference].users = [];
 
-                var myConf = Conferences.collection.findOne({name: data.conference});
-
-                console.log(myConf, "myConf");
+                Conferences.collection.find({}).toArray(function(err, doc) {
+                    console.log(doc, "doc 112");
+                });
 
                 Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
                     console.log(1, doc, data.conference);
