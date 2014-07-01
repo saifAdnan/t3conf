@@ -101,6 +101,15 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams) {
         $location.url("/");
     });
 
+    $scope.kick = function(username) {
+        for (var i = 0; i < $scope.users.length; i = i + 1) {
+            if ($scope.users[i].name == username) {
+                $scope.users.splice(i, 1);
+            }
+            watchService.chatEmit("kick", {username: username});
+        }
+    }
+
     $scope.sendMessage = function () {
         watchService.chatEmit('send:message', {
             message: $scope.message,
