@@ -384,6 +384,7 @@ module.exports = function (app, rooms, ami, confs) {
     app.get('/action/confs', function (req, res) {
         for (var i = 0; i < confs.length; i++) {
             Conferences.collection.find({name: confs[i].name}).toArray(function (err, doc) {
+                console.log(doc, doc.length);
                 if (doc.length > 0) {
                     confs[i].sip= doc[0].sip;
                 }
