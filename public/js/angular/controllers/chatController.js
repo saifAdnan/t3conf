@@ -1,4 +1,4 @@
-function chatController($scope, $rootScope, $http, watchService, $routeParams) {
+function chatController($scope, $rootScope, $http, watchService, $routeParams, $location) {
     var roomName = $routeParams.name;
 
     $scope.enableChat = true;
@@ -147,4 +147,4 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams) {
 
     };
 }
-app.controller("chatController", ['$scope', '$rootScope', '$http', 'watchService', '$routeParams', chatController]);
+app.controller("chatController", ['$scope', '$rootScope', '$http', 'watchService', '$routeParams', '$location', chatController]);

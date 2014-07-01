@@ -76,8 +76,8 @@
       <file leaf-file-name="chatController.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/chatController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3631841" vertical-offset="1860" max-vertical-offset="3276">
-              <caret line="99" column="47" selection-start-line="99" selection-start-column="47" selection-end-line="99" selection-end-column="47" />
+            <state vertical-scroll-proportion="0.7562189" vertical-offset="2673" max-vertical-offset="3276">
+              <caret line="149" column="109" selection-start-line="149" selection-start-column="109" selection-end-line="149" selection-end-column="109" />
               <folding />
             </state>
           </provider>
@@ -1037,8 +1037,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/chatController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3631841" vertical-offset="1860" max-vertical-offset="3276">
-          <caret line="99" column="47" selection-start-line="99" selection-start-column="47" selection-end-line="99" selection-end-column="47" />
+        <state vertical-scroll-proportion="0.7562189" vertical-offset="2673" max-vertical-offset="3276">
+          <caret line="149" column="109" selection-start-line="149" selection-start-column="109" selection-end-line="149" selection-end-column="109" />
           <folding />
         </state>
       </provider>
