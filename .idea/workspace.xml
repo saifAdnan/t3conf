@@ -73,21 +73,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="chatController.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="chatController.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/chatController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.38308457" vertical-offset="2016" max-vertical-offset="3255">
-              <caret line="107" column="18" selection-start-line="107" selection-start-column="18" selection-end-line="107" selection-end-column="18" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2016" max-vertical-offset="3255">
+              <caret line="111" column="35" selection-start-line="111" selection-start-column="31" selection-end-line="111" selection-end-column="35" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="chat.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="chat.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/chat.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="489" max-vertical-offset="1281">
-              <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.58208954" vertical-offset="489" max-vertical-offset="1281">
+              <caret line="40" column="38" selection-start-line="40" selection-start-column="38" selection-end-line="40" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -172,8 +172,8 @@
         <option value="$PROJECT_DIR$/public/js/angular/controllers/adminController.js" />
         <option value="$PROJECT_DIR$/views/room.html" />
         <option value="$PROJECT_DIR$/public/js/angular/services/watchService.js" />
-        <option value="$PROJECT_DIR$/routes/chat.js" />
         <option value="$PROJECT_DIR$/public/js/angular/controllers/chatController.js" />
+        <option value="$PROJECT_DIR$/routes/chat.js" />
       </list>
     </option>
   </component>
@@ -1019,10 +1019,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/chat.js">
+    <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/chatController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="489" max-vertical-offset="1281">
-          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2016" max-vertical-offset="3255">
+          <caret line="111" column="35" selection-start-line="111" selection-start-column="31" selection-end-line="111" selection-end-column="35" />
           <folding />
         </state>
       </provider>
@@ -1035,10 +1035,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/chatController.js">
+    <entry file="file://$PROJECT_DIR$/routes/chat.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38308457" vertical-offset="2016" max-vertical-offset="3255">
-          <caret line="107" column="18" selection-start-line="107" selection-start-column="18" selection-end-line="107" selection-end-column="18" />
+        <state vertical-scroll-proportion="0.58208954" vertical-offset="489" max-vertical-offset="1281">
+          <caret line="40" column="38" selection-start-line="40" selection-start-column="38" selection-end-line="40" selection-end-column="38" />
           <folding />
         </state>
       </provider>
