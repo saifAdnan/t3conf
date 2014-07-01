@@ -71,11 +71,8 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         return false;
     };
 
-
-
-    //sipService.sipLogin();
-    //sipService.sipHangUp();
-
+    sipService.sipHangUp();
+    sipService.sipLogin();
 }
 
 app.controller("mainController", ['$scope', '$http', '$location', 'watchService', 'sipService', '$rootScope', mainController]);
