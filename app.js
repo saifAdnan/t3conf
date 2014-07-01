@@ -133,6 +133,10 @@ ami.on('ami_data', function (data) {
             if (conferences[data.conference].users.length === 1) {
                 delete conferences[data.conference];
                 io.sockets.emit('user:join', conferences);
+                if (Conferences.collection.find({name: data.conference}))
+                    Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
+                        conferences[data.conference].sip = doc[0].sip;
+                    });
                 console.log('\n\nCONF DELETED', conferences);
             } else {
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
@@ -156,10 +160,6 @@ ami.on('ami_data', function (data) {
          locked: 'No' }
          */
         if (!conferences[data.conference]) conferences[data.conference] = {};
-        if (Conferences.collection.find({name: data.conference}))
-            Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
-                conferences[data.conference].sip = doc[0].sip;
-            });
     }
 });
 
