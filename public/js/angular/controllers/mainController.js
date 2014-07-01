@@ -74,7 +74,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
 
 
     sipService.sipLogin();
-    sipService.sipHangUp();
+    //sipService.sipHangUp();
 
 }
 
