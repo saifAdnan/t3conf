@@ -110,7 +110,7 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams) {
             }
             watchService.chatEmit("kick", {username: username});
         }
-    }
+    };
 
     $scope.sendMessage = function () {
         watchService.chatEmit('send:message', {
