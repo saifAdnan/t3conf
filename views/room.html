@@ -92,9 +92,9 @@
                 </div>
                 <div class="panel-body" >
                     <ul class="list-unstyled room_users">
-                        <li ng-repeat="user in users" data-ng-click="mention(user.username)">
-                            <i class="glyphicon glyphicon-user"></i>
-                            <span ng-bind-template="{%user.username%} ({%user.sip%})"></span>
+                        <li ng-repeat="user in users">
+                            <i class="glyphicon glyphicon-user" data-ng-click="mention(user.username)"></i>
+                            <span ng-bind-template="{%user.username%} ({%user.sip%})" data-ng-click="mention(user.username)"></span>
                             <i class="glyphicon glyphicon-thumbs-down" ng-click="kick({%user.username%})"></i>
                         </li>
                     </ul>
