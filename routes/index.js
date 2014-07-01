@@ -3,7 +3,7 @@ var passport = require('passport');
 var Users = require('../models/users');
 var Conferences = require('../models/conferences');
 
-module.exports = function (app, rooms, ami, confs, files) {
+module.exports = function (app, rooms, ami, confs, files_arr) {
     "use strict";
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -386,7 +386,15 @@ module.exports = function (app, rooms, ami, confs, files) {
     });
 
     app.get('/action/getFiles', function (req, res) {
-        res.json(files);
+        fs.readdir(__dirname + '/asterisk/monitor', function (err, files) { // '/' denotes the root folder
+            if (err) throw err;
+
+            files.forEach( function (file) {
+                files_arr.push(file);
+            });
+
+        });
+        res.json(files_arr);
     });
 
     app.post('/action/conf_users', function (req, res) {
