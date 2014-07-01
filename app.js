@@ -111,9 +111,8 @@ ami.on('ami_data', function (data) {
                 var n = parseInt(data.conference, 10);
 
                 Conferences.collection.find({sip: n}).toArray(function (err, doc) {
-                    console.log(1, doc, data.conference);
                    if (doc.length > 0) {
-                       conferences[data.conference].sip = doc[0].sip;
+                       conferences[data.conference].sip_name = doc[0].name;
                    }
                     conferences[data.conference].users.push(user);
                     io.sockets.emit('user:join', conferences);
