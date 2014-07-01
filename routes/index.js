@@ -391,8 +391,6 @@ module.exports = function (app, rooms, ami, confs) {
             res.json(files);
 
         });
-
-
     });
 
     app.post('/action/conf_users', function (req, res) {
@@ -456,8 +454,6 @@ module.exports = function (app, rooms, ami, confs) {
         } else {
             res.redirect("/login");
         }
-
-
     });
 
     app.post("/conference/save", function (req, res) {
