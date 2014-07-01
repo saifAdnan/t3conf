@@ -359,11 +359,11 @@ module.exports = function (app, rooms, ami, confs) {
 
                     for (var i = 0; i < doc.length; i = i + 1) {
                         if (doc[i].pin) {
-                            conferences.write("exten => " + doc[i].name + ",1,Authenticate(" + doc[i].pin + ")\n");
+                            conferences.write("exten => " + doc[i].sip + ",1,Authenticate(" + doc[i].pin + ")\n");
                         }
-                        conferences.write("exten => " + doc[i].name + ",1,Answer\n");
-                        conferences.write("exten => " + doc[i].name + ",n,ConfBridge(" + doc[i].name + ",test.common,test.user,test.menu)\n");
-                        conferences.write("exten => " + doc[i].name + ",n,Hangup()\n\n");
+                        conferences.write("exten => " + doc[i].sip + ",1,Answer\n");
+                        conferences.write("exten => " + doc[i].sip + ",n,ConfBridge(" + doc[i].sip + ",test.common,test.user,test.menu)\n");
+                        conferences.write("exten => " + doc[i].sip + ",n,Hangup()\n\n");
 
                         if (i + 1 === doc.length) {
                             conferences.end();
