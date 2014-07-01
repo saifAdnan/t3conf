@@ -40,6 +40,11 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         }
     };
 
+    $scope.hangUp = function () {
+        sipService.sipHangUp();
+        $location.url("/");
+    };
+
     $scope.createConference = function (e) {
         e.preventDefault();
 
