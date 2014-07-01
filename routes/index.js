@@ -386,18 +386,13 @@ module.exports = function (app, rooms, ami, confs) {
     });
 
     app.get('/action/getFiles', function (req, res) {
-        var files_arr = [];
-
         fs.readdir('asterisk/monitor', function (err, files) { // '/' denotes the root folder
 
-            console.log(files);
-            //if (err) throw err;
-            files.forEach(function (file) {
-                files_arr.push(file);
-            });
+            res.json(files);
 
         });
-        res.json(files_arr);
+
+
     });
 
     app.post('/action/conf_users', function (req, res) {
