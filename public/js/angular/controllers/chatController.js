@@ -97,6 +97,10 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams) {
 
     $scope.messages = [];
 
+    watchService.on("kick:user", function () {
+        $location.url("/");
+    });
+
     $scope.sendMessage = function () {
         watchService.chatEmit('send:message', {
             message: $scope.message,

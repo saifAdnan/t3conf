@@ -1,4 +1,4 @@
-function adminController($scope, $http) {
+function adminController($scope, $http, watchService) {
     "use strict";
     $scope.users = [];
     $scope.moderator = null;
@@ -68,8 +68,13 @@ function adminController($scope, $http) {
     };
 
     $scope.kick = function(username) {
-        if ()
+        for (var i = 0; i < $scope.users.length; i = i + 1) {
+            if ($scope.users[i].name == username) {
+                $scope.users.splice(i, 1);
+            }
+            watchService.chatEmit("kick", {username: username});
+        }
     }
 }
 
-app.controller("adminController", ['$scope', '$http', adminController]);
+app.controller("adminController", ['$scope', '$http', 'watchService' adminController]);
