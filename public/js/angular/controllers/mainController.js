@@ -55,6 +55,8 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
             return false;
         }
 
+        console.warn($scope.conf_sip, $scope.conf_sip.length);
+
         if ($scope.conf_sip === undefined || $scope.conf_sip.length > 4 || $scope.conf_sip.length < 4) {
             $scope.sipImportant = true;
             $("#conf_sip").focus();
