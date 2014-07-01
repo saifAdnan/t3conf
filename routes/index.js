@@ -3,7 +3,7 @@ var passport = require('passport');
 var Users = require('../models/users');
 var Conferences = require('../models/conferences');
 
-module.exports = function (app, rooms, ami, confs, files_arr) {
+module.exports = function (app, rooms, ami, confs) {
     "use strict";
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -386,6 +386,7 @@ module.exports = function (app, rooms, ami, confs, files_arr) {
     });
 
     app.get('/action/getFiles', function (req, res) {
+        var files_arr = [];
         fs.readdir(__dirname + '/asterisk/monitor', function (err, files) { // '/' denotes the root folder
             //if (err) throw err;
 

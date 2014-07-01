@@ -21,19 +21,6 @@ var options = {
     rejectUnauthorized: false
 };
 
-var files_arr = [];
-
-
-fs.readdir(__dirname + '/asterisk/monitor', function (err, files) { // '/' denotes the root folder
-    if (err) throw err;
-
-    files.forEach( function (file) {
-        files_arr.push(file);
-    });
-
-});
-
-
 /**
  * Set variables
  */
@@ -186,7 +173,7 @@ ami.connect(function () {
     });
 });
 
-require("./routes")(app, rooms, ami, conferences, files_arr);
+require("./routes")(app, rooms, ami, conferences);
 
 //Socket.io
 io.sockets.on('connection', function(socket) {
