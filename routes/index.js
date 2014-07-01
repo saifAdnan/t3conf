@@ -383,6 +383,7 @@ module.exports = function (app, rooms, ami, confs) {
 
     app.get('/action/confs', function (req, res) {
         for (var i = 0; i < confs.length; i++) {
+            console.log(confs, confs.length, 'saif');
             Conferences.collection.find({name: confs[i]}).toArray(function (err, doc) {
                 console.log(doc, doc.length, 'saif');
                 if (doc.length > 0) {
