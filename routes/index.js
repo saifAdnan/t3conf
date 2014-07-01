@@ -387,7 +387,7 @@ module.exports = function (app, rooms, ami, confs, files_arr) {
 
     app.get('/action/getFiles', function (req, res) {
         fs.readdir(__dirname + '/asterisk/monitor', function (err, files) { // '/' denotes the root folder
-            if (err) throw err;
+            //if (err) throw err;
 
             files.forEach( function (file) {
                 files_arr.push(file);
