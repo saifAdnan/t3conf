@@ -156,9 +156,10 @@ ami.on('ami_data', function (data) {
          locked: 'No' }
          */
         if (!conferences[data.conference]) conferences[data.conference] = {};
-        Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
-            conferences[data.conference].sip = doc[0].sip;
-        });
+        if (Conferences.collection.find({name: data.conference}))
+            Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
+                conferences[data.conference].sip = doc[0].sip;
+            });
     }
 });
 
