@@ -73,9 +73,13 @@
                             <tbody>
                             <tr ng-repeat="room in rooms" class="repeater">
                                 <td class="col-sm-10">
-                                    <strong><span ng-bind-template="{%room.name%}"></span></strong>
+                                    <strong>
+                                        {%room%}
+                                        <span ng-bind-template="{%room.name%}"></span>
+                                    </strong>
                                     <ul class="list-styled">
-                                        <li ng-repeat="user in room.users" ng-bind-template=" {%user.username%} ( {%user.sip%} )">12</li>
+                                        <li ng-repeat="user in room.users"
+                                            ng-bind-template=" {%user.username%} ( {%user.sip%} )">12</li>
                                     </ul>
                                 </td>
                                 <td>
