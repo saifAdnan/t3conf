@@ -156,8 +156,7 @@ ami.on('ami_data', function (data) {
          locked: 'No' }
          */
         if (!conferences[data.conference]) conferences[data.conference] = {};
-
-
+        require("./routes")(app, rooms, ami, conferences);
     }
 });
 
