@@ -1,6 +1,22 @@
 function chatController($scope, $rootScope, $http, watchService, $routeParams, $location) {
     var roomName = $routeParams.name;
 
+    $scope.moderator = null;
+
+    $http.get("/users").success(function(data) {
+        if (!data) return false;
+        $scope.users = data.users;
+        $scope.moderator = data.moderator;
+
+        $scope.isAdmin = data.isAdmin;
+
+        $.each($scope.users, function(index, user) {
+            user.index = index + 1;
+            user.isRole = user.role === 'admin' ? true : false;
+            user.date = new Date(user.date).toLocaleString();
+        });
+    });
+
     $scope.enableChat = true;
 
     $scope.users = null;
