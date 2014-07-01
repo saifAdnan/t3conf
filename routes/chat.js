@@ -37,6 +37,7 @@ module.exports = function (socket, io, channel, confs, web_users, web_users_for_
 
     socket.on("kick", function (data) {
         console.log(data, 'kick');
+
         var socket_id = web_users[data.to];
         if (io.of("/" + channel).sockets[socket_id]) {
             io.of("/" + channel).sockets[socket_id].emit('kick:user',{});
