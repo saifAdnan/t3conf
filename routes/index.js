@@ -4,6 +4,7 @@ var Users = require('../models/users');
 var Conferences = require('../models/conferences');
 
 module.exports = function (app, rooms, ami, confs) {
+    Conferences
     console.log(confs);
     "use strict";
 
