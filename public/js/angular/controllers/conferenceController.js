@@ -14,8 +14,6 @@ function conferenceController($scope, $rootScope, $http, watchService, sipServic
         sender: USERNAME
     });
 
-    $("#keypad").modal();
-
     $scope.sipSendDTMF = function (c) {
         sipService.sipSendDTMF(c);
     };

@@ -66,6 +66,10 @@ function adminController($scope, $http) {
             return false;
         }
     };
+
+    $scope.kick = function(username) {
+        if ()
+    }
 }
 
 app.controller("adminController", ['$scope', '$http', adminController]);
