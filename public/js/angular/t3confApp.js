@@ -46,13 +46,11 @@ app.config(['$routeProvider', '$locationProvider',
         $routeProvider
             .when('/', {
                 templateUrl: '/views/home.html',
-                controller: 'mainController',
-                animation: 'slide'
+                controller: 'mainController'
             })
             .when('/conference/:name', {
                 templateUrl: '/views/room.html',
-                controller: 'conferenceController',
-                animation: 'slide'
+                controller: 'conferenceController'
             });
 
         $locationProvider

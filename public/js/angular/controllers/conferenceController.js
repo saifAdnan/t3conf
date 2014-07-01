@@ -1,5 +1,6 @@
 function conferenceController($scope, $rootScope, $http, watchService, sipService, $routeParams) {
     $rootScope.isCalling = true;
+
     watchService.on('user:left', function(data) {
         $("#" + data.socketid).parent().remove();
     });
@@ -7,6 +8,7 @@ function conferenceController($scope, $rootScope, $http, watchService, sipServic
     watchService.on("change:broadcaster", function () {
         watchService.emit("change:broadcaster", {socket: watchService.socketId()});
     });
+
     watchService.emit("new-channel", {
         channel: $routeParams.name,
         sender: USERNAME
