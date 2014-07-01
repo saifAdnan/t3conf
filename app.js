@@ -108,8 +108,12 @@ ami.on('ami_data', function (data) {
                 if (!conferences[data.conference]) conferences[data.conference] = {};
                 if (!conferences[data.conference].users) conferences[data.conference].users = [];
 
+                var myConf = Conferences.collection.findOne({name: data.conference});
+
+                console.log(myConf, "myConf");
+
                 Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
-                    console.log(1, doc);
+                    console.log(1, doc, data.conference);
                    if (doc.length > 0) {
                        console.log(2);
                        conferences[doc[0].name].name = doc[0].name;
