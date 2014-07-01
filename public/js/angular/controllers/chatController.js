@@ -97,7 +97,7 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams) {
 
     $scope.messages = [];
 
-    watchService.on("kick:user", function () {
+    watchService.chatOn("kick:user", function () {
         console.log("kick trigger");
         $location.url("/");
     });
