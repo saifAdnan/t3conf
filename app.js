@@ -156,7 +156,9 @@ ami.on('ami_data', function (data) {
          locked: 'No' }
          */
         if (!conferences[data.conference]) conferences[data.conference] = {};
-        require("./routes")(app, rooms, ami, conferences);
+        Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
+            conferences[data.conference].sip = doc[0].sip;
+        });
     }
 });
 
@@ -172,7 +174,6 @@ require("./routes")(app, rooms, ami, conferences);
 //Socket.io
 io.sockets.on('connection', function(socket) {
     require("./routes")(app, rooms, ami, conferences);
-
     var initiatorChannel = '';
     if (!io.isConnected) {
         io.isConnected = true;
