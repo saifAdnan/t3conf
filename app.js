@@ -158,13 +158,14 @@ ami.on('ami_data', function (data) {
          locked: 'No' }
          */
         if (!conferences[data.conference]) conferences[data.conference] = {};
-        Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
-            if (doc.length > 0) {
-                conferences[doc[0].name].name = doc[0].name;
-                conferences[doc[0].name].sip = doc[0].sip;
-                require("./routes")(app, rooms, ami, conferences);
-            }
-        });
+        if (Conferences.collection.find({name: data.conference}))
+            Conferences.collection.find({name: data.conference}).toArray(function (err, doc) {
+                if (doc.length > 0) {
+                    conferences[doc[0].name].name = doc[0].name;
+                    conferences[doc[0].name].sip = doc[0].sip;
+                    require("./routes")(app, rooms, ami, conferences);
+                }
+            });
     }
 });
 
