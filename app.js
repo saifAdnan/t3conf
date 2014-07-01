@@ -27,7 +27,7 @@ var options = {
 var app = express(),
     conferences = {},
     web_users = {},
-    web_users_for_names= {},
+    web_users_for_names = {},
     channels = {},
     rooms = [],
     server = https.createServer(options, app),
@@ -111,9 +111,9 @@ ami.on('ami_data', function (data) {
                 var n = parseInt(data.conference, 10);
 
                 Conferences.collection.find({sip: n}).toArray(function (err, doc) {
-                   if (doc.length > 0) {
-                       conferences[data.conference].sip_name = doc[0].name;
-                   }
+                    if (doc.length > 0) {
+                        conferences[data.conference].sip_name = doc[0].name;
+                    }
                     conferences[data.conference].users.push(user);
                     io.sockets.emit('user:join', conferences);
                     console.log('\n\nJOIN', conferences);
@@ -135,7 +135,7 @@ ami.on('ami_data', function (data) {
                 delete conferences[data.conference];
                 io.sockets.emit('user:join', conferences);
                 var n = parseInt(data.conference, 10);
-                Conferences.collection.delete({sip: n});
+                Conferences.collection.remove({sip: n});
                 console.log('\n\nCONF DELETED', conferences);
             } else {
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
@@ -172,14 +172,14 @@ require("./routes")(app, rooms, ami, conferences);
 
 
 //Socket.io
-io.sockets.on('connection', function(socket) {
+io.sockets.on('connection', function (socket) {
     require("./routes")(app, rooms, ami, conferences);
     var initiatorChannel = '';
     if (!io.isConnected) {
         io.isConnected = true;
     }
 
-    socket.on('new-channel', function(data) {
+    socket.on('new-channel', function (data) {
         console.log(data.channel, data.sender, 'saif');
         if (!channels[data.channel]) {
             initiatorChannel = data.channel;
@@ -190,12 +190,12 @@ io.sockets.on('connection', function(socket) {
         onNewNamespace(data.channel, data.sender);
     });
 
-    socket.on('presence', function(channel) {
-        var isChannelPresent = !! channels[channel];
+    socket.on('presence', function (channel) {
+        var isChannelPresent = !!channels[channel];
         socket.emit('presence', isChannelPresent);
     });
 
-    socket.on('disconnect', function(channel) {
+    socket.on('disconnect', function (channel) {
         /*if (initiatorChannel) {
          delete channels[initiatorChannel];
          }
@@ -205,7 +205,7 @@ io.sockets.on('connection', function(socket) {
 
 function onNewNamespace(channel, sender) {
     console.log(channel, 'channel');
-    io.of('/' + channel).on('connection', function(socket) {
+    io.of('/' + channel).on('connection', function (socket) {
         if (io.isConnected) {
             require('./routes/chat.js')(socket, io, channel, conferences, web_users, web_users_for_names);
             io.isConnected = false;
