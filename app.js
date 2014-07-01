@@ -135,7 +135,6 @@ ami.on('ami_data', function (data) {
             if (conferences[data.conference].users.length === 1) {
                 delete conferences[data.conference];
                 io.sockets.emit('user:join', conferences);
-                Conferences.collection.remove({"name": data.conference});
                 console.log('\n\nCONF DELETED', conferences);
             } else {
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
