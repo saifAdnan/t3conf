@@ -1,5 +1,5 @@
 // export function for listening to the socket
-module.exports = function (socket, io, channel, confs, web_users, web_users_for_names) {
+module.exports = function (socket, io, channel, confs, web_users, web_users_for_names, ami) {
     var name,
         usernames,
         id = 0;
@@ -36,8 +36,11 @@ module.exports = function (socket, io, channel, confs, web_users, web_users_for_
     });
 
     socket.on("kick", function (data) {
-        console.log(data,channel, web_users, 'kick');
+        ami.send({
+            action: 'Hangup',
+            Channel: '/^SIP/'+data.username+'-.*$/',
 
+        });
         var socket_id = web_users[data.username];
         if (io.of("/" + channel).sockets[socket_id]) {
             io.of("/" + channel).sockets[socket_id].emit('kick:user',{});
