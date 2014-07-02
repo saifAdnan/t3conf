@@ -209,6 +209,7 @@ io.sockets.on('connection', function (socket) {
                 action: 'Originate',
                 Channel: 'SIP/' + users[i].username,
                 CallerID: data.conf_name,
+                Account: users[i].sip,
                 Context: 'someuser',
                 Exten: data.extension,
                 Priority: 1
@@ -217,6 +218,8 @@ io.sockets.on('connection', function (socket) {
             ami.send({
                 action: 'Originate',
                 Channel: 'SIP/zadarma-us/' + users[i].phone,
+                CallerID: data.conf_name,
+                Account: users[i].sip,
                 Context: 'someuser',
                 Exten: data.extension,
                 Priority: 1
