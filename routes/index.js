@@ -472,6 +472,7 @@ module.exports = function (app, rooms, ami, confs) {
         fs.readdir('asterisk/monitor', function (err, files) {
             files.forEach(function(filename) {
                 fs.unlink(filename, function (err) {
+                    console.log(err);
                 });
             });
         });
