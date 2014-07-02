@@ -96,6 +96,16 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         }
     };
 
+    $scope.clearRecords = function (filename) {
+        e.preventDefault();
+        if (confirm("Are you sure to deletethis record?")) {
+            $http.post("/action/clearRecord", {filename: filename});
+            return false
+        } else {
+            return false;
+        }
+    };
+
     sipService.sipHangUp();
     sipService.sipLogin();
 }

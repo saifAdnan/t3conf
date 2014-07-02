@@ -130,7 +130,10 @@
                         </div>
                         <ul>
                             <li ng-repeat="file in files">
-                                <a href="/asterisk/monitor/{%file%}">{%file%}</a>
+                                <a href="/asterisk/monitor/{%file%}" ng-bind="file">
+
+                                </a>
+                                <i class="glyphicon glyphicon-floppy-remove" ng-click="clearRecord({%file%})"></i>
                             </li>
                         </ul>
                     </div>

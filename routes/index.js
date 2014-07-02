@@ -468,10 +468,17 @@ module.exports = function (app, rooms, ami, confs) {
         });
     });
 
+    app.post('/action/clearRecord', function (req, res) {
+        fs.unlinkSync('/var/www/t3conf/asterisk/monitor/' + req.body.filename, function (err) {
+        });
+        res.end('File has been deleted!');
+    });
+
     app.post('/action/clearRecords', function (req, res) {
         fs.readdir('asterisk/monitor/', function (err, files) {
-            files.forEach(function(filename) {
-                fs.unlinkSync('/var/www/t3conf/asterisk/monitor/' + filename, function (err) {});
+            files.forEach(function (filename) {
+                fs.unlinkSync('/var/www/t3conf/asterisk/monitor/' + filename, function (err) {
+                });
             });
         });
         res.end('Records has been deleted!');
