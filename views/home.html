@@ -48,11 +48,13 @@
 
                             <div class="form-group">
                                 <label for="conf_pass">Conference password ( optional ) <span class="important">NUMBERS ONLY</span></label>
-                                <input type="password" name="conf_pass" id="conf_pass" to-number ng-model="conf_pin" class="form-control"/>
+                                <input type="password" name="conf_pass" id="conf_pass" to-number ng-model="conf_pin"
+                                       class="form-control"/>
                             </div>
 
                             <div class="form-group">
-                                <button type="submit" class="btn btn-default" ng-disabled="!$parent.connected"> Create </button>
+                                <button type="submit" class="btn btn-default" ng-disabled="!$parent.connected"> Create
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -70,7 +72,7 @@
                         <a href="#!/conference/1113">Spyxel (1113) </a>)
                     </div>
                     <div class="panel-body" id="rooms">
-                        <table class="table table-rooms" ng-show="rooms.length">
+                        <table class="table table-rooms">
                             <thead>
                             <th>Name</th>
                             <th>Join</th>
@@ -112,6 +114,15 @@
                                                 >JOIN</span>
                                 </td>
                             </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-rooms" ng-show="rooms.length">
+                            <thead>
+                            <th>Name</th>
+                            <th>Join</th>
+                            </thead>
+                            <tbody>
+
                             <tr ng-repeat="room in rooms" class="repeater">
                                 <td class="col-sm-10">
                                     <strong>
@@ -119,7 +130,8 @@
                                     </strong>
                                     <ul class="list-styled">
                                         <li ng-repeat="user in room.users"
-                                            ng-bind-template=" {%user.username%} ( {%user.sip%} )">12</li>
+                                            ng-bind-template=" {%user.username%} ( {%user.sip%} )">12
+                                        </li>
                                     </ul>
                                 </td>
                                 <td>
@@ -131,7 +143,7 @@
                             </tbody>
                         </table>
                         <div class="help-block" ng-show="!rooms.length">
-                            <p>No conference found!</p>
+                            <p>No active conference found!</p>
                         </div>
                     </div>
                 </div>
