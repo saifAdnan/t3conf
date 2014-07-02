@@ -30,7 +30,7 @@
                                        ng-model="conf_name"
                                        id="conf_name"
                                        name="conf_name"
-                                       ng-change="generateSipNumber()"
+                                       ng-blur="generateSipNumber()"
                                        ng-keyup="updateFormAction($event)"/>
                             </div>
                             <div class="form-group {%(sipImportant ? 'has-error' : '')%}">
