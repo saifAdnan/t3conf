@@ -212,3 +212,9 @@ label {
 .m-links a:after {
     display: none;
 }
+
+.panel-records .panel-body {
+    max-height: 300px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
