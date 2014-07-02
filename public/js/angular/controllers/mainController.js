@@ -55,6 +55,11 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
             return false;
         }
 
+        if ($scope.conf_sip === undefined) {
+            $scope.generateSipNumber();
+        }
+
+
         if ($scope.conf_sip === undefined || $scope.conf_sip.toString().length > 4 || $scope.conf_sip.toString().length < 4) {
             $scope.sipImportant = true;
             $("#conf_sip").focus();
