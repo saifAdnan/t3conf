@@ -117,7 +117,6 @@ ami.on('ami_data', function (data) {
          */
 
         var chn = data.channel.split("SIP/")[1].split("-")[0];
-
         var calleridnum = data.calleridnum !== '<unknown>' ? data.calleridnum : chn;
 
         Account.collection.find({username: calleridnum}).toArray(function (err, doc) {
@@ -166,7 +165,9 @@ ami.on('ami_data', function (data) {
                 console.log('\n\nCONF DELETED', conferences);
             } else {
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
-                    if (conferences[data.conference].users[i].username === data.calleridnum) {
+                    var chn_l = data.channel.split("SIP/")[1].split("-")[0];
+                    var calleridnum_l = data.calleridnum !== '<unknown>' ? data.calleridnum : chn_l;
+                    if (conferences[data.conference].users[i].username === calleridnum_l) {
                         conferences[data.conference].users.splice(i, 1);
                         io.sockets.emit('user:join', conferences);
                         console.log('\n\nLEFT', conferences);
