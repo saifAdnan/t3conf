@@ -17,7 +17,6 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
     watchService.on("user:join", function (data) {
         $scope.rooms = getValues(data);
         for (var i = 0; i < $scope.rooms.length; i++) {
-            console.warn($scope.rooms);
             if ($scope.rooms[i].name === $routeParams.name) {
                 $scope.users = $scope.rooms[i].users;
             }
