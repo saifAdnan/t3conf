@@ -147,7 +147,11 @@ ami.on('ami_data', function (data) {
          calleridname: 'saif adnan' }
          */
         if (conferences[data.conference] && conferences[data.conference].users && conferences[data.conference].users.length) {
-            if (conferences[data.conference].users.length === 1) {
+            if (conferences[data.conference].users.length === 1
+                && conferences[data.conference].name !== '1111'
+                && conferences[data.conference].name !== '1112'
+                && conferences[data.conference].name !== '1113'
+                ) {
                 delete conferences[data.conference];
                 io.sockets.emit('user:join', conferences);
                 var n = parseInt(data.conference, 10);
