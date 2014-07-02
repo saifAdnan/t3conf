@@ -86,9 +86,11 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         $scope.conf_sip = Math.floor(Math.random() * 9000) + 1000;
     };
 
-    $scope.clearRecords = function () {
+    $scope.clearRecords = function (e) {
+        e.preventDefault();
         if (confirm("Are you sure to delete all records?")) {
             $http.post("/action/clearRecords");
+            return false
         } else {
             return false;
         }
