@@ -11,7 +11,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         $scope.rooms = getValues(data);
 
         for(room in $scope.rooms) {
-            console.warn(room);
+            console.warn(room, 'room');
         }
 
     });
