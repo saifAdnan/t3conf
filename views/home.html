@@ -30,6 +30,7 @@
                                        ng-model="conf_name"
                                        id="conf_name"
                                        name="conf_name"
+                                       ng-change="generateSipNumber()"
                                        ng-keyup="updateFormAction($event)"/>
                             </div>
                             <div class="form-group {%(sipImportant ? 'has-error' : '')%}">
@@ -42,6 +43,7 @@
                                        ng-model="conf_sip"
                                        id="conf_sip"
                                        name="conf_sip"
+                                       ng-model="sipNumber"
                                        placeholder="SIP should be 4 digital numbers"
                                        ng-keyup="updateFormAction($event)"/>
                             </div>
