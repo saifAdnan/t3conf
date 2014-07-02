@@ -10,8 +10,8 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     $http.get("/action/confs").success(function (data) {
         $scope.rooms = getValues(data);
 
-        for(room in $scope.rooms) {
-            console.warn(room, 'room');
+        for(var i = 0; i < $scope.rooms.length; i ++) {
+            console.warn($scope.rooms[i], 'room');
         }
 
     });
