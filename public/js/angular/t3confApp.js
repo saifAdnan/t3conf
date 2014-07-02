@@ -8,7 +8,6 @@ var app = angular.module('t3confApp', ['ui.bootstrap', 'ngAnimate', 'ngRoute'], 
 ]);
 
 function getValues(hash) {
-    console.log(hash);
     var values = [];
     for (var key in hash) {
         if (hash.hasOwnProperty(key)) {
@@ -35,9 +34,6 @@ app.run(['$rootScope', '$http',
     function($rootScope, $http) {
         $rootScope.username = USERNAME;
         $rootScope.enableChat = true;
-
-            $scope.isAdmin = data.isAdmin;
-        });
 
         $http.get("/rooms").success(function(data) {
             $rootScope.rooms = data;
