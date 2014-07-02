@@ -208,9 +208,9 @@ io.sockets.on('connection', function (socket) {
             ami.send({
                 action: 'Originate',
                 Channel: 'SIP/' + users[i].username,
-                CallerID: data.extension,
+                CallerID: data.conf_name,
                 Context: 'someuser',
-                Exten: data.conf_name,
+                Exten: data.extension,
                 Priority: 1
             });
 
