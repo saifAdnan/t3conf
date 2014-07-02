@@ -25,7 +25,13 @@ var options = {
  * Set variables
  */
 var app = express(),
-    conferences = {},
+    conferences = {
+        '1111': {
+            name: '1111',
+            sip: 1111,
+            sip_name: 'T3leads'
+        }
+    },
     web_users = {},
     web_users_for_names = {},
     channels = {},
