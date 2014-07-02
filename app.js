@@ -120,7 +120,9 @@ ami.on('ami_data', function (data) {
 
         var calleridnum = data.calleridnum ? data.calleridnum : chn;
 
-        Account.collection.find({username: data.calleridnum}).toArray(function (err, doc) {
+        console.log(calleridnum, 1111);
+
+        Account.collection.find({username: calleridnum}).toArray(function (err, doc) {
             if (doc.length) {
                 var user = {
                     username: data.calleridnum,
