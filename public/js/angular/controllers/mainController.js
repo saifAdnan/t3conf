@@ -90,6 +90,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         e.preventDefault();
         if (confirm("Are you sure to delete all records?")) {
             $http.post("/action/clearRecords");
+            $location.url("/");
             return false
         } else {
             return false;
@@ -100,6 +101,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         e.preventDefault();
         if (confirm("Are you sure to deletethis record?")) {
             $http.post("/action/clearRecord", {filename: filename});
+            $location.url("/");
             return false
         } else {
             return false;
