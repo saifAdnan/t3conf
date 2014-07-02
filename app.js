@@ -119,7 +119,8 @@ ami.on('ami_data', function (data) {
             if (doc.length) {
                 var user = {
                     username: data.calleridnum,
-                    sip: doc[0].sip
+                    sip: doc[0].sip,
+                    phone: doc[0].phone
                 };
                 if (!conferences[data.conference]) conferences[data.conference] = {};
                 if (!conferences[data.conference].users) conferences[data.conference].users = [];
