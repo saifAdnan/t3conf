@@ -66,19 +66,15 @@
                         <h4 class="panel-title">
                             Conferences
                         </h4>
-                        (
-                        <a href="#!/conference/1111">T3leads (1111) </a> ,
-                        <a href="#!/conference/1112">Sora (1112) </a> ,
-                        <a href="#!/conference/1113">Spyxel (1113) </a>)
                     </div>
                     <div class="panel-body" id="rooms">
                         <table class="table table-rooms">
-                            <thead>
+                            <!--<thead>
                             <th>Name</th>
                             <th>Join</th>
-                            </thead>
+                            </thead>-->
                             <tbody>
-                            <tr>
+                            <tr ng-hide="t3leadsActive">
                                 <td class="col-sm-10">
                                     <strong>
                                         <span>T3leads (1111)</span>
@@ -90,7 +86,7 @@
                                                 >JOIN</span>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr ng-hide="soraActive">
                                 <td class="col-sm-10">
                                     <strong>
                                         <span>Sora (1112)</span>
@@ -102,7 +98,7 @@
                                                 >JOIN</span>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr ng-hide="spyxelActive">
                                 <td class="col-sm-10">
                                     <strong>
                                         <span>Spyxel (1113)</span>
