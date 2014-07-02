@@ -58,7 +58,7 @@ function conferenceController($scope, $rootScope, $http, watchService, sipServic
         e.preventDefault();
         watchService.emit("invite", {
             users: $scope.selectedUsers,
-            extension: $routeParams.name
+            extension: $routeParams.name,
             conf_name: $scope.conf_name
         });
         $("#invite").modal('hide');
