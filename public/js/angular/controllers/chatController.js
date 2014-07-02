@@ -3,6 +3,13 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
     $scope.username = USERNAME;
     $scope.moderator = null;
 
+    $scope.conf_name = null;
+    $scope.conf_sip = roomName;
+
+    $http.get("/action/confs", function (data) {
+        $scope.conf_name = data[$scope.conf_sip].sip_name;
+    });
+
     $http.get("/users").success(function(data) {
         if (!data) return false;
         $scope.moderator = data.moderator;
