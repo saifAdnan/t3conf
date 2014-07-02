@@ -120,12 +120,10 @@ ami.on('ami_data', function (data) {
 
         var calleridnum = data.calleridnum !== '<unknown>' ? data.calleridnum : chn;
 
-        console.log(calleridnum, 1111);
-
         Account.collection.find({username: calleridnum}).toArray(function (err, doc) {
             if (doc.length) {
                 var user = {
-                    username: data.calleridnum,
+                    username: data.calleridnum !== '<unknown>' ? data.calleridnum : doc[0].username,
                     sip: doc[0].sip,
                     phone: doc[0].phone
                 };
