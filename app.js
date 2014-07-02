@@ -210,7 +210,7 @@ io.sockets.on('connection', function (socket) {
                 Channel: 'SIP/' + users[i].username,
                 CallerID: data.extension,
                 Context: 'someuser',
-                Exten: data.extension,
+                Exten: data.conf_name,
                 Priority: 1
             });
 
