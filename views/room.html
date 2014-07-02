@@ -95,7 +95,7 @@
                         <li ng-repeat="user in users">
                             <i class="glyphicon glyphicon-user" data-ng-click="mention(user.username)"></i>
                             <span ng-bind-template="{%user.username%} ({%user.sip%})" data-ng-click="mention(user.username)"></span>
-                            <i class="glyphicon glyphicon-thumbs-down" ng-click="kick(user.username)" ng-show="moderator && user.username !== USERNAME"></i>
+                            <i class="glyphicon glyphicon-thumbs-down" ng-click="kick(user.username)" ng-show="moderator && user.username !== $parent.username"></i>
                         </li>
                     </ul>
                 </div>

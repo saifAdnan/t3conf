@@ -1,6 +1,6 @@
 function chatController($scope, $rootScope, $http, watchService, $routeParams, $location) {
     var roomName = $routeParams.name;
-
+    $scope.username = USERNAME;
     $scope.moderator = null;
 
     $http.get("/users").success(function(data) {
