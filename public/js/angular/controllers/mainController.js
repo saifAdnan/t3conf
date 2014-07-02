@@ -78,7 +78,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     };
 
     $scope.generateSipNumber = function () {
-      $scope.sipnumber = 1222;
+      $scope.conf_sip = 1222;
     };
 
     sipService.sipHangUp();
