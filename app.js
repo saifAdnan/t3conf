@@ -39,7 +39,7 @@ var app = express(),
         '1113': {
             name: '1113',
             sip: 1113,
-            sip_name: 'Spyxel (+17188317156 #153497)'
+            sip_name: 'ATC (+17188317156 #153497)'
         }
     },
     web_users = {},
@@ -208,6 +208,7 @@ io.sockets.on('connection', function (socket) {
             ami.send({
                 action: 'Originate',
                 Channel: 'SIP/' + users[i].username,
+                CallerID: data.extension,
                 Context: 'someuser',
                 Exten: data.extension,
                 Priority: 1
