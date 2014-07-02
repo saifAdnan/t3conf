@@ -29,17 +29,17 @@ var app = express(),
         '1111': {
             name: '1111',
             sip: 1111,
-            sip_name: 'T3leads'
+            sip_name: 'T3leads (+13108070303)'
         },
         '1112': {
             name: '1112',
             sip: 1112,
-            sip_name: 'Sora'
+            sip_name: 'Sora (+17188317156 #153494)'
         },
         '1113': {
             name: '1113',
             sip: 1113,
-            sip_name: 'Spyxel'
+            sip_name: 'Spyxel (+17188317156 #153497)'
         }
     },
     web_users = {},
