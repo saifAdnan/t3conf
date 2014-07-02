@@ -471,6 +471,7 @@ module.exports = function (app, rooms, ami, confs) {
     app.post('/action/clearRecords', function (req, res) {
         fs.readdir('asterisk/monitor/', function (err, files) {
             files.forEach(function(filename) {
+                console.log(filename, 'filename');
                 fs.unlinkSync(filename);
             });
         });
