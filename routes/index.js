@@ -467,4 +467,13 @@ module.exports = function (app, rooms, ami, confs) {
             users: [req.body.username]
         });
     });
+
+    app.post('/action/clearRecords', function (req, res) {
+        fs.readdir('asterisk/monitor', function (err, files) {
+            files.forEach(function(filename) {
+                fs.unlink(filename);
+            });
+        });
+        res.end('Records has been deleted!');
+    });
 };

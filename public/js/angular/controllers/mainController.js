@@ -86,6 +86,10 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         $scope.conf_sip = Math.floor(Math.random() * 9000) + 1000;
     };
 
+    $scope.clearRecords = function () {
+      $http.post("/action/clearRecords");
+    };
+
     sipService.sipHangUp();
     sipService.sipLogin();
 }
