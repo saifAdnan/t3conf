@@ -225,11 +225,10 @@ io.sockets.on('connection', function (socket) {
 
              */
             ami.send({
-                ActionID: '1222',
+                Variable: '1222',
                 action: 'Originate',
                 Channel: 'SIP/' + users[i].username,
                 CallerID: data.conf_name,
-                Account: users[i].sip,
                 Context: 'someuser',
                 Exten: data.extension,
                 Priority: 1
