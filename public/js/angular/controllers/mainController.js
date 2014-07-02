@@ -5,6 +5,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     $scope.roomNumber = null;
     $scope.isExist = false;
     $scope.inConference = false;
+    $scope.t3leadsActive = false;
 
     // Get current conferences on load
     $http.get("/action/confs").success(function (data) {
