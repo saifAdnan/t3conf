@@ -11,7 +11,9 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         $scope.rooms = getValues(data);
 
         for(var i = 0; i < $scope.rooms.length; i ++) {
-            console.warn($scope.rooms[i], 'room');
+            if ($scope.rooms[i].name === '1111') {
+                $scope.t3leadsActive = true;
+            }
         }
 
     });
