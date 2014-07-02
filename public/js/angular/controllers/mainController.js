@@ -9,6 +9,11 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     // Get current conferences on load
     $http.get("/action/confs").success(function (data) {
         $scope.rooms = getValues(data);
+
+        for(room in $scope.rooms) {
+            console.warn(room);
+        }
+
     });
 
     $http.get("/action/getFiles").success(function (data) {
@@ -20,6 +25,9 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     watchService.on("user:join", function (data) {
         $scope.rooms = getValues(data);
         console.warn($scope.rooms);
+        for(room in $scope.rooms) {
+            console.warn(room);
+        }
     });
 
     // Join coference
