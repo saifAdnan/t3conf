@@ -155,6 +155,7 @@ ami.on('ami_data', function (data) {
                 ) {
                 delete conferences[data.conference];
                 io.sockets.emit('user:join', conferences);
+                console.log(data.conference, typeof data.conferencem, 'typeof');
                 Conferences.collection.remove({sip: data.conference});
                 console.log('\n\nCONF DELETED', conferences);
             } else {
