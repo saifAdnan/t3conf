@@ -4,6 +4,15 @@ function conferenceController($scope, $rootScope, $http, watchService, sipServic
     $scope.users = [];
     $scope.selectedUsers = [];
 
+    $scope.conf_name = null;
+    $scope.conf_sip = $routeParams.name;
+
+    setTimeout(function () {
+        $http.get("/action/confs").success(function (data) {
+            $scope.conf_name = data[$scope.conf_sip].sip_name;
+        });
+    }, 1000);
+
     $http.get("/action/users").success(function(data) {
         $scope.users = data;
     });
@@ -50,6 +59,7 @@ function conferenceController($scope, $rootScope, $http, watchService, sipServic
         watchService.emit("invite", {
             users: $scope.selectedUsers,
             extension: $routeParams.name
+            conf_name: $scope.conf_name
         });
         $("#invite").modal('hide');
         return false;
