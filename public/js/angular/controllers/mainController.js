@@ -78,7 +78,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     };
 
     $scope.generateSipNumber = function () {
-        $scope.conf_sip = Math.floor(Math.random() * 90000) + 1000;
+        $scope.conf_sip = Math.floor(Math.random() * 9000) + 1000;
     };
 
     sipService.sipHangUp();

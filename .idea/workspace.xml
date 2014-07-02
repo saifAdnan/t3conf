@@ -27,7 +27,7 @@
         <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/mainController.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.8618421" vertical-offset="894" max-vertical-offset="1953">
-              <caret line="80" column="60" selection-start-line="80" selection-start-column="60" selection-end-line="80" selection-end-column="60" />
+              <caret line="80" column="57" selection-start-line="80" selection-start-column="57" selection-end-line="80" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -1036,7 +1036,7 @@
     <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/mainController.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8618421" vertical-offset="894" max-vertical-offset="1953">
-          <caret line="80" column="60" selection-start-line="80" selection-start-column="60" selection-end-line="80" selection-end-column="60" />
+          <caret line="80" column="57" selection-start-line="80" selection-start-column="57" selection-end-line="80" selection-end-column="57" />
           <folding />
         </state>
       </provider>
