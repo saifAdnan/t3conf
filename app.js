@@ -118,7 +118,7 @@ ami.on('ami_data', function (data) {
 
         var chn = data.channel.split("SIP/")[1].split("-")[0];
 
-        var calleridnum = data.calleridnum ? data.calleridnum : chn;
+        var calleridnum = data.calleridnum !== '<unknown>' ? data.calleridnum : chn;
 
         console.log(calleridnum, 1111);
 
