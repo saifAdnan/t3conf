@@ -6,12 +6,13 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
     $scope.conf_name = null;
     $scope.conf_sip = roomName;
 
-    $http.get("/action/confs").success(function (data) {
-        console.warn(data, 'asdasd', $scope.conf_sip);
-        $scope.conf_name = data[$scope.conf_sip].sip_name;
-    });
+    setTimeout(function () {
+        $http.get("/action/confs").success(function (data) {
+            $scope.conf_name = data[$scope.conf_sip].sip_name;
+        });
+    }, 1000);
 
-    $http.get("/users").success(function(data) {
+    $http.get("/users").success(function (data) {
         if (!data) return false;
         $scope.moderator = data.moderator;
 
@@ -90,7 +91,6 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
     });
 
 
-
     // ==============================
 
     $scope.mention = function (name) {
@@ -117,11 +117,11 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
         $location.url("/");
     });
 
-    $scope.kick = function(username) {
+    $scope.kick = function (username) {
         console.log(username, $scope.users, 'username');
         watchService.chatEmit("kick", {
             username: username
-        },roomName);
+        }, roomName);
     };
 
     $scope.sendMessage = function () {
