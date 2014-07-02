@@ -53,7 +53,7 @@
                     <td>
                         <span ng-bind="user.date"></span>
                     </td>
-                    <td class="remove" ng-show="$parent.$parent.isAdmin">
+                    <td class="remove" ng-show="$parent.isAdmin">
                         <i class="glyphicon glyphicon-floppy-remove" ng-click="removeUser(user._id)"></i>
                     </td>
                 </tr>
