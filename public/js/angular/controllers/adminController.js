@@ -1,4 +1,4 @@
-function adminController($scope, $http) {
+function adminController($scope, $http, $rootScope) {
     "use strict";
     $scope.users = [];
     $scope.moderator = null;
@@ -9,6 +9,7 @@ function adminController($scope, $http) {
         $scope.moderator = data.moderator;
 
         $scope.isAdmin = data.isAdmin;
+        $rootScope.isAdmin = data.isAdmin;
 
         $.each($scope.users, function(index, user) {
             user.index = index + 1;
@@ -68,4 +69,4 @@ function adminController($scope, $http) {
     };
 }
 
-app.controller("adminController", ['$scope', '$http', adminController]);
+app.controller("adminController", ['$scope', '$http', '$rootScope', adminController]);
