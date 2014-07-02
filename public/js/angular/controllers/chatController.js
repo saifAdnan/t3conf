@@ -7,6 +7,7 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
     $scope.conf_sip = roomName;
 
     $http.get("/action/confs", function (data) {
+        console.warn(data[$scope.conf_sip], 'asdasd');
         $scope.conf_name = data[$scope.conf_sip].sip_name;
     });
 
