@@ -200,6 +200,27 @@ io.sockets.on('connection', function (socket) {
         io.isConnected = true;
     }
 
+    socket.on("invite", function (data) {
+        var users = data.users;
+
+        for (var i = 0; i < users.length; i++) {
+            ami.send({
+                action: 'Originate',
+                Channel: 'SIP/' + users[i].username,
+                Context: 'someuser',
+                Exten: data.extension,
+                Priority: 1
+            });
+            ami.send({
+                action: 'Originate',
+                Channel: 'trunk/' + users[i].phone,
+                Context: 'someuser',
+                Exten: data.extension,
+                Priority: 1
+            })
+        }
+    });
+
     socket.on('new-channel', function (data) {
         console.log(data.channel, data.sender, 'saif');
         if (!channels[data.channel]) {

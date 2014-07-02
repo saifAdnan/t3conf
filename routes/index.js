@@ -83,6 +83,23 @@ module.exports = function (app, rooms, ami, confs) {
         }
     });
 
+    app.get('/action/users', function (req, res) {
+       Users.find({approved: true}, function(err,doc) {
+           var rtn = [];
+           for (var i = 0; i < doc.length; i = i + 1) {
+               var a = {};
+               a.username = doc[i].username;
+               a.firstname = doc[i].firstname;
+               a.lastname = doc[i].lastname;
+               a.sip = doc[i].sip;
+               a.phone = doc[i].phone;
+               rtn.push(a);
+           }
+
+           res.json(rtn);
+       });
+    });
+
     /**
      * route /login
      * render login.html

@@ -46,6 +46,12 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         $location.url("/");
     };
 
+    $scope.invite = function () {
+        if ($("#invite").length) {
+            $("#invite").modal();
+        }
+    };
+
     $scope.createConference = function (e) {
         e.preventDefault();
 

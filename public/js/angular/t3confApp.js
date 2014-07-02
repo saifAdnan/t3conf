@@ -36,6 +36,9 @@ app.run(['$rootScope', '$http',
         $rootScope.username = USERNAME;
         $rootScope.enableChat = true;
 
+            $scope.isAdmin = data.isAdmin;
+        });
+
         $http.get("/rooms").success(function(data) {
             $rootScope.rooms = data;
         });

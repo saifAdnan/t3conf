@@ -1,6 +1,13 @@
 function conferenceController($scope, $rootScope, $http, watchService, sipService, $routeParams) {
     $rootScope.isCalling = true;
 
+    $scope.users = [];
+    $scope.selectedUsers = [];
+
+    $http.get("/action/users").success(function(data) {
+        $scope.users = data;
+    });
+
     watchService.on('user:left', function(data) {
         $("#" + data.socketid).parent().remove();
     });
@@ -27,8 +34,27 @@ function conferenceController($scope, $rootScope, $http, watchService, sipServic
     });
 
     $scope.closeKeyPad = function () {
-        $("#keypad").modal('hide');
-    }
+        if ($("#keypad").length) {
+            $("#keypad").modal('hide');
+        }
+    };
+
+    $scope.closeInvite = function () {
+        if ($("#invite").length) {
+            $("#invite").modal('hide');
+        }
+    };
+
+    $scope.invite = function (e) {
+        e.preventDefault();
+        watchService.emit("invite", {
+            users: $scope.selectedUsers,
+            extension: $routeParams.name
+        });
+        $("#invite").modal('hide');
+        return false;
+
+    };
 }
 
 app.controller("conferenceController", ['$scope', '$rootScope', '$http', 'watchService', 'sipService', '$routeParams', conferenceController]);
