@@ -211,9 +211,10 @@ io.sockets.on('connection', function (socket) {
                 Exten: data.extension,
                 Priority: 1
             });
+
             ami.send({
                 action: 'Originate',
-                Channel: 'trunk/' + users[i].phone,
+                Channel: 'trunk/zadarma-us/' + users[i].phone,
                 Context: 'someuser',
                 Exten: data.extension,
                 Priority: 1
