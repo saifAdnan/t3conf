@@ -96,7 +96,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         }
     };
 
-    $scope.clearRecords = function (filename) {
+    $scope.clearRecord = function (filename) {
         e.preventDefault();
         if (confirm("Are you sure to deletethis record?")) {
             $http.post("/action/clearRecord", {filename: filename});
