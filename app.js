@@ -30,6 +30,16 @@ var app = express(),
             name: '1111',
             sip: 1111,
             sip_name: 'T3leads'
+        },
+        '1112': {
+            name: '1112',
+            sip: 1112,
+            sip_name: 'Sora'
+        },
+        '1113': {
+            name: '1113',
+            sip: 1113,
+            sip_name: 'Spyxel'
         }
     },
     web_users = {},
