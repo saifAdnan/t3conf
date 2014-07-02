@@ -104,8 +104,8 @@ server.listen(app.get("port")); //1855
 
 var ami = new AsteriskAmi({ host: '46.36.223.131', username: 'myasterisk', password: '123456'});
 ami.on('ami_data', function (data) {
-    console.log(data);
     if (data.event === "ConfbridgeJoin") {
+        console.log(data);
         /*
          { event: 'ConfbridgeJoin',
          privilege: 'call,all',
@@ -139,6 +139,7 @@ ami.on('ami_data', function (data) {
             }
         });
     } else if (data.event === 'ConfbridgeLeave') {
+        console.log(data);
         /*
          { event: 'ConfbridgeLeave',
          privilege: 'call,all',
