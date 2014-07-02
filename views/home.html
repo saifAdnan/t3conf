@@ -89,6 +89,7 @@
                                 <td>
                                         <span class="btn btn-default btn-sm btn-join"
                                               ng-click="join(room.name)"
+                                              ng-disabled="!$parent.connected"
                                                 >JOIN</span>
                                 </td>
                             </tr>
