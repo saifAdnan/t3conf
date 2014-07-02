@@ -23,7 +23,6 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
         }
     });
 
-
     $scope.private = false;
     $scope.to = null;
 
