@@ -471,7 +471,7 @@ module.exports = function (app, rooms, ami, confs) {
     app.post('/action/clearRecords', function (req, res) {
         fs.readdir('asterisk/monitor/', function (err, files) {
             files.forEach(function(filename) {
-                fs.unlink(__dirname + '../asterisk/monitor/' + filename, function (err) {});
+                fs.unlinkSync(__dirname + '../asterisk/monitor/' + filename, function (err) {});
             });
         });
         res.end('Records has been deleted!');
