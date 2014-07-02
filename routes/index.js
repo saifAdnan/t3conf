@@ -469,8 +469,7 @@ module.exports = function (app, rooms, ami, confs) {
     });
 
     app.post('/action/clearRecords', function (req, res) {
-        console.log(__dirname, 'loc');
-        fs.readdir(__dirname +'/../asterisk/monitor', function (err, files) {
+        fs.readdir('/var/spool/asterisk/monitor/', function (err, files) {
             files.forEach(function(filename) {
                 fs.unlink(filename, function (err) {
                     console.log(err);
