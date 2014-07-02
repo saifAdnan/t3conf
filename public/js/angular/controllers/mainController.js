@@ -27,9 +27,10 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     // Watch asterisk conference changes
     watchService.on("user:join", function (data) {
         $scope.rooms = getValues(data);
-        console.warn($scope.rooms);
-        for(room in $scope.rooms) {
-            console.warn(room);
+        for(var i = 0; i < $scope.rooms.length; i ++) {
+            if ($scope.rooms[i].name === '1111') {
+                $scope.t3leadsActive = true;
+            }
         }
     });
 
