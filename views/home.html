@@ -133,7 +133,9 @@
                                 <a href="/asterisk/monitor/{%file%}" ng-bind="file">
 
                                 </a>
-                                <i class="glyphicon glyphicon-floppy-remove" ng-click="clearRecord(file)"></i>
+                                <a href="#" ng-click="clearRecord($event, file)">
+                                    <i class="glyphicon glyphicon-floppy-remove"></i>
+                                </a>
                             </li>
                         </ul>
                     </div>
