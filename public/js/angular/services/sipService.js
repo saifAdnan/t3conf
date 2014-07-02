@@ -13,6 +13,9 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
         console.warn("connected");
     });
 
+    var isStarted = false;
+    var chkCounter =0;
+
     var postInit = function () {
         // check webrtc4all version
         if (SIPml.isWebRtc4AllSupported() && SIPml.isWebRtc4AllPluginOutdated()) {
@@ -132,8 +135,17 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
     }
 
     var eventsListener = function(e){
+        var chkStatus = setInterval(function () {
+            chkCounter = chkCounter + 1;
+            if (chkCounter > 1 && isStarted === false) {
+                window.location.reload();
+            }
+        }, 1000);
 
         if(e.type == 'started'){
+            isStarted = true;
+            window.clearInterval(chkStatus);
+            clearInterval(chkStatus);
             login();
         }
         else if(e.type == 'i_new_message'){ // incoming new SIP MESSAGE (SMS-like)
