@@ -218,3 +218,8 @@ label {
     overflow-x: hidden;
     overflow-y: scroll;
 }
+
+.panel-records h4 {
+    display: inline-block;
+    margin-right: 10px;
+}
