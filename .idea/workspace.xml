@@ -66,8 +66,8 @@
       <file leaf-file-name="index.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.55239785" vertical-offset="9580" max-vertical-offset="10227">
-              <caret line="471" column="35" selection-start-line="471" selection-start-column="35" selection-end-line="471" selection-end-column="35" />
+            <state vertical-scroll-proportion="0.589698" vertical-offset="9580" max-vertical-offset="10227">
+              <caret line="472" column="32" selection-start-line="472" selection-start-column="32" selection-end-line="472" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -1036,8 +1036,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.55239785" vertical-offset="9580" max-vertical-offset="10227">
-          <caret line="471" column="35" selection-start-line="471" selection-start-column="35" selection-end-line="471" selection-end-column="35" />
+        <state vertical-scroll-proportion="0.589698" vertical-offset="9580" max-vertical-offset="10227">
+          <caret line="472" column="32" selection-start-line="472" selection-start-column="32" selection-end-line="472" selection-end-column="32" />
           <folding />
         </state>
       </provider>
