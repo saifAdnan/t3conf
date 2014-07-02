@@ -87,7 +87,11 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     };
 
     $scope.clearRecords = function () {
-      $http.post("/action/clearRecords");
+        if (confirm("Are you sure to delete all records?")) {
+            $http.post("/action/clearRecords");
+        } else {
+            return false;
+        }
     };
 
     sipService.sipHangUp();
