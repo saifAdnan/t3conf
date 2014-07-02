@@ -214,7 +214,7 @@ io.sockets.on('connection', function (socket) {
 
             ami.send({
                 action: 'Originate',
-                Channel: 'trunk/zadarma-us/' + users[i].phone,
+                Channel: 'SIP/zadarma-us/' + users[i].phone,
                 Context: 'someuser',
                 Exten: data.extension,
                 Priority: 1
