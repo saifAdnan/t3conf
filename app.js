@@ -116,6 +116,10 @@ ami.on('ami_data', function (data) {
          calleridname: 'Sergey' }
          */
 
+        var chn = data.channel.split("SIP/")[1].split("-")[0];
+
+        var calleridnum = data.calleridnum ? data.calleridnum : chn;
+
         Account.collection.find({username: data.calleridnum}).toArray(function (err, doc) {
             if (doc.length) {
                 var user = {
