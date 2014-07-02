@@ -156,7 +156,9 @@ ami.on('ami_data', function (data) {
                 delete conferences[data.conference];
                 io.sockets.emit('user:join', conferences);
                 var sip_int = parseInt(data.conference, 10);
-                Conferences.collection('conferences').remove({'sip': sip_int});
+                Conferences.remove({'sip': sip_int} , function(err, result) {
+                    console.log(err, result);
+                });
                 console.log('\n\nCONF DELETED', conferences);
             } else {
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
