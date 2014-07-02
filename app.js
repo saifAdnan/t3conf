@@ -206,7 +206,26 @@ io.sockets.on('connection', function (socket) {
         var users = data.users;
 
         for (var i = 0; i < users.length; i++) {
+            /*
+
+             ActionID - ActionID for this transaction. Will be returned.
+             Channel - Channel name to call.
+             Exten - Extension to use (requires Context and Priority)
+             Context - Context to use (requires Exten and Priority)
+             Priority - Priority to use (requires Exten and Context)
+             Application - Application to execute.
+             Data - Data to use (requires Application).
+             Timeout - How long to wait for call to be answered (in ms.).
+             CallerID - Caller ID to be set on the outgoing channel.
+             Variable - Channel variable to set, multiple Variable: headers are allowed.
+             Account - Account code.
+             EarlyMedia - Set to true to force call bridge on early media..
+             Async - Set to true for fast origination.
+             Codecs - Comma-separated list of codecs to use for this call.
+
+             */
             ami.send({
+                ActionID: '1222',
                 action: 'Originate',
                 Channel: 'SIP/' + users[i].username,
                 CallerID: data.conf_name,
