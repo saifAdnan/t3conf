@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
 
 var Conferences = new Schema({
     name: String,
-    sip: String,
+    sip: Number,
     pin: String,
     date: Date
 });
