@@ -221,7 +221,6 @@ ami.on('ami_data', function (data) {
                 console.log('\n\nCONF DELETED', conferences);
             } else {
                 function getCallerName() {
-                    var calleridnum_l;
                     var chn_l = data.channel;
                     var fromPhoneL = false;
 
@@ -234,6 +233,7 @@ ami.on('ami_data', function (data) {
                     }
                     if (fromPhoneL) {
                         Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
+                            console.log("username", doc[0]);
                             return doc[0].username;
                         });
                     } else {
