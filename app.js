@@ -101,6 +101,28 @@ mongoose.connect('mongodb://' + db.host + '/' + db.db);
 //server listent o port
 server.listen(app.get("port")); //1855
 
+function getCallerName(data) {
+    var chn_l = data.channel;
+    var fromPhoneL = false;
+
+    if ((chn_l.split("SIP/zadarma-us").length - 1 ) === 1) {
+        chn_l = data.calleridnum;
+        fromPhoneL = true;
+    } else {
+        fromPhoneL = false;
+        chn_l = chn_l.split("SIP/")[1].split("-")[0];
+    }
+    if (fromPhoneL) {
+        Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
+            console.log("username", doc[0].username);
+            return doc[0].username;
+        });
+    } else {
+        return data.calleridnum;
+    }
+
+}
+
 var ami = new AsteriskAmi(asterisk);
 ami.on('ami_data', function (data) {
     if (data.event === "ConfbridgeJoin") {
@@ -220,39 +242,14 @@ ami.on('ami_data', function (data) {
                 Conferences.remove({'sip': sip_int});
                 console.log('\n\nCONF DELETED', conferences);
             } else {
-                function getCallerName(data) {
-                    var chn_l = data.channel;
-                    var fromPhoneL = false;
-
-                    if ((chn_l.split("SIP/zadarma-us").length - 1 ) === 1) {
-                        chn_l = data.calleridnum;
-                        fromPhoneL = true;
-                    } else {
-                        fromPhoneL = false;
-                        chn_l = chn_l.split("SIP/")[1].split("-")[0];
-                    }
-                    if (fromPhoneL) {
-                        Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
-                            console.log("username", doc[0].username);
-                            return doc[0].username;
-                        });
-                    } else {
-                        return data.calleridnum;
-                    }
-
-                }
-
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
-
                     console.log(getCallerName(data));
-
-                    if (conferences[data.conference].users[i].username === getCallerName()) {
+                    if (conferences[data.conference].users[i].username === getCallerName(data)) {
                         conferences[data.conference].users.splice(i, 1);
                         io.sockets.emit('user:join', conferences);
                         console.log('\n\nLEFT', conferences);
                     }
                 }
-
             }
         } else if (data.event === 'ConfbridgeListRooms') {
             /*
