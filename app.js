@@ -198,6 +198,16 @@ ami.on('ami_data', function (data) {
          calleridnum: 'test001',
          calleridname: 'saif adnan' }
          */
+
+        /* PHONE
+         { event: 'ConfbridgeLeave',
+         privilege: 'call,all',
+         channel: 'SIP/zadarma-us-00000308',
+         uniqueid: '1404379140.1524',
+         conference: '1111',
+         calleridnum: '14244440999',
+         calleridname: '14244440999' }
+         */
         if (conferences[data.conference] && conferences[data.conference].users && conferences[data.conference].users.length) {
             if (conferences[data.conference].users.length === 1
                 && conferences[data.conference].name !== '1111'
@@ -211,14 +221,25 @@ ami.on('ami_data', function (data) {
                 console.log('\n\nCONF DELETED', conferences);
             } else {
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
+                    var calleridnum_l;
                     var chn_l = data.channel;
+                    var fromPhoneL = false;
 
-                    if ((chn_l.split("/").length - 1) === 2) {
-                        chn_l = chn_l.split("SIP/")[2].split("-")[0];
+                    if ((chn_l.split("SIP/zadarma-us").length - 1 ) === 1) {
+                        chn_l = data.calleridnum;
+                        fromPhoneL = true;
                     } else {
+                        fromPhoneL = false;
                         chn_l = chn_l.split("SIP/")[1].split("-")[0];
                     }
-                    var calleridnum_l = data.calleridnum !== '<unknown>' ? data.calleridnum : chn_l;
+
+                    if (fromPhoneL) {
+                        Account.collection.find({phone: chn_l}, function(err, doc) {
+                            calleridnum_l = doc[0].username;
+                        });
+                    } else {
+                        calleridnum_l = data.calleridnum;
+                    }
 
                     if (conferences[data.conference].users[i].username === calleridnum_l) {
                         conferences[data.conference].users.splice(i, 1);
