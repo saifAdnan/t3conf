@@ -235,12 +235,13 @@ ami.on('ami_data', function (data) {
 
                     if (fromPhoneL) {
                         Account.collection.find({phone: chn_l}).toArray(function(err, doc) {
-                            console.log(doc, 'doc');
                             calleridnum_l = doc[0].username;
                         });
                     } else {
                         calleridnum_l = data.calleridnum;
                     }
+
+                    console.log(conferences[data.conference].users[i].username, calleridnum_l, 'calleridnum_l');
 
                     if (conferences[data.conference].users[i].username === calleridnum_l) {
                         conferences[data.conference].users.splice(i, 1);
