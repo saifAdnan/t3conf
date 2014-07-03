@@ -116,7 +116,7 @@ function getCallerName(data) {
 
 
     if (fromPhoneL) {
-        return Account.collection.find({phone: chn_l})[0].username;
+        return Account.collection.find({phone: chn_l}).toArray()[0].username;
     } else {
         return data.calleridnum;
     }
