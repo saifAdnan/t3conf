@@ -236,18 +236,21 @@ ami.on('ami_data', function (data) {
                     if (fromPhoneL) {
                         Account.collection.find({phone: chn_l}).toArray(function(err, doc) {
                             calleridnum_l = doc[0].username;
+                            if (conferences[data.conference].users[i].username === calleridnum_l) {
+                                conferences[data.conference].users.splice(i, 1);
+                                io.sockets.emit('user:join', conferences);
+                                console.log('\n\nLEFT', conferences);
+                                break;
+                            }
                         });
                     } else {
                         calleridnum_l = data.calleridnum;
-                    }
-
-                    console.log(conferences[data.conference].users[i].username, calleridnum_l, 'calleridnum_l');
-
-                    if (conferences[data.conference].users[i].username === calleridnum_l) {
-                        conferences[data.conference].users.splice(i, 1);
-                        io.sockets.emit('user:join', conferences);
-                        console.log('\n\nLEFT', conferences);
-                        break;
+                        if (conferences[data.conference].users[i].username === calleridnum_l) {
+                            conferences[data.conference].users.splice(i, 1);
+                            io.sockets.emit('user:join', conferences);
+                            console.log('\n\nLEFT', conferences);
+                            break;
+                        }
                     }
                 }
             }
