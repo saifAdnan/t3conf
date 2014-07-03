@@ -5,6 +5,7 @@ var fs = require('fs'),
     methodOverride = require('method-override'),
     mongoose = require('mongoose'),
     mongoStore = require('connect-mongo')(express),
+    mongooseQ = require('mongoose-q')(mongoose),
     LocalStrategy = require('passport-local').Strategy,
     https = require('https'),
     passport = require('passport'),
@@ -113,10 +114,10 @@ function getCallerName(data) {
         fromPhoneL = false;
         chn_l = chn_l.split("SIP/")[1].split("-")[0];
     }
-    var promise = Account.collection.find({phone: chn_l}).exec();
+
 
     if (fromPhoneL) {
-        promise.then(function(doc) {
+        Account.collection.find({phone: chn_l}).then(function (doc) {
             return doc[0].username;
         });
     } else {
