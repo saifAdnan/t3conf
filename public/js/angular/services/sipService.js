@@ -228,7 +228,7 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
             if (!$rootScope.connected) {
                 if (cb && typeof cb === 'function') return cb(false);
             }
-            callSession = sipStack.newSession('call-audiovideo', {
+            callSession = sipStack.newSession('call-audio', {
                 video_local: videoLocal,
                 video_remote: videoRemote,
                 audio_remote: audioRemote,
