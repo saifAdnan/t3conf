@@ -1,22 +1,35 @@
 app.factory('sipService', ['$rootScope', function ($rootScope) {
-    $rootScope.status = "Please wait...";
-    $rootScope.connected = false;
     var sipStack,
         callSession,
         oConfigCall,
         videoLocal = document.getElementById("video_local"),
         videoRemote = document.getElementById("video_remote"),
         audioRemote = document.getElementById("audio_remote"),
-        viewVideoLocal, viewVideoRemote; // <video> (webrtc) or <div> (webrtc4all)
+        viewVideoLocal, viewVideoRemote,
+        isStarted = false,
+        chkCounter =0;
 
-    $rootScope.$watch('connected', function() {
-        console.warn("connected");
-    });
+    //SIPml5 config
+    var sipml5_config = {
+        realm: '46.36.223.131',
+        impi: USERNAME,
+        impu: 'sip:' + USERNAME + '@46.36.223.131',
+        password: PASSWORD, // optional
+        display_name: FIRSTNAME + ' ' + LASTNAME, // optional
+        //websocket_proxy_url: 'wss://46.36.223.131:10062', // optional
+        //outbound_proxy_url: 'udp://example.org:5060', // optional
+        enable_rtcweb_breaker: true, // optional
+        events_listener: { events: '*', listener: eventsListener }, // optional: '*' means all events
+        sip_headers: [ // optional
+            { name: 'User-Agent', value: 'IM-client/OMA1.0 sipML5-v1.0.0.0' },
+            { name: 'Organization', value: 'Doubango Telecom' }
+        ]
+    };
 
-    var isStarted = false;
-    var chkCounter =0;
+    $rootScope.status = "Please wait...";
+    $rootScope.connected = false;
 
-    var postInit = function () {
+    function postInit() {
         // check webrtc4all version
         if (SIPml.isWebRtc4AllSupported() && SIPml.isWebRtc4AllPluginOutdated()) {
             if (confirm("Your WebRtc4all extension is outdated ("+SIPml.getWebRtc4AllVersion()+"). A new version with critical bug fix is available. Do you want to install it?\nIMPORTANT: You must restart your browser after the installation.")) {
@@ -134,7 +147,7 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
         };
     }
 
-    var eventsListener = function(e){
+    function eventsListener (e){
         var chkStatus = setInterval(function () {
             chkCounter = chkCounter + 1;
             if (chkCounter > 1 && isStarted === false) {
@@ -163,9 +176,9 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
             $rootScope.connected = true;
             $rootScope.$apply();
         }
-    };
+    }
 
-    var login = function(){
+    function login(){
         registerSession = sipStack.newSession('register', {
             events_listener: { events: '*', listener: eventsListener }, // optional: '*' means all events
             sip_caps: [
@@ -175,25 +188,9 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
             ]
         });
         registerSession.register();
-    };
+    }
 
-    var sipml5_config = {
-        realm: '46.36.223.131',
-        impi: USERNAME,
-        impu: 'sip:' + USERNAME + '@46.36.223.131',
-        password: PASSWORD, // optional
-        display_name: FIRSTNAME + ' ' + LASTNAME, // optional
-        //websocket_proxy_url: 'wss://46.36.223.131:10062', // optional
-        //outbound_proxy_url: 'udp://example.org:5060', // optional
-        enable_rtcweb_breaker: true, // optional
-        events_listener: { events: '*', listener: eventsListener }, // optional: '*' means all events
-        sip_headers: [ // optional
-            { name: 'User-Agent', value: 'IM-client/OMA1.0 sipML5-v1.0.0.0' },
-            { name: 'Organization', value: 'Doubango Telecom' }
-        ]
-    };
-
-    var getPVal = function (PName) {
+    function getPVal(PName) {
         var query = window.location.search.substring(1);
         var vars = query.split('&');
         for (var i = 0; i < vars.length; i++) {
@@ -203,9 +200,9 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
             }
         }
         return null;
-    };
+    }
 
-    var preInit = function() {
+    function preInit() {
         // set default webrtc type (before initialization)
         var s_webrtc_type = getPVal("wt");
         if (s_webrtc_type) {
@@ -217,7 +214,7 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
 
         // initialize SIPML5
         SIPml.init(postInit);
-    };
+    }
 
     preInit();
 
