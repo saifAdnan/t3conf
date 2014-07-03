@@ -143,7 +143,7 @@ ami.on('ami_data', function (data) {
                 if (doc.length) {
                     var user = {
                         username: doc[0].username,
-                        channel: channel,
+                        channel: data.channel,
                         sip: doc[0].phone,
                         phone: doc[0].phone
                     };
@@ -167,7 +167,7 @@ ami.on('ami_data', function (data) {
                 if (doc.length) {
                     var user = {
                         username: data.calleridnum !== '<unknown>' ? data.calleridnum : doc[0].username,
-                        channel: channel,
+                        channel: data.channel,
                         sip: doc[0].sip,
                         phone: doc[0].phone
                     };
