@@ -157,6 +157,18 @@ ami.on('ami_data', function (data) {
          calleridname: '13108070303' }
          */
 
+        /*
+        unknown number
+         { event: 'ConfbridgeLeave',
+         privilege: 'call,all',
+         channel: 'SIP/zadarma-us-000003bb',
+         uniqueid: '1404390608.1766',
+         conference: '1111',
+         calleridnum: '15244440999',
+         calleridname: '15244440999' }
+
+         */
+
         var chn = data.channel;
         var fromPhone = false;
 
@@ -179,20 +191,28 @@ ami.on('ami_data', function (data) {
                         sip: doc[0].phone,
                         phone: doc[0].phone
                     };
-                    if (!conferences[data.conference]) conferences[data.conference] = {};
-                    if (!conferences[data.conference].users) conferences[data.conference].users = [];
-
-                    var n = parseInt(data.conference, 10);
-
-                    Conferences.collection.find({sip: n}).toArray(function (err, doc) {
-                        if (doc.length > 0) {
-                            conferences[data.conference].sip_name = doc[0].name;
-                        }
-                        conferences[data.conference].users.push(user);
-                        io.sockets.emit('user:join', conferences);
-                        console.log('\n\nJOIN', conferences);
-                    });
+                } else {
+                    var user = {
+                        username: '',
+                        channel: data.channel,
+                        sip: '',
+                        phone: data.calleridnum
+                    }
                 }
+
+                if (!conferences[data.conference]) conferences[data.conference] = {};
+                if (!conferences[data.conference].users) conferences[data.conference].users = [];
+
+                var n = parseInt(data.conference, 10);
+
+                Conferences.collection.find({sip: n}).toArray(function (err, doc) {
+                    if (doc.length > 0) {
+                        conferences[data.conference].sip_name = doc[0].name;
+                    }
+                    conferences[data.conference].users.push(user);
+                    io.sockets.emit('user:join', conferences);
+                    console.log('\n\nJOIN', conferences);
+                });
             });
         } else {
             Account.collection.find({username: calleridnum}).toArray(function (err, doc) {
