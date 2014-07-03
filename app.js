@@ -235,19 +235,19 @@ ami.on('ami_data', function (data) {
 
                     if (fromPhoneL) {
                         Account.collection.find({phone: chn_l}).toArray(function(err, doc) {
-                            if (conferences[data.conference].users[i].username === doc[0].username) {
-                                conferences[data.conference].users.splice(i, 1);
-                                io.sockets.emit('user:join', conferences);
-                                console.log('\n\nLEFT', conferences);
-                            }
-                        }).bind(i);
+                            calleridnum_l = doc[0].username;
+                        });
                     } else {
                         calleridnum_l = data.calleridnum;
-                        if (conferences[data.conference].users[i].username === calleridnum_l) {
-                            conferences[data.conference].users.splice(i, 1);
-                            io.sockets.emit('user:join', conferences);
-                            console.log('\n\nLEFT', conferences);
-                        }
+                    }
+
+                    console.log(conferences[data.conference].users[i].username, calleridnum_l, 'calleridnum_l');
+
+                    if (conferences[data.conference].users[i].username === calleridnum_l) {
+                        conferences[data.conference].users.splice(i, 1);
+                        io.sockets.emit('user:join', conferences);
+                        console.log('\n\nLEFT', conferences);
+                        break;
                     }
                 }
             }
