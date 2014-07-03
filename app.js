@@ -244,6 +244,8 @@ ami.on('ami_data', function (data) {
 
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
 
+                    console.log(getCallerName());
+
                     if (conferences[data.conference].users[i].username === getCallerName()) {
                         conferences[data.conference].users.splice(i, 1);
                         io.sockets.emit('user:join', conferences);
