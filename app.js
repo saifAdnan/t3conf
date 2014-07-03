@@ -116,11 +116,19 @@ function kickUser(data, i) {
 
     if (fromPhoneL) {
         Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
-            if(!doc[0]) return false;
-            if (conferences[data.conference].users[i].username === doc[0].username) {
-                conferences[data.conference].users.splice(i, 1);
-                io.sockets.emit('user:join', conferences);
-                console.log('\n\nLEFT', conferences);
+            if (!doc[0]) {
+                if (conferences[data.conference].users[i].username === data.calleridnum) {
+                    conferences[data.conference].users.splice(i, 1);
+                    io.sockets.emit('user:join', conferences);
+                    console.log('\n\nLEFT', conferences);
+                }
+            } else {
+                if (conferences[data.conference].users[i].username === doc[0].username) {
+                    conferences[data.conference].users.splice(i, 1);
+                    io.sockets.emit('user:join', conferences);
+                    console.log('\n\nLEFT', conferences);
+
+                }
             }
         });
     } else {
@@ -158,7 +166,7 @@ ami.on('ami_data', function (data) {
          */
 
         /*
-        unknown number
+         unknown number
          { event: 'ConfbridgeLeave',
          privilege: 'call,all',
          channel: 'SIP/zadarma-us-000003bb',
