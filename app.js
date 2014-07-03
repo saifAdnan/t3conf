@@ -220,7 +220,7 @@ ami.on('ami_data', function (data) {
                 Conferences.remove({'sip': sip_int});
                 console.log('\n\nCONF DELETED', conferences);
             } else {
-                function getCallerName() {
+                function getCallerName(data) {
                     var chn_l = data.channel;
                     var fromPhoneL = false;
 
@@ -244,7 +244,7 @@ ami.on('ami_data', function (data) {
 
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
 
-                    console.log(getCallerName());
+                    console.log(getCallerName(data));
 
                     if (conferences[data.conference].users[i].username === getCallerName()) {
                         conferences[data.conference].users.splice(i, 1);
