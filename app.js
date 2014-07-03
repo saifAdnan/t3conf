@@ -237,20 +237,18 @@ ami.on('ami_data', function (data) {
 
                     if (fromPhoneL) {
                         Account.collection.find({phone: chn_l}).toArray(function(err, doc) {
-                            Promise.resolve(doc[0].username);
+                            Promise.resolve(doc[0].username, i);
                         });
                     } else {
-                        Promise.resolve(data.calleridnum);
+                        Promise.resolve(data.calleridnum, i);
                     }
 
-                    promise.then(function(result){
+                    promise.then(function(result, i){
                         console.log(conferences[data.conference].users[i].username, result, 'calleridnum_l');
-
                         if (conferences[data.conference].users[i].username === result) {
                             conferences[data.conference].users.splice(i, 1);
                             io.sockets.emit('user:join', conferences);
                             console.log('\n\nLEFT', conferences);
-                            break;
                         }
                     });
                 }
