@@ -10,8 +10,7 @@ var fs = require('fs'),
     passport = require('passport'),
     Account = require('./models/users'),
     Conferences = require('./models/conferences.js'),
-    AsteriskAmi = require('asterisk-ami'),
-    q = require("q");
+    AsteriskAmi = require('asterisk-ami');
 
 // SSL options
 var options = {
