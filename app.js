@@ -116,8 +116,12 @@ function getCallerName(data) {
 
     if (fromPhoneL) {
         var promise = new mongoose.Promise;
-        promise = Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
-            promise.resolve(doc[0].username);
+        Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
+            if (conferences[data.conference].users[i].username === doc[0].username) {
+                conferences[data.conference].users.splice(i, 1);
+                io.sockets.emit('user:join', conferences);
+                console.log('\n\nLEFT', conferences);
+            }
         });
         return promise;
     } else {
