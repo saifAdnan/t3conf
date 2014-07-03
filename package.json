@@ -30,6 +30,7 @@
     "passport": "*",
     "passport-local": "*",
     "passport-local-mongoose": "*",
+    "promise": "^5.0.0",
     "session.socket.io": "^0.1.6",
     "socket.io": "0.*",
     "walk": "^2.3.3",

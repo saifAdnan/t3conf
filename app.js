@@ -10,7 +10,8 @@ var fs = require('fs'),
     passport = require('passport'),
     Account = require('./models/users'),
     Conferences = require('./models/conferences.js'),
-    AsteriskAmi = require('asterisk-ami');
+    AsteriskAmi = require('asterisk-ami'),
+    Promise = require("promise").Promise;
 
 // SSL options
 var options = {
@@ -208,6 +209,7 @@ ami.on('ami_data', function (data) {
          calleridnum: '14244440999',
          calleridname: '14244440999' }
          */
+        var promise = new Promise();
         if (conferences[data.conference] && conferences[data.conference].users && conferences[data.conference].users.length) {
             if (conferences[data.conference].users.length === 1
                 && conferences[data.conference].name !== '1111'
@@ -235,20 +237,22 @@ ami.on('ami_data', function (data) {
 
                     if (fromPhoneL) {
                         Account.collection.find({phone: chn_l}).toArray(function(err, doc) {
-                            calleridnum_l = doc[0].username;
+                            Promise.resolve(doc[0].username);
                         });
                     } else {
-                        calleridnum_l = data.calleridnum;
+                        Promise.resolve(data.calleridnum);
                     }
 
-                    console.log(conferences[data.conference].users[i].username, calleridnum_l, 'calleridnum_l');
+                    promise.then(function(result){
+                        console.log(conferences[data.conference].users[i].username, result, 'calleridnum_l');
 
-                    if (conferences[data.conference].users[i].username === calleridnum_l) {
-                        conferences[data.conference].users.splice(i, 1);
-                        io.sockets.emit('user:join', conferences);
-                        console.log('\n\nLEFT', conferences);
-                        break;
-                    }
+                        if (conferences[data.conference].users[i].username === result) {
+                            conferences[data.conference].users.splice(i, 1);
+                            io.sockets.emit('user:join', conferences);
+                            console.log('\n\nLEFT', conferences);
+                            break;
+                        }
+                    });
                 }
             }
 
