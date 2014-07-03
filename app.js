@@ -116,7 +116,7 @@ function getCallerName(data) {
 
     if (fromPhoneL) {
         var promise = new mongoose.Promise;
-        Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
+        promise = Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
             promise.resolve(doc[0].username);
         });
         return promise;
