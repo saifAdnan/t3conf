@@ -42,17 +42,17 @@ var app = express(),
         '1111': {
             name: '1111',
             sip: 1111,
-            sip_name: 'T3leads (+13108070303)'
+            sip_name: 'T3leads (#1)'
         },
         '1112': {
             name: '1112',
             sip: 1112,
-            sip_name: 'Sora (+17188317156 #153494)'
+            sip_name: 'Sora (#2)'
         },
         '1113': {
             name: '1113',
             sip: 1113,
-            sip_name: 'ATC (+17188317156 #153497)'
+            sip_name: 'ATC (#3)'
         }
     },
     web_users = {},
@@ -115,38 +115,76 @@ ami.on('ami_data', function (data) {
          calleridname: 'Sergey' }
          */
 
-        var chn = data.channel;
+        /*
+         event: 'ConfbridgeJoin',
+         privilege: 'call,all',
+         channel: 'SIP/zadarma-us-000002ce',
+         uniqueid: '1404373038.1445',
+         conference: '1113',
+         calleridnum: '13108070303',
+         calleridname: '13108070303' }
+         */
 
-        if ((chn.split("/").length - 1) === 2) {
-            chn = chn.split("SIP/")[2].split("-")[0];
+        var chn = data.channel;
+        var fromPhone = false;
+
+        if ((chn.split("SIP/zadarma-us").length - 1 ) === 1) {
+            chn = data.calleridnum;
+            fromPhone = true;
         } else {
+            fromPhone = false;
             chn = chn.split("SIP/")[1].split("-")[0];
         }
 
         var calleridnum = data.calleridnum !== '<unknown>' ? data.calleridnum : chn;
 
-        Account.collection.find({username: calleridnum}).toArray(function (err, doc) {
-            if (doc.length) {
-                var user = {
-                    username: data.calleridnum !== '<unknown>' ? data.calleridnum : doc[0].username,
-                    sip: doc[0].sip,
-                    phone: doc[0].phone
-                };
-                if (!conferences[data.conference]) conferences[data.conference] = {};
-                if (!conferences[data.conference].users) conferences[data.conference].users = [];
+        if (fromPhone) {
+            Account.collection.find({phone: calleridnum}).toArray(function (err, doc) {
+                if (doc.length) {
+                    var user = {
+                        username: data.calleridnum !== '<unknown>' ? data.calleridnum : doc[0].username,
+                        sip: doc[0].sip,
+                        phone: doc[0].phone
+                    };
+                    if (!conferences[data.conference]) conferences[data.conference] = {};
+                    if (!conferences[data.conference].users) conferences[data.conference].users = [];
 
-                var n = parseInt(data.conference, 10);
+                    var n = parseInt(data.conference, 10);
 
-                Conferences.collection.find({sip: n}).toArray(function (err, doc) {
-                    if (doc.length > 0) {
-                        conferences[data.conference].sip_name = doc[0].name;
-                    }
-                    conferences[data.conference].users.push(user);
-                    io.sockets.emit('user:join', conferences);
-                    console.log('\n\nJOIN', conferences);
-                });
-            }
-        });
+                    Conferences.collection.find({sip: n}).toArray(function (err, doc) {
+                        if (doc.length > 0) {
+                            conferences[data.conference].sip_name = doc[0].name;
+                        }
+                        conferences[data.conference].users.push(user);
+                        io.sockets.emit('user:join', conferences);
+                        console.log('\n\nJOIN', conferences);
+                    });
+                }
+            });
+        } else {
+            Account.collection.find({username: calleridnum}).toArray(function (err, doc) {
+                if (doc.length) {
+                    var user = {
+                        username: data.calleridnum !== '<unknown>' ? data.calleridnum : doc[0].username,
+                        sip: doc[0].sip,
+                        phone: doc[0].phone
+                    };
+                    if (!conferences[data.conference]) conferences[data.conference] = {};
+                    if (!conferences[data.conference].users) conferences[data.conference].users = [];
+
+                    var n = parseInt(data.conference, 10);
+
+                    Conferences.collection.find({sip: n}).toArray(function (err, doc) {
+                        if (doc.length > 0) {
+                            conferences[data.conference].sip_name = doc[0].name;
+                        }
+                        conferences[data.conference].users.push(user);
+                        io.sockets.emit('user:join', conferences);
+                        console.log('\n\nJOIN', conferences);
+                    });
+                }
+            });
+        }
     } else if (data.event === 'ConfbridgeLeave') {
         console.log(data);
         /*
