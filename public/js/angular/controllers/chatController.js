@@ -117,10 +117,11 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
         $location.url("/");
     });
 
-    $scope.kick = function (username) {
+    $scope.kick = function (username, channel) {
         console.log(username, $scope.users, 'username');
         watchService.chatEmit("kick", {
-            username: username
+            username: username,
+            channel: channel
         }, roomName);
     };
 
