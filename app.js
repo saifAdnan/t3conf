@@ -116,7 +116,8 @@ function kickUser(data, i) {
 
     if (fromPhoneL) {
         Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
-            if (!doc[0]) {
+            if (!doc.length) {
+                console.log("no doc", data.calleridnum);
                 if (conferences[data.conference].users[i].username === data.calleridnum) {
                     conferences[data.conference].users.splice(i, 1);
                     io.sockets.emit('user:join', conferences);
