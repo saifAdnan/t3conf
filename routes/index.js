@@ -323,18 +323,12 @@ module.exports = function (app, rooms, ami, confs) {
                             users.write("type=friend\n");
                             users.write("canreinvite=no\n");
                             users.write("host=dynamic\n");
-                            users.write("disallow=all\n");
-                            users.write("allow=ulaw\n");
-                            users.write("allow=alaw\n");
                             users.write("hassip=yes\n");
                             users.write("callwaiting=yes\n");
                             users.write("context=someuser\n");
-                            users.write("nat=force_rport,comedia\n");
                             users.write("\n");
 
-
                             extensions.write("exten => " + doc[i].sip + ",1,Dial(SIP/" + doc[i].username + ")\n");
-
 
                             if (i + 1 === doc.length) {
                                 users.end();
