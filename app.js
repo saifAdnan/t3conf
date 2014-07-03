@@ -101,7 +101,7 @@ mongoose.connect('mongodb://' + db.host + '/' + db.db);
 //server listent o port
 server.listen(app.get("port")); //1855
 
-function getCallerName(data, i) {
+function kickUser(data, i) {
     var chn_l = data.channel;
     var fromPhoneL = false;
 
@@ -116,6 +116,7 @@ function getCallerName(data, i) {
 
     if (fromPhoneL) {
         Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
+            if(!doc[0]) return false;
             if (conferences[data.conference].users[i].username === doc[0].username) {
                 conferences[data.conference].users.splice(i, 1);
                 io.sockets.emit('user:join', conferences);
@@ -252,7 +253,7 @@ ami.on('ami_data', function (data) {
                 console.log('\n\nCONF DELETED', conferences);
             } else {
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
-                    getCallerName(data, i);
+                    kickUser(data, i);
                 }
             }
         } else if (data.event === 'ConfbridgeListRooms') {
