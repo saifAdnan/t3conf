@@ -240,7 +240,7 @@ ami.on('ami_data', function (data) {
                                 io.sockets.emit('user:join', conferences);
                                 console.log('\n\nLEFT', conferences);
                             }
-                        }.bind(i));
+                        }).bind(i);
                     } else {
                         calleridnum_l = data.calleridnum;
                         if (conferences[data.conference].users[i].username === calleridnum_l) {
