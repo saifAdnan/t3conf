@@ -290,6 +290,7 @@ io.sockets.on('connection', function (socket) {
         var users = data.users;
 
         for (var i = 0; i < users.length; i++) {
+            console.log(users[i].phone);
             /*
 
              ActionID - ActionID for this transaction. Will be returned.
