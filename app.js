@@ -312,7 +312,7 @@ io.sockets.on('connection', function (socket) {
                 Variable: '1222',
                 action: 'Originate',
                 Channel: 'SIP/' + users[i].username,
-                CallerID: data.phone,
+                CallerID: users[i].phone,
                 Context: 'someuser',
                 Exten: data.extension,
                 Priority: 1
