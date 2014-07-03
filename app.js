@@ -11,7 +11,7 @@ var fs = require('fs'),
     Account = require('./models/users'),
     Conferences = require('./models/conferences.js'),
     AsteriskAmi = require('asterisk-ami'),
-    Promise = require("promise").Promise;
+    Promise = require("promise");
 
 // SSL options
 var options = {
