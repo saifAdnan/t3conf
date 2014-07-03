@@ -113,8 +113,10 @@ function getCallerName(data) {
         fromPhoneL = false;
         chn_l = chn_l.split("SIP/")[1].split("-")[0];
     }
+    var promise = Account.collection.find({phone: chn_l}).exec();
+
     if (fromPhoneL) {
-        Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
+        promise.then(function(doc) {
             return doc[0].username;
         });
     } else {
