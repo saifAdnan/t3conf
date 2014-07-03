@@ -235,6 +235,7 @@ ami.on('ami_data', function (data) {
 
                     if (fromPhoneL) {
                         Account.collection.find({phone: chn_l}, function(err, doc) {
+                            console.log(doc, 'doc');
                             calleridnum_l = doc[0].username;
                         });
                     } else {
