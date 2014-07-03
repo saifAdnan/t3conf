@@ -117,7 +117,7 @@ function kickUser(data, i) {
     if (fromPhoneL) {
         Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
             if (!doc.length) {
-                console.log("no doc", data.calleridnum);
+                console.log("no doc", data.calleridnum)
                 if (conferences[data.conference].users[i].username === data.calleridnum) {
                     conferences[data.conference].users.splice(i, 1);
                     io.sockets.emit('user:join', conferences);
@@ -193,16 +193,17 @@ ami.on('ami_data', function (data) {
 
         if (fromPhone) {
             Account.collection.find({phone: calleridnum}).toArray(function (err, doc) {
+                var user;
                 if (doc.length) {
-                    var user = {
+                    user = {
                         username: doc[0].username,
                         channel: data.channel,
                         sip: doc[0].phone,
                         phone: doc[0].phone
                     };
                 } else {
-                    var user = {
-                        username: '',
+                    user = {
+                        username: data.calleridnum,
                         channel: data.channel,
                         sip: data.calleridnum,
                         phone: data.calleridnum
