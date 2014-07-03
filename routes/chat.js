@@ -36,6 +36,7 @@ module.exports = function (socket, io, channel, confs, web_users, web_users_for_
     });
 
     socket.on("kick", function (data) {
+        console.log(data, "kick");
         ami.send({
             action: 'Hangup',
             Channel: data.channel,
