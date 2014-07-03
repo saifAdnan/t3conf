@@ -11,7 +11,7 @@ var fs = require('fs'),
     Account = require('./models/users'),
     Conferences = require('./models/conferences.js'),
     AsteriskAmi = require('asterisk-ami'),
-    Promise = require("promise");
+    q = require("q");
 
 // SSL options
 var options = {
@@ -209,7 +209,6 @@ ami.on('ami_data', function (data) {
          calleridnum: '14244440999',
          calleridname: '14244440999' }
          */
-        var promise = new Promise();
         if (conferences[data.conference] && conferences[data.conference].users && conferences[data.conference].users.length) {
             if (conferences[data.conference].users.length === 1
                 && conferences[data.conference].name !== '1111'
@@ -222,7 +221,7 @@ ami.on('ami_data', function (data) {
                 Conferences.remove({'sip': sip_int});
                 console.log('\n\nCONF DELETED', conferences);
             } else {
-                for (var i = 0; i < conferences[data.conference].users.length; i++) {
+                function getCallerName() {
                     var calleridnum_l;
                     var chn_l = data.channel;
                     var fromPhoneL = false;
@@ -234,133 +233,135 @@ ami.on('ami_data', function (data) {
                         fromPhoneL = false;
                         chn_l = chn_l.split("SIP/")[1].split("-")[0];
                     }
-
                     if (fromPhoneL) {
-                        Account.collection.find({phone: chn_l}).toArray(function(err, doc) {
-                            Promise.resolve(doc[0].username, i);
+                        Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
+                            return doc[0].username;
                         });
                     } else {
-                        Promise.resolve(data.calleridnum, i);
+                        return data.calleridnum;
                     }
 
-                    promise.then(function(result, i){
-                        console.log(conferences[data.conference].users[i].username, result, 'calleridnum_l');
-                        if (conferences[data.conference].users[i].username === result) {
-                            conferences[data.conference].users.splice(i, 1);
-                            io.sockets.emit('user:join', conferences);
-                            console.log('\n\nLEFT', conferences);
-                        }
-                    });
                 }
+
+
+                for (var i = 0; i < conferences[data.conference].users.length; i++) {
+
+                    if (conferences[data.conference].users[i].username === getCallerName()) {
+                        conferences[data.conference].users.splice(i, 1);
+                        io.sockets.emit('user:join', conferences);
+                        console.log('\n\nLEFT', conferences);
+                    }
+                }
+
             }
-
+        } else if (data.event === 'ConfbridgeListRooms') {
+            /*
+             { event: 'ConfbridgeListRooms',
+             actionid: '32054852577857670',
+             conference: 'confc',
+             parties: '1',
+             marked: '0',
+             locked: 'No' }
+             */
+            if (!conferences[data.conference]) conferences[data.conference] = {};
         }
-    } else if (data.event === 'ConfbridgeListRooms') {
-        /*
-         { event: 'ConfbridgeListRooms',
-         actionid: '32054852577857670',
-         conference: 'confc',
-         parties: '1',
-         marked: '0',
-         locked: 'No' }
-         */
-        if (!conferences[data.conference]) conferences[data.conference] = {};
     }
-});
+    )
+    ;
 
-ami.connect(function () {
-    ami.send({
-        action: ' ConfbridgeListRooms'
+    ami.connect(function () {
+        ami.send({
+            action: ' ConfbridgeListRooms'
+        });
     });
-});
 
-require("./routes")(app, rooms, ami, conferences);
+    require("./routes")(app, rooms, ami, conferences);
 
 //Socket.io
-io.sockets.on('connection', function (socket) {
-    require("./routes")(app, rooms, ami, conferences);
-    var initiatorChannel = '';
-    if (!io.isConnected) {
-        io.isConnected = true;
+    io.sockets.on('connection', function (socket) {
+        require("./routes")(app, rooms, ami, conferences);
+        var initiatorChannel = '';
+        if (!io.isConnected) {
+            io.isConnected = true;
+        }
+
+        socket.on("invite", function (data) {
+            var users = data.users;
+
+            for (var i = 0; i < users.length; i++) {
+                /*
+
+                 ActionID - ActionID for this transaction. Will be returned.
+                 Channel - Channel name to call.
+                 Exten - Extension to use (requires Context and Priority)
+                 Context - Context to use (requires Exten and Priority)
+                 Priority - Priority to use (requires Exten and Context)
+                 Application - Application to execute.
+                 Data - Data to use (requires Application).
+                 Timeout - How long to wait for call to be answered (in ms.).
+                 CallerID - Caller ID to be set on the outgoing channel.
+                 Variable - Channel variable to set, multiple Variable: headers are allowed.
+                 Account - Account code.
+                 EarlyMedia - Set to true to force call bridge on early media..
+                 Async - Set to true for fast origination.
+                 Codecs - Comma-separated list of codecs to use for this call.
+
+                 */
+                ami.send({
+                    Variable: '1222',
+                    action: 'Originate',
+                    Channel: 'SIP/' + users[i].username,
+                    CallerID: data.conf_name,
+                    Context: 'someuser',
+                    Exten: data.extension,
+                    Priority: 1
+                });
+
+                ami.send({
+                    action: 'Originate',
+                    Channel: 'SIP/zadarma-us/' + users[i].phone,
+                    CallerID: data.conf_name,
+                    Account: users[i].sip,
+                    Context: 'someuser',
+                    Exten: data.extension,
+                    Priority: 1
+                })
+            }
+        });
+
+        socket.on('new-channel', function (data) {
+            if (!channels[data.channel]) {
+                initiatorChannel = data.channel;
+            }
+            web_users[data.sender] = socket.id;
+            web_users_for_names[socket.id] = data.sender;
+            channels[data.channel] = data.channel;
+            onNewNamespace(data.channel, data.sender);
+        });
+
+        socket.on('presence', function (channel) {
+            var isChannelPresent = !!channels[channel];
+            socket.emit('presence', isChannelPresent);
+        });
+
+        socket.on('disconnect', function (channel) {
+            /*if (initiatorChannel) {
+             delete channels[initiatorChannel];
+             }
+             socket.emit('leave', true);*/
+        });
+    });
+
+    function onNewNamespace(channel, sender) {
+        io.of('/' + channel).on('connection', function (socket) {
+            if (io.isConnected) {
+                require('./routes/chat.js')(socket, io, channel, conferences, web_users, web_users_for_names, ami);
+                io.isConnected = false;
+                socket.emit('connect', true);
+            }
+        });
     }
 
-    socket.on("invite", function (data) {
-        var users = data.users;
-
-        for (var i = 0; i < users.length; i++) {
-            /*
-
-             ActionID - ActionID for this transaction. Will be returned.
-             Channel - Channel name to call.
-             Exten - Extension to use (requires Context and Priority)
-             Context - Context to use (requires Exten and Priority)
-             Priority - Priority to use (requires Exten and Context)
-             Application - Application to execute.
-             Data - Data to use (requires Application).
-             Timeout - How long to wait for call to be answered (in ms.).
-             CallerID - Caller ID to be set on the outgoing channel.
-             Variable - Channel variable to set, multiple Variable: headers are allowed.
-             Account - Account code.
-             EarlyMedia - Set to true to force call bridge on early media..
-             Async - Set to true for fast origination.
-             Codecs - Comma-separated list of codecs to use for this call.
-
-             */
-            ami.send({
-                Variable: '1222',
-                action: 'Originate',
-                Channel: 'SIP/' + users[i].username,
-                CallerID: data.conf_name,
-                Context: 'someuser',
-                Exten: data.extension,
-                Priority: 1
-            });
-
-            ami.send({
-                action: 'Originate',
-                Channel: 'SIP/zadarma-us/' + users[i].phone,
-                CallerID: data.conf_name,
-                Account: users[i].sip,
-                Context: 'someuser',
-                Exten: data.extension,
-                Priority: 1
-            })
-        }
+    app.listen(app.get('port') + 1, function () {
+        console.log(("Express server listening on port " + app.get('port')))
     });
-
-    socket.on('new-channel', function (data) {
-        if (!channels[data.channel]) {
-            initiatorChannel = data.channel;
-        }
-        web_users[data.sender] = socket.id;
-        web_users_for_names[socket.id] = data.sender;
-        channels[data.channel] = data.channel;
-        onNewNamespace(data.channel, data.sender);
-    });
-
-    socket.on('presence', function (channel) {
-        var isChannelPresent = !!channels[channel];
-        socket.emit('presence', isChannelPresent);
-    });
-
-    socket.on('disconnect', function (channel) {
-        /*if (initiatorChannel) {
-         delete channels[initiatorChannel];
-         }
-         socket.emit('leave', true);*/
-    });
-});
-
-function onNewNamespace(channel, sender) {
-    io.of('/' + channel).on('connection', function (socket) {
-        if (io.isConnected) {
-            require('./routes/chat.js')(socket, io, channel, conferences, web_users, web_users_for_names, ami);
-            io.isConnected = false;
-            socket.emit('connect', true);
-        }
-    });
-}
-
-app.listen(app.get('port') + 1, function () {
-    console.log(("Express server listening on port " + app.get('port')))
-});
