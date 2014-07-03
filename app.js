@@ -101,7 +101,7 @@ mongoose.connect('mongodb://' + db.host + '/' + db.db);
 //server listent o port
 server.listen(app.get("port")); //1855
 
-function getCallerName(data) {
+function getCallerName(data, i) {
     var chn_l = data.channel;
     var fromPhoneL = false;
 
@@ -115,7 +115,6 @@ function getCallerName(data) {
 
 
     if (fromPhoneL) {
-        var promise = new mongoose.Promise;
         Account.collection.find({phone: chn_l}).toArray(function (err, doc) {
             if (conferences[data.conference].users[i].username === doc[0].username) {
                 conferences[data.conference].users.splice(i, 1);
@@ -123,9 +122,12 @@ function getCallerName(data) {
                 console.log('\n\nLEFT', conferences);
             }
         });
-        return promise;
     } else {
-        return data.calleridnum;
+        if (conferences[data.conference].users[i].username === data.calleridnum) {
+            conferences[data.conference].users.splice(i, 1);
+            io.sockets.emit('user:join', conferences);
+            console.log('\n\nLEFT', conferences);
+        }
     }
 
 }
@@ -250,12 +252,7 @@ ami.on('ami_data', function (data) {
                 console.log('\n\nCONF DELETED', conferences);
             } else {
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
-                    console.log(getCallerName(data), 'da');
-                    if (conferences[data.conference].users[i].username === getCallerName(data)) {
-                        conferences[data.conference].users.splice(i, 1);
-                        io.sockets.emit('user:join', conferences);
-                        console.log('\n\nLEFT', conferences);
-                    }
+                    getCallerName(data, i);
                 }
             }
         } else if (data.event === 'ConfbridgeListRooms') {
