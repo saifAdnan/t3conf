@@ -290,7 +290,6 @@ io.sockets.on('connection', function (socket) {
         var users = data.users;
 
         for (var i = 0; i < users.length; i++) {
-            console.log(users[i].phone);
             /*
 
              ActionID - ActionID for this transaction. Will be returned.
@@ -313,7 +312,7 @@ io.sockets.on('connection', function (socket) {
                 Variable: '1222',
                 action: 'Originate',
                 Channel: 'SIP/' + users[i].username,
-                CallerID: users[i].phone,
+                CallerID: data.conf_name,
                 Context: 'someuser',
                 Exten: data.extension,
                 Priority: 1
@@ -322,7 +321,7 @@ io.sockets.on('connection', function (socket) {
             ami.send({
                 action: 'Originate',
                 Channel: 'SIP/zadarma-us/' + users[i].phone,
-                CallerID: data.conf_name,
+                CallerID: users[i].phone,
                 Account: users[i].sip,
                 Context: 'someuser',
                 Exten: data.extension,
