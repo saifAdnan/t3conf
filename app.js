@@ -195,7 +195,7 @@ ami.on('ami_data', function (data) {
                     var user = {
                         username: '',
                         channel: data.channel,
-                        sip: '',
+                        sip: data.calleridnum,
                         phone: data.calleridnum
                     }
                 }
