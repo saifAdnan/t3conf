@@ -1,9 +1,8 @@
-/**
- * Load dependencies
- */
+//Load dependencies
 var fs = require('fs'),
     path = require('path'),
     express = require('express'),
+    methodOverride = require('method-override'),
     mongoose = require('mongoose'),
     mongoStore = require('connect-mongo')(express),
     LocalStrategy = require('passport-local').Strategy,
@@ -13,6 +12,7 @@ var fs = require('fs'),
     Conferences = require('./models/conferences.js'),
     AsteriskAmi = require('asterisk-ami');
 
+// SSL options
 var options = {
     key: fs.readFileSync(__dirname + '/trafficdestination_net.key'),
     cert: fs.readFileSync(__dirname + '/trafficdestination_net.crt'),
@@ -21,9 +21,22 @@ var options = {
     rejectUnauthorized: false
 };
 
-/**
- * Set variables
- */
+// Asterisk arguments
+var asterisk = {
+    host: '46.36.223.131',
+    username: 'myasterisk',
+    password: '123456'
+};
+
+// Db options
+var db = {
+    db: 't3conf',
+    host: 'localhost',
+    collection: 'usersessions',
+    auto_reconnect: true
+};
+
+// Set variables
 var app = express(),
     conferences = {
         '1111': {
@@ -50,21 +63,13 @@ var app = express(),
     io = require('socket.io').listen(server, {
         log: false,
         'transports': ['websocket', 'flashsocket', 'xhr-polling']
-    }),
+    }).set('origins', '*:*'),
     session_conf = {
-        db: {
-            db: 't3conf',
-            host: 'localhost',
-            collection: 'usersessions',
-            auto_reconnect: true
-        },
+        db: db,
         secret: 't3conf'
     };
 
-io.set('origins', '*:*');
-/**
- * Express configuration
- */
+// Express configuration
 app.configure(function () {
     app.set('port', 2156);
     app.set('views', __dirname + '/views');
@@ -72,7 +77,7 @@ app.configure(function () {
     app.use(express.static(__dirname));
     app.use(express.json());
     app.use(express.urlencoded());
-    app.use(express.methodOverride());
+    app.use(methodOverride());
     app.use(express.cookieParser('t3conf'));
     app.use(express.session({
         secret: session_conf.secret,
@@ -85,24 +90,18 @@ app.configure(function () {
     app.engine('html', require('hogan-express'));
 });
 
-/**
- * Passport Configuration
- */
+// Passport Configuration
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
 // Mongo DB
-
-mongoose.connect('mongodb://localhost/t3conf');
-
-// Require routes
+mongoose.connect('mongodb://' + db.host + '/' + db.db);
 
 //server listent o port
-
 server.listen(app.get("port")); //1855
 
-var ami = new AsteriskAmi({ host: '46.36.223.131', username: 'myasterisk', password: '123456'});
+var ami = new AsteriskAmi(asterisk);
 ami.on('ami_data', function (data) {
     if (data.event === "ConfbridgeJoin") {
         console.log(data);
@@ -116,7 +115,14 @@ ami.on('ami_data', function (data) {
          calleridname: 'Sergey' }
          */
 
-        var chn = data.channel.split("SIP/")[1].split("-")[0];
+        var chn = data.channel;
+
+        if ((chn.split("/").length - 1) === 2) {
+            chn = chn.split("SIP/")[2].split("-")[0];
+        } else {
+            chn = chn.split("SIP/")[1].split("-")[0];
+        }
+
         var calleridnum = data.calleridnum !== '<unknown>' ? data.calleridnum : chn;
 
         Account.collection.find({username: calleridnum}).toArray(function (err, doc) {
@@ -165,8 +171,15 @@ ami.on('ami_data', function (data) {
                 console.log('\n\nCONF DELETED', conferences);
             } else {
                 for (var i = 0; i < conferences[data.conference].users.length; i++) {
-                    var chn_l = data.channel.split("SIP/")[1].split("-")[0];
+                    var chn_l = data.channel;
+
+                    if ((chn_l.split("/").length - 1) === 2) {
+                        chn_l = chn_l.split("SIP/")[2].split("-")[0];
+                    } else {
+                        chn_l = chn_l.split("SIP/")[1].split("-")[0];
+                    }
                     var calleridnum_l = data.calleridnum !== '<unknown>' ? data.calleridnum : chn_l;
+
                     if (conferences[data.conference].users[i].username === calleridnum_l) {
                         conferences[data.conference].users.splice(i, 1);
                         io.sockets.emit('user:join', conferences);
@@ -197,7 +210,6 @@ ami.connect(function () {
 });
 
 require("./routes")(app, rooms, ami, conferences);
-
 
 //Socket.io
 io.sockets.on('connection', function (socket) {
@@ -252,7 +264,6 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('new-channel', function (data) {
-        console.log(data.channel, data.sender, 'saif');
         if (!channels[data.channel]) {
             initiatorChannel = data.channel;
         }
@@ -276,7 +287,6 @@ io.sockets.on('connection', function (socket) {
 });
 
 function onNewNamespace(channel, sender) {
-    console.log(channel, 'channel');
     io.of('/' + channel).on('connection', function (socket) {
         if (io.isConnected) {
             require('./routes/chat.js')(socket, io, channel, conferences, web_users, web_users_for_names, ami);
@@ -286,6 +296,6 @@ function onNewNamespace(channel, sender) {
     });
 }
 
-app.listen(app.get('port') + 1, function () { //1857
+app.listen(app.get('port') + 1, function () {
     console.log(("Express server listening on port " + app.get('port')))
 });
