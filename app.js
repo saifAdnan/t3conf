@@ -240,7 +240,6 @@ ami.on('ami_data', function (data) {
                                 conferences[data.conference].users.splice(i, 1);
                                 io.sockets.emit('user:join', conferences);
                                 console.log('\n\nLEFT', conferences);
-                                break;
                             }
                         });
                     } else {
@@ -249,7 +248,6 @@ ami.on('ami_data', function (data) {
                             conferences[data.conference].users.splice(i, 1);
                             io.sockets.emit('user:join', conferences);
                             console.log('\n\nLEFT', conferences);
-                            break;
                         }
                     }
                 }
