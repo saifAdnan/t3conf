@@ -376,7 +376,7 @@ module.exports = function (app, rooms, ami, confs) {
 
                         conferences.write("exten => " + doc[i].sip + ",1,Answer()\n");
                         conferences.write("exten => " + doc[i].sip + ",n,Set(CONFBRIDGE(bridge,record_conference)=yes\n");
-                        conferences.write("exten => " + doc[i].sip + ",n,Set(CONFBRIDGE(bridge,record_file)=/var/spool/asterisk/monitor/"+doc[i].sip+"\n");
+                        conferences.write("exten => " + doc[i].sip + ",n,Set(CONFBRIDGE(bridge,record_file)=/var/spool/asterisk/monitor/"+doc[i].sip+".wav)\n");
                         conferences.write("exten => " + doc[i].sip + ",n,ConfBridge(" + doc[i].sip + ",,test.user,test.menu)\n");
                         conferences.write("exten => " + doc[i].sip + ",n,Hangup()\n\n");
 
