@@ -330,6 +330,7 @@ module.exports = function (app, rooms, ami, confs) {
 
                             extensions.write("exten => " + doc[i].sip + ",1,Dial(SIP/" + doc[i].username + ")\n");
 
+
                             if (i + 1 === doc.length) {
                                 users.end();
                                 extensions.end();
@@ -372,8 +373,11 @@ module.exports = function (app, rooms, ami, confs) {
                         if (doc[i].pin) {
                             conferences.write("exten => " + doc[i].sip + ",1,Authenticate(" + doc[i].pin + ")\n");
                         }
+
                         conferences.write("exten => " + doc[i].sip + ",1,Answer\n");
-                        conferences.write("exten => " + doc[i].sip + ",n,ConfBridge(" + doc[i].sip + ",test.common,test.user,test.menu)\n");
+                        conferences.write("exten => " + doc[i].sip + ",n,Set(CONFBRIDGE(bridge,record_conference)=yes\n");
+                        conferences.write("exten => " + doc[i].sip + ",n,Set(CONFBRIDGE(bridge,record_file)=/var/spool/asterisk/monitor/"+doc[i].sip+"\n");
+                        conferences.write("exten => " + doc[i].sip + ",n,ConfBridge(" + doc[i].sip + ",,test.user,test.menu)\n");
                         conferences.write("exten => " + doc[i].sip + ",n,Hangup()\n\n");
 
                         if (i + 1 === doc.length) {
@@ -398,9 +402,11 @@ module.exports = function (app, rooms, ami, confs) {
 
     app.get('/action/getFiles', function (req, res) {
         fs.readdir('asterisk/monitor', function (err, files) { // '/' denotes the root folder
+            for (var i = 0; i < files.length; i++) {
+                var filename = files[i];
 
+            }
             res.json(files);
-
         });
     });
 
