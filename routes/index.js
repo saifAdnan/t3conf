@@ -368,7 +368,6 @@ module.exports = function (app, rooms, ami, confs) {
                     var conferences = fs.createWriteStream("asterisk/conferences.conf");
 
                     conferences.write("\n");
-                    conferences.write("[someuser]\n");
 
                     for (var i = 0; i < doc.length; i = i + 1) {
                         if (doc[i].pin) {
