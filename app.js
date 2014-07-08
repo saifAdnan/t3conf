@@ -313,7 +313,7 @@ ami.on('ami_data', function (data) {
             var reg = new RegExp(/([0-9]{9}.)/g);
             var date = file.match(reg)[0];
 
-            Records.insert({
+            Records.collection.insert({
                 name: file.split(settings.PROJECT_DIR + 'asterisk/monitor/')[1],
                 date: date
             });
