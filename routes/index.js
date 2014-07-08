@@ -402,7 +402,7 @@ module.exports = function (app, rooms, ami, confs) {
 
     app.get('/action/getFiles', function (req, res) {
         fs.readdir('asterisk/monitor', function (err, files) { // '/' denotes the root folder
-            var r_files = [];
+            /*var r_files = [];
             for (var i = 0; i < files.length; i++) {
                 var filename = files[i];
                 var r = new RegExp('[-].+.wav');
@@ -411,8 +411,8 @@ module.exports = function (app, rooms, ami, confs) {
                     name: filename,
                     date: date
                 });
-            }
-            res.json(r_files);
+            }*/
+            res.json(files);
         });
     });
 
