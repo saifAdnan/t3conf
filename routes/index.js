@@ -2,6 +2,7 @@ var fs = require('fs');
 var passport = require('passport');
 var Users = require('../models/users');
 var Conferences = require('../models/conferences');
+var settings = require("../settings");
 
 module.exports = function (app, rooms, ami, confs) {
     "use strict";
@@ -402,7 +403,7 @@ module.exports = function (app, rooms, ami, confs) {
 
     app.get('/action/getFiles', function (req, res) {
         fs.readdir('asterisk/monitor', function (err, files) { // '/' denotes the root folder
-            /*var r_files = [];
+            var r_files = [];
             for (var i = 0; i < files.length; i++) {
                 var filename = files[i];
                 var r = new RegExp('[-].+.wav');
@@ -411,8 +412,8 @@ module.exports = function (app, rooms, ami, confs) {
                     name: filename,
                     date: date
                 });
-            }*/
-            res.json(files);
+            }
+            res.json(r_files);
         });
     });
 
@@ -491,8 +492,22 @@ module.exports = function (app, rooms, ami, confs) {
         });
     });
 
+
+
+    app.post('/action/renameRecord', function (req, res) {
+        var file = req.body.filename;
+        var n_file = req.body.n_filename;
+
+        console.log(file, n_file);
+
+        fs.rename(settings.PROJECT_DIR + '/asterisk/monitor/' + file, settings.PROJECT_DIR + '/asterisk/monitor/' + n_file, function(err) {
+            if ( err ) console.log('ERROR: ' + err);
+        });
+        res.end('File has been deleted!');
+    });
+
     app.post('/action/clearRecord', function (req, res) {
-        fs.unlinkSync('/var/www/t3conf/asterisk/monitor/' + req.body.filename, function (err) {
+        fs.unlinkSync(settings.PROJECT_DIR + '/asterisk/monitor/' + req.body.filename, function (err) {
         });
         res.end('File has been deleted!');
     });

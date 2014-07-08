@@ -7,6 +7,9 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     $scope.inConference = false;
     $scope.t3leadsActive = false;
     $scope.isMuted = false;
+    $scope.filename = null;
+    $scope.n_filename = null;
+    $scope.n_filename_date = null;
 
     // Get current conferences on load
     $http.get("/action/confs").success(function (data) {
@@ -15,6 +18,12 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
 
     $http.get("/action/getFiles").success(function (data) {
         if (!data.length) $scope.no_files_message = "No records found.";
+        for (var i = 0; i < data.length; i++) {
+            var d = new Date(data[i].date * 1000);
+            d = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes();
+
+            data[i].ui_date = d;
+        }
         $scope.files = data;
     });
 
@@ -39,6 +48,29 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
 
     $scope.sipCall = function (num) {
         sipService.sipCall(num);
+    };
+
+    $scope.rename = function (e, file) {
+        $scope.filename = file.name.replace(" ", "");
+        $scope.n_filename = file.name.replace(" ", "").split(file.date)[0].replace("-", "");
+        $scope.n_filename_date = file.date;
+        $("#rename").modal().find("input").focus();
+    };
+
+    $scope.closeRenameM = function () {
+        $("#rename").modal('hide');
+    };
+
+    $scope.changeFilename = function(e) {
+        e.preventDefault();
+        $http.post("/action/renameRecord", {
+            filename: $scope.filename,
+            n_filename: $scope.n_filename + '-' + $scope.n_filename_date + '.wav'
+        }).success(function (data) {
+            window.location.reload();
+        });
+
+        return false;
     };
 
     $scope.toggleKeypad = function () {
