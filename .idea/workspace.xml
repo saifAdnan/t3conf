@@ -26,8 +26,8 @@
       <file leaf-file-name="index.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.42889908" vertical-offset="8215" max-vertical-offset="11193">
-              <caret line="409" column="77" selection-start-line="409" selection-start-column="77" selection-end-line="409" selection-end-column="77" />
+            <state vertical-scroll-proportion="0.42889908" vertical-offset="7753" max-vertical-offset="11193">
+              <caret line="387" column="37" selection-start-line="387" selection-start-column="37" selection-end-line="387" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -748,14 +748,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/mainController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="817" max-vertical-offset="3444">
-          <caret line="76" column="17" selection-start-line="76" selection-start-column="17" selection-end-line="76" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="571" max-vertical-offset="8463">
@@ -807,10 +799,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/mainController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="817" max-vertical-offset="3444">
+          <caret line="76" column="17" selection-start-line="76" selection-start-column="17" selection-end-line="76" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42889908" vertical-offset="8215" max-vertical-offset="11193">
-          <caret line="409" column="77" selection-start-line="409" selection-start-column="77" selection-end-line="409" selection-end-column="77" />
+        <state vertical-scroll-proportion="0.42889908" vertical-offset="7753" max-vertical-offset="11193">
+          <caret line="387" column="37" selection-start-line="387" selection-start-column="37" selection-end-line="387" selection-end-column="37" />
           <folding />
         </state>
       </provider>
