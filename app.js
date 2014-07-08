@@ -313,7 +313,7 @@ ami.on('ami_data', function (data) {
         var date = file.match(reg)[0];
 
         Record.insert({
-            name: file.split(settings.PROJECT_DIR + '/asterisk/monitor/')[1],
+            name: file.split(settings.PROJECT_DIR + 'asterisk/monitor/')[1],
             date: date
         });
     }
