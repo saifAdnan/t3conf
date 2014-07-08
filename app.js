@@ -11,6 +11,7 @@ var fs = require('fs'),
     Account = require('./models/users'),
     Conferences = require('./models/conferences.js'),
     Records = require('./models/records.js'),
+    settings = require('./models/settings.js'),
     AsteriskAmi = require('asterisk-ami');
 
 // SSL options
@@ -299,6 +300,22 @@ ami.on('ami_data', function (data) {
              */
             if (!conferences[data.conference]) conferences[data.conference] = {};
         }
+    } else if (data.event === 'VarSet') {
+        /*{ event: 'VarSet',
+            privilege: 'dialplan,all',
+            channel: 'ConfBridgeRecorder/conf-4520-uid-465567982',
+            variable: 'MIXMONITOR_FILENAME',
+            value: '/var/spool/asterisk/monitor/frt-1404823141.wav',
+            uniqueid: '1404823141.282' }
+        */
+        var file = data.value;
+        var reg = new RegExp(/([0-9]{9}.)/g);
+        var date = file.match(reg)[0];
+
+        Record.insert({
+            name: file.split(settings.PROJECT_DIR + '/asterisk/monitor/')[1],
+            date: date
+        });
     }
 });
 
