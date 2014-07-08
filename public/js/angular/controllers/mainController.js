@@ -6,6 +6,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     $scope.isExist = false;
     $scope.inConference = false;
     $scope.t3leadsActive = false;
+    $scope.isMuted = false;
 
     // Get current conferences on load
     $http.get("/action/confs").success(function (data) {
@@ -25,6 +26,11 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     // Join coference
     $scope.join = function (num) {
         $location.url('/conference/' + num);
+    };
+
+    $scope.mute = function () {
+        sipService.sipSendDTMF("1");
+        $scope.isMuted = !$scope.isMuted;
     };
 
     $scope.sipHangUp = function () {
