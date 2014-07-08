@@ -316,6 +316,8 @@ ami.on('ami_data', function (data) {
             Records.collection.insert({
                 name: file.split(settings.PROJECT_DIR + 'asterisk/monitor/')[1],
                 date: date
+            }, function (err) {
+                if (err) console.log(err);
             });
         }
     }
