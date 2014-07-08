@@ -214,7 +214,7 @@ label {
 }
 
 .panel-records .panel-body,
-.panel-users .panel-body,
+.panel-users .panel-body
 {
     max-height: 300px;
     overflow-x: hidden;
