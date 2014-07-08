@@ -314,7 +314,7 @@ ami.on('ami_data', function (data) {
             var date = file.match(reg)[0];
 
             Records.collection.insert({
-                name: file.split(settings.PROJECT_DIR + 'asterisk/monitor/')[1],
+                name: file.split('/var/spool/asterisk/monitor/')[1],
                 date: date
             }, function (err) {
                 if (err) console.log(err);
