@@ -213,7 +213,9 @@ label {
     display: none;
 }
 
-.panel-records .panel-body {
+.panel-records .panel-body,
+.panel-users .panel-body,
+{
     max-height: 300px;
     overflow-x: hidden;
     overflow-y: scroll;
