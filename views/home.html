@@ -151,6 +151,21 @@
                         <i class="glyphicon glyphicon-floppy-remove"></i>
                         Clear records
                     </a>
+                    <table class="table">
+                        <input class="form-control" type="search" name="sName" id="sName" ng-model="sName" placeholder="Search"/>
+                        <thead>
+                        <th ng-click="rec_predicate = 'name'; rec_reverse=!rec_reverse">
+                            Filename
+                            <i class="glyphicon {% (rec_predicate == 'name' && rec_reverse ? 'glyphicon-chevron-up': 'glyphicon-chevron-down')%}"></i>
+                        </th>
+                        <th ng-click="rec_predicate = 'date'; rec_reverse=!rec_reverse">
+                            Date
+                            <i class="glyphicon {% (rec_predicate == 'date' && rec_reverse ? 'glyphicon-chevron-up': 'glyphicon-chevron-down')%}"></i>
+                        </th>
+                        <th ng-show="$parent.isAdmin">Rename</th>
+                        <th ng-show="$parent.isAdmin">Delete</th>
+                        </thead>
+                    </table>
                 </div>
                 <div class="panel-body" id="rooms">
                     <div class="help-block" ng-show="no_files_message.length > 0">
@@ -158,18 +173,6 @@
                     </div>
                     <table class="table">
                         <input class="form-control" type="search" name="sName" id="sName" ng-model="sName" placeholder="Search"/>
-                        <thead>
-                            <th ng-click="rec_predicate = 'name'; rec_reverse=!rec_reverse">
-                                Filename
-                                <i class="glyphicon {% (rec_predicate == 'name' && rec_reverse ? 'glyphicon-chevron-up': 'glyphicon-chevron-down')%}"></i>
-                            </th>
-                            <th ng-click="rec_predicate = 'date'; rec_reverse=!rec_reverse">
-                                Date
-                                <i class="glyphicon {% (rec_predicate == 'date' && rec_reverse ? 'glyphicon-chevron-up': 'glyphicon-chevron-down')%}"></i>
-                            </th>
-                            <th ng-show="$parent.isAdmin">Rename</th>
-                            <th ng-show="$parent.isAdmin">Delete</th>
-                        </thead>
                         <tr ng-repeat="file in files | orderBy: rec_predicate:rec_reverse | filter: {name: sName}">
                             <td>
                                 <a href="/asterisk/monitor/{%file.name%}" ng-bind="file.name"></a>
