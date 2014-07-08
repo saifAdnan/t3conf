@@ -308,14 +308,16 @@ ami.on('ami_data', function (data) {
             value: '/var/spool/asterisk/monitor/frt-1404823141.wav',
             uniqueid: '1404823141.282' }
         */
-        var file = data.value;
-        var reg = new RegExp(/([0-9]{9}.)/g);
-        var date = file.match(reg)[0];
+        if (data.variable === 'MIXMONITOR_FILENAME') {
+            var file = data.value;
+            var reg = new RegExp(/([0-9]{9}.)/g);
+            var date = file.match(reg)[0];
 
-        Records.insert({
-            name: file.split(settings.PROJECT_DIR + 'asterisk/monitor/')[1],
-            date: date
-        });
+            Records.insert({
+                name: file.split(settings.PROJECT_DIR + 'asterisk/monitor/')[1],
+                date: date
+            });
+        }
     }
 });
 
