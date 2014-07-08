@@ -407,7 +407,7 @@ module.exports = function (app, rooms, ami, confs) {
             for (var i = 0; i < files.length; i++) {
                 var filename = files[i];
 
-                fs.stat(settings.PROJECT_DIR + '/asterisk/monitor' + file, function (err, data) {
+                fs.stat(settings.PROJECT_DIR + '/asterisk/monitor' + filename, function (err, data) {
                    console.log(err, data);
                 });
                 //var r = new RegExp('[-].+.wav');
