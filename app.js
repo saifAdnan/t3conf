@@ -10,6 +10,7 @@ var fs = require('fs'),
     passport = require('passport'),
     Account = require('./models/users'),
     Conferences = require('./models/conferences.js'),
+    Records = require('./models/records.js'),
     AsteriskAmi = require('asterisk-ami');
 
 // SSL options
@@ -144,6 +145,7 @@ function kickUser(data, i) {
 
 var ami = new AsteriskAmi(asterisk);
 ami.on('ami_data', function (data) {
+    console.log(data, 'data');
     if (data.event === "ConfbridgeJoin") {
         console.log(data);
         /*
