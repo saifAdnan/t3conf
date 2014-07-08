@@ -11,7 +11,7 @@ var fs = require('fs'),
     Account = require('./models/users'),
     Conferences = require('./models/conferences.js'),
     Records = require('./models/records.js'),
-    settings = require('./models/settings.js'),
+    settings = require('./settings.js'),
     AsteriskAmi = require('asterisk-ami');
 
 // SSL options
