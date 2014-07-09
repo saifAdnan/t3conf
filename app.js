@@ -4,7 +4,7 @@ var express = require('express'),
     mongoose = require('mongoose'),
     mongoStore = require('connect-mongo')(express),
     LocalStrategy = require('passport-local').Strategy,
-    https = require('http'),
+    https = require('https'),
     passport = require('passport'),
     Account = require('./models/users'),
     Conferences = require('./models/conferences.js'),
@@ -26,12 +26,12 @@ var app = express(),
         secret: 't3conf'
     };
 
-if ('development' === app.get('env')) {
+if ('development' == app.get('env')) {
     server = https.createServer(app);
     app.use(express.errorHandler());
 }
 
-if ('production' === app.get("env")) {
+if ('production' == app.get("env")) {
     server = https.createServer(settings.SSL, app);
 }
 
