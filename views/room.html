@@ -83,9 +83,10 @@
     <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div>
-
-    <div class="row-fluid" ng-controller="chatController">
+<div class="loading" ng-hide="$parent.inCall">
+    <img src="public/img/loading.gif" alt=""/>
+</div>
+<div class="row-fluid" ng-controller="chatController" ng-show="$parent.inCall">
         <div class="col-sm-9">
             <div class="chat">
                 <div class="well message-spot" id="messages">
@@ -109,8 +110,14 @@
                                         X {%to%}
                                     </div>
                                 </div>
-                                <input type="text" id="message" ng-model="message" class="form-control"
-                                       ng-disabled="!$parent.enableChat" autocomplete="off"/>
+                                <div class="form-group  {%(msgErr ? 'has-error' : '')%}">
+                                    <input type="text"
+                                           id="message"
+                                           ng-model="message"
+                                           class="form-control"
+                                           ng-disabled="!$parent.enableChat"
+                                           autocomplete="off"/>
+                                </div>
                             </div>
                             <div class="col-sm-2">
                                 <input type="submit" value="send" class="btn btn-default"
@@ -145,5 +152,3 @@
             </div>
         </div>
     </div>
-
-</div>

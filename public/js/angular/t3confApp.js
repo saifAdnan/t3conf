@@ -34,6 +34,7 @@ app.run(['$rootScope', '$http',
     function($rootScope, $http) {
         $rootScope.username = USERNAME;
         $rootScope.enableChat = true;
+        $rootScope.inCall = false;
 
         $http.get("/rooms").success(function(data) {
             $rootScope.rooms = data;

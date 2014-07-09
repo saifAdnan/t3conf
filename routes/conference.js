@@ -136,14 +136,14 @@ module.exports = function (socket, rooms) {
                 socket.broadcast.emit("rooms:update", {
                     users: rooms[i].users
                 });
-                socket.broadcast.emit("user:join", {
+                /*socket.broadcast.emit("user:join", {
 
                     username: data.username,
                     roomToken: data.roomToken,
                     broadcaster: data.broadcaster,
                     joinSocket: data.joinSocket
 
-                });
+                });*/
                 break;
             }
         }

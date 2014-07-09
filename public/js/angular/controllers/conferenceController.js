@@ -1,17 +1,8 @@
 function conferenceController($scope, $rootScope, $http, watchService, sipService, $routeParams) {
-    $rootScope.isCalling = true;
-
     $scope.users = [];
     $scope.selectedUsers = [];
-
     $scope.conf_name = null;
     $scope.conf_sip = $routeParams.name;
-
-    setTimeout(function () {
-        $http.get("/action/confs").success(function (data) {
-            $scope.conf_name = data[$scope.conf_sip].sip_name;
-        });
-    }, 1000);
 
     $http.get("/action/users").success(function(data) {
         $scope.users = data;

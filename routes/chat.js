@@ -8,9 +8,9 @@ module.exports = function (socket, io, channel, confs, web_users, web_users_for_
 
     socket.on("init", function (data) {
         // notify other clients that a new user has joined
-        socket.broadcast.emit('user:join', {
+        /*socket.broadcast.emit('user:join', {
             name: data.username
-        });
+        });*/
 
     });
 
