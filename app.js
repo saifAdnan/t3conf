@@ -33,6 +33,8 @@ if ('development' == app.get('env')) {
     server = https.createServer(settings.SSL, app);
 }
 
+console.log(app.get('env'));
+
 // Socket IO
 io = require('socket.io').listen(server, settings.IO).set('origins', '*:*');
 
