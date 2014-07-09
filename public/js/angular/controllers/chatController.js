@@ -6,25 +6,29 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
     $scope.conf_name = null;
     $scope.conf_sip = roomName;
 
-    setTimeout(function () {
-        $http.get("/action/confs").success(function (data) {
-            $scope.conf_name = data[$scope.conf_sip].sip_name;
-        });
-    }, 1000);
-
-    $http.get("/users").success(function (data) {
-        if (!data) return false;
-        $scope.moderator = data.moderator;
-
-        $scope.isAdmin = data.isAdmin;
-    });
-
+    $scope.msgErr = false;
     $scope.enableChat = true;
-
     $scope.users = null;
+    $scope.private = false;
+    $scope.to = null;
 
     watchService.on("user:join", function (data) {
         $scope.rooms = getValues(data);
+        for (var i = 0; i < $scope.rooms.length; i++) {
+            if ($scope.rooms[i].name === $routeParams.name) {
+                $scope.users = $scope.rooms[i].users;
+                for(var j = 0; j < $scope.rooms[i].users.length; j++) {
+                    if ($scope.rooms[i].users[j].username === USERNAME) {
+                        $rootScope.inCall = true;
+                    }
+                }
+            }
+        }
+    });
+
+    watchService.on("user:leave", function (data) {
+        $scope.rooms = getValues(data);
+
         for (var i = 0; i < $scope.rooms.length; i++) {
             if ($scope.rooms[i].name === $routeParams.name) {
                 $scope.users = $scope.rooms[i].users;
@@ -32,8 +36,12 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
         }
     });
 
-    $scope.private = false;
-    $scope.to = null;
+    $http.get("/users").success(function (data) {
+        if (!data) return false;
+        $scope.moderator = data.moderator;
+        $scope.isAdmin = data.isAdmin;
+    });
+
 
     watchService.chatEmit("init", {
         username: USERNAME
@@ -90,7 +98,6 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
         }, 10);
     });
 
-
     // ==============================
 
     $scope.mention = function (name) {
@@ -113,7 +120,6 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
     $scope.messages = [];
 
     watchService.chatOn("kick:user", roomName, function () {
-        console.log("kick trigger");
         $location.url("/");
     });
 
@@ -126,6 +132,13 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
     };
 
     $scope.sendMessage = function () {
+        if ($scope.message === "" || !$scope.message) {
+            $scope.msgErr = true;
+            $scope.$apply();
+            return false;
+        }
+        $scope.msgErr = false;
+
         watchService.chatEmit('send:message', {
             message: $scope.message,
             roomName: roomName,

@@ -1,6 +1,5 @@
 function mainController($scope, $http, $location, watchService, sipService, $rootScope) {
-    //watchService.disconnect();
-    $rootScope.isCalling = false;
+    $rootScope.inCall = false;
     $scope.rooms = null;
     $scope.roomNumber = null;
     $scope.isExist = false;
@@ -11,7 +10,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     $scope.n_filename = null;
     $scope.n_filename_date = null;
 
-    // Get current conferences on load
+
     $http.get("/action/confs").success(function (data) {
         $scope.rooms = getValues(data);
     });
@@ -27,12 +26,10 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         $scope.files = data;
     });
 
-    // Watch asterisk conference changes
     watchService.on("user:join", function (data) {
         $scope.rooms = getValues(data);
     });
 
-    // Join coference
     $scope.join = function (num) {
         $location.url('/conference/' + num);
     };
@@ -74,8 +71,10 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     };
 
     $scope.toggleKeypad = function () {
-        if ($("#keypad").length) {
-            $("#keypad").modal();
+        var keypad = $("#keypad");
+
+        if (keypad.length) {
+            keypad.modal();
         }
     };
 
@@ -85,8 +84,9 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     };
 
     $scope.invite = function () {
-        if ($("#invite").length) {
-            $("#invite").modal();
+        var invite = $("#invite");
+        if (invite.length) {
+            invite.modal();
         }
     };
 
@@ -153,6 +153,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     };
 
     sipService.sipHangUp();
+
     sipService.sipLogin();
 }
 

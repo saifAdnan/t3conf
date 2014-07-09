@@ -225,3 +225,13 @@ label {
     display: inline-block;
     margin-right: 10px;
 }
+
+.loading {
+    width: 150px;
+    height: 120px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -75px;
+    margin-top: -60px;
+}

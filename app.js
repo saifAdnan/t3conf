@@ -26,16 +26,17 @@ var app = express(),
         secret: 't3conf'
     };
 
+// Development env
 if ('development' == app.get('env')) {
-    server = https.createServer(app);
+    var http = require("http");
+    server = http.createServer(app);
     app.use(express.errorHandler());
 }
 
+// Production env
 if ('production' == app.get("env")) {
     server = https.createServer(settings.SSL, app);
 }
-
-console.log(app.get('env'));
 
 // Socket IO
 io = require('socket.io').listen(server, settings.IO).set('origins', '*:*');

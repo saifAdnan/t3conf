@@ -24,13 +24,13 @@ module.exports = function (ami, conferences, io) {
                     console.log("no doc", data.calleridnum)
                     if (conferences[data.conference].users[i].username === data.calleridnum) {
                         conferences[data.conference].users.splice(i, 1);
-                        io.sockets.emit('user:join', conferences);
+                        io.sockets.emit('user:leave', conferences);
                         //console.log('\n\nLEFT', conferences);
                     }
                 } else {
                     if (conferences[data.conference].users[i].username === doc[0].username) {
                         conferences[data.conference].users.splice(i, 1);
-                        io.sockets.emit('user:join', conferences);
+                        io.sockets.emit('user:leave', conferences);
                         //console.log('\n\nLEFT', conferences);
 
                     }
@@ -39,7 +39,7 @@ module.exports = function (ami, conferences, io) {
         } else {
             if (conferences[data.conference].users[i].username === data.calleridnum) {
                 conferences[data.conference].users.splice(i, 1);
-                io.sockets.emit('user:join', conferences);
+                io.sockets.emit('user:leave', conferences);
                 //console.log('\n\nLEFT', conferences);
             }
         }
@@ -180,7 +180,7 @@ module.exports = function (ami, conferences, io) {
                     && conferences[data.conference].name !== '1113'
                     ) {
                     delete conferences[data.conference];
-                    io.sockets.emit('user:join', conferences);
+                    io.sockets.emit('user:leave', conferences);
                     var sip_int = parseInt(data.conference, 10);
                     Conferences.remove({'sip': sip_int});
                     console.log('\n\nCONF DELETED', conferences);
