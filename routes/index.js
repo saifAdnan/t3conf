@@ -407,11 +407,6 @@ module.exports = function (app, rooms, ami, confs) {
             for (var i = 0; i < files.length; i++) {
                 var filename = files[i];
 
-                fs.stat(settings.PROJECT_DIR + '/asterisk/monitor' + filename, function (err, data) {
-                   console.log(err, data);
-                });
-                //var r = new RegExp('[-].+.wav');
-                //var date = filename.match(r)[0].split("-")[1].replace(".wav", "");
                 r_files.push({
                     name: filename,
                     date: new Date()
@@ -495,8 +490,6 @@ module.exports = function (app, rooms, ami, confs) {
             users: [req.body.username]
         });
     });
-
-
 
     app.post('/action/renameRecord', function (req, res) {
         var file = req.body.filename;
