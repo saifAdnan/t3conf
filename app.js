@@ -26,10 +26,12 @@ var app = express(),
         secret: 't3conf'
     };
 
-if ('development' == app.get('env')) {
-    server = https.createServer(app)
+if ('development' === app.get('env')) {
+    server = https.createServer(app);
     app.use(express.errorHandler());
-} else {
+}
+
+if ('production' === app.get("env")) {
     server = https.createServer(settings.SSL, app);
 }
 
