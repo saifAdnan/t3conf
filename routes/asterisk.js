@@ -28,7 +28,7 @@ module.exports = function (ami, conferences, io) {
                         //console.log('\n\nLEFT', conferences);
                     }
                 } else {
-                    if (conferences[data.conference].users[i].username === doc[0].username) {
+                    if (conferences[data.conference].users[i] && conferences[data.conference].users[i].username === doc[0].username) {
                         conferences[data.conference].users.splice(i, 1);
                         io.sockets.emit('user:leave', conferences);
                         //console.log('\n\nLEFT', conferences);
