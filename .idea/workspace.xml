@@ -66,8 +66,8 @@
       <file leaf-file-name="sipService.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/js/angular/services/sipService.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.44382647" vertical-offset="0" max-vertical-offset="5691">
-              <caret line="19" column="57" selection-start-line="19" selection-start-column="57" selection-end-line="19" selection-end-column="57" />
+            <state vertical-scroll-proportion="0.49054506" vertical-offset="0" max-vertical-offset="5691">
+              <caret line="21" column="40" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -972,8 +972,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/angular/services/sipService.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.44382647" vertical-offset="0" max-vertical-offset="5691">
-          <caret line="19" column="57" selection-start-line="19" selection-start-column="57" selection-end-line="19" selection-end-column="57" />
+        <state vertical-scroll-proportion="0.49054506" vertical-offset="0" max-vertical-offset="5691">
+          <caret line="21" column="40" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
           <folding />
         </state>
       </provider>
