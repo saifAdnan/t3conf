@@ -67,7 +67,7 @@
         <entry file="file://$PROJECT_DIR$/public/js/angular/services/sipService.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.44382647" vertical-offset="0" max-vertical-offset="5691">
-              <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+              <caret line="19" column="55" selection-start-line="19" selection-start-column="55" selection-end-line="19" selection-end-column="55" />
               <folding />
             </state>
           </provider>
@@ -973,7 +973,7 @@
     <entry file="file://$PROJECT_DIR$/public/js/angular/services/sipService.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.44382647" vertical-offset="0" max-vertical-offset="5691">
-          <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+          <caret line="19" column="55" selection-start-line="19" selection-start-column="55" selection-end-line="19" selection-end-column="55" />
           <folding />
         </state>
       </provider>
