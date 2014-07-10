@@ -7,7 +7,8 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
         audioRemote = document.getElementById("audio_remote"),
         viewVideoLocal, viewVideoRemote,
         isStarted = false,
-        chkCounter =0;
+        chkCounter = 0,
+        chkStatus;
 
     //SIPml5 config
     var sipml5_config = {
@@ -16,8 +17,8 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
         impu: 'sip:' + USERNAME + '@46.36.223.131',
         password: PASSWORD, // optional
         display_name: FIRSTNAME + ' ' + LASTNAME, // optional
-        //websocket_proxy_url: 'wss://46.36.223.131:10062', // optional
-        //outbound_proxy_url: 'udp://example.org:5060', // optional
+        websocket_proxy_url: 'wss://46.36.223.131:10062/', // optional
+        outbound_proxy_url: 'udp://46.36.223.131:10060', // optional
         enable_rtcweb_breaker: true, // optional
         events_listener: { events: '*', listener: eventsListener }, // optional: '*' means all events
         sip_headers: [ // optional
@@ -148,12 +149,17 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
     }
 
     function eventsListener (e){
-        var chkStatus = setInterval(function () {
-            chkCounter = chkCounter + 1;
-            if (chkCounter > 1 && isStarted === false) {
-                window.location.reload();
-            }
-        }, 1000);
+        console.warn(typeof chkStatus, 1);
+        if (typeof chkStatus !== 'number') {
+            console.warn(typeof chkStatus, 2);
+            /*chkStatus = setInterval(function () {
+                chkCounter = chkCounter + 1;
+                console.warn(chkCounter, e.type);
+                if (chkCounter > 1 && isStarted === false) {
+                    window.location.reload();
+                }
+            }, 500);*/
+        }
 
         if(e.type == 'started'){
             isStarted = true;
@@ -175,6 +181,8 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
             $rootScope.status = "Connected";
             $rootScope.connected = true;
             $rootScope.$apply();
+            clearInterval(chkStatus);
+            window.clearInterval(chkStatus);
         }
     }
 
@@ -228,6 +236,7 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
             if (!$rootScope.connected) {
                 if (cb && typeof cb === 'function') return cb(false);
             }
+            if (!sipStack) return false;
             callSession = sipStack.newSession('call-audio', {
                 video_local: videoLocal,
                 video_remote: videoRemote,
