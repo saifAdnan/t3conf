@@ -18,7 +18,7 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
         password: PASSWORD, // optional
         display_name: FIRSTNAME + ' ' + LASTNAME, // optional
         websocket_proxy_url: 'wss://trafficdestination.net:10062/', // optional
-        outbound_proxy_url: 'udp://trafficdestination.net:10060 ', // optional
+        outbound_proxy_url: 'udp://trafficdestination.net:10060/', // optional
         enable_rtcweb_breaker: true, // optional
         events_listener: { events: '*', listener: eventsListener }, // optional: '*' means all events
         sip_headers: [ // optional
