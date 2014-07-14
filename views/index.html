@@ -55,9 +55,9 @@
             <div class="btn-toolbar pull-right" style="position:relative; top: 7px; margin-right: 50px;">
                 <div id="txtRegStatus" class="pull-right bg-success" ng-bind="status"></div>
                 <!--<div id="txtCallStatus" class="pull-right bg-success" ></div>-->
-                <div class="btn btn-primary pull-right" ng-click="toggleKeypad()" ng-show="inCall">keypad</div>
+                <div class="btn btn-primary pull-right" ng-click="toggleKeypad()" ng-show="$parent.inConference">keypad</div>
                 <div class="btn btn-success pull-right" ng-click="invite()" ng-show="inCall">Invite</div>
-                <div class="btn {%(isMuted ? 'btn-danger' : 'btn-success')%} pull-right" ng-click="mute()" ng-show="$parent.inConference">
+                <div class="btn {%(isMuted ? 'btn-danger' : 'btn-success')%} pull-right" ng-click="mute()" ng-show="inCall">
                     <span class="glyphicon {%(isMuted ? 'glyphicon-volume-off' : 'glyphicon-volume-up')%}"></span>
                 </div>
                 <div class="btn btn-danger pull-right" ng-click="hangUp()" ng-show="inCall">Hang up</div>
