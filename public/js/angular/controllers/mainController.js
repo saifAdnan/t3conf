@@ -1,4 +1,4 @@
-function mainController($scope, $http, $location, watchService, sipService, $rootScope) {
+function mainController($scope, $http, $location, watchService, sipService, $rootScope, $timeout) {
     $rootScope.inCall = false;
     $scope.rooms = null;
     $scope.roomNumber = null;
@@ -11,9 +11,11 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
 
     $rootScope.inConference = false;
 
-    $http.get("/action/confs").success(function (data) {
-        $scope.rooms = getValues(data);
-    });
+    $timeout(function () {
+        $http.get("/action/confs").success(function (data) {
+            $scope.rooms = getValues(data);
+        });
+    }, 100);
 
     $http.get("/action/getFiles").success(function (data) {
         if (!data.length) $scope.no_files_message = "No records found.";
@@ -26,7 +28,13 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         $scope.files = data;
     });
 
+    watchService.disconnect();
+
     watchService.on("user:join", function (data) {
+        $scope.rooms = getValues(data);
+    });
+
+    watchService.on("user:leave", function (data) {
         $scope.rooms = getValues(data);
     });
 
@@ -157,4 +165,4 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     sipService.sipLogin();
 }
 
-app.controller("mainController", ['$scope', '$http', '$location', 'watchService', 'sipService', '$rootScope', mainController]);
+app.controller("mainController", ['$scope', '$http', '$location', 'watchService', 'sipService', '$rootScope', '$timeout', mainController]);
