@@ -9,6 +9,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     $scope.n_filename = null;
     $scope.n_filename_date = null;
 
+    $rootScope.inConference = false;
 
     $http.get("/action/confs").success(function (data) {
         $scope.rooms = getValues(data);
