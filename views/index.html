@@ -57,7 +57,7 @@
                 <!--<div id="txtCallStatus" class="pull-right bg-success" ></div>-->
                 <div class="btn btn-primary pull-right" ng-click="toggleKeypad()" ng-show="inCall">keypad</div>
                 <div class="btn btn-success pull-right" ng-click="invite()" ng-show="inCall">Invite</div>
-                <div class="btn {%(isMuted ? 'btn-danger' : 'btn-success')%} pull-right" ng-click="mute()" ng-show="inCall">
+                <div class="btn {%(isMuted ? 'btn-danger' : 'btn-success')%} pull-right" ng-click="mute()" ng-show="inConference">
                     <span class="glyphicon {%(isMuted ? 'glyphicon-volume-off' : 'glyphicon-volume-up')%}"></span>
                 </div>
                 <div class="btn btn-danger pull-right" ng-click="hangUp()" ng-show="inCall">Hang up</div>
