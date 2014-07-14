@@ -1,22 +1,10 @@
 // export function for listening to the socket
 module.exports = function (socket, io, channel, confs, web_users, web_users_for_names, ami) {
-    var name,
-        usernames,
-        id = 0;
-
     socket.channel = channel;
-
-    socket.on("init", function (data) {
-        // notify other clients that a new user has joined
-        /*socket.broadcast.emit('user:join', {
-            name: data.username
-        });*/
-
-    });
 
     // broadcast a user's message to other users
     socket.on('send:message', function (data) {
-        console.log("send", data)
+        console.log("send", data);
         if (data.private && data.to && data.roomName) {
             var socket_id = web_users[data.to];
             if (io.of("/" + channel).sockets[socket_id]) {
@@ -26,7 +14,6 @@ module.exports = function (socket, io, channel, confs, web_users, web_users_for_
                     private: true
                 });
             }
-
         } else {
             socket.broadcast.emit('send:message', {
                 from: data.from,

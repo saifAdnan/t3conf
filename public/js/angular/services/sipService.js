@@ -149,16 +149,13 @@ app.factory('sipService', ['$rootScope', function ($rootScope) {
     }
 
     function eventsListener (e){
-        console.warn(typeof chkStatus, 1);
         if (typeof chkStatus !== 'number') {
-            console.warn(typeof chkStatus, 2);
-            /*chkStatus = setInterval(function () {
+            chkStatus = setInterval(function () {
                 chkCounter = chkCounter + 1;
-                console.warn(chkCounter, e.type);
                 if (chkCounter > 1 && isStarted === false) {
                     window.location.reload();
                 }
-            }, 500);*/
+            }, 1000);
         }
 
         if(e.type == 'started'){

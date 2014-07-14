@@ -142,16 +142,9 @@ io.sockets.on('connection', function (socket) {
         var isChannelPresent = !!channels[channel];
         socket.emit('presence', isChannelPresent);
     });
-
-    socket.on('disconnect', function (channel) {
-        /*if (initiatorChannel) {
-         delete channels[initiatorChannel];
-         }
-         socket.emit('leave', true);*/
-    });
 });
 
-function onNewNamespace(channel, sender) {
+function onNewNamespace(channel) {
     io.of('/' + channel).on('connection', function (socket) {
         if (io.isConnected) {
             require('./routes/chat.js')(socket, io, channel, conferences, web_users, web_users_for_names, ami);

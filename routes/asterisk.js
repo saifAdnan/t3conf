@@ -25,13 +25,13 @@ module.exports = function (ami, conferences, io) {
                     if (conferences[data.conference].users[i].username === data.calleridnum) {
                         conferences[data.conference].users.splice(i, 1);
                         io.sockets.emit('user:leave', conferences);
-                        //console.log('\n\nLEFT', conferences);
+                        console.log('\n\nLEFT', conferences);
                     }
                 } else {
                     if (conferences[data.conference].users[i] && conferences[data.conference].users[i].username === doc[0].username) {
                         conferences[data.conference].users.splice(i, 1);
                         io.sockets.emit('user:leave', conferences);
-                        //console.log('\n\nLEFT', conferences);
+                        console.log('\n\nLEFT', conferences);
 
                     }
                 }
@@ -40,7 +40,7 @@ module.exports = function (ami, conferences, io) {
             if (conferences[data.conference].users[i].username === data.calleridnum) {
                 conferences[data.conference].users.splice(i, 1);
                 io.sockets.emit('user:leave', conferences);
-                //console.log('\n\nLEFT', conferences);
+                console.log('\n\nLEFT', conferences);
             }
         }
 
@@ -103,14 +103,16 @@ module.exports = function (ami, conferences, io) {
                             username: doc[0].username,
                             channel: data.channel,
                             sip: doc[0].phone,
-                            phone: doc[0].phone
+                            phone: doc[0].phone,
+                            role: doc[0].role
                         };
                     } else {
                         user = {
                             username: data.calleridnum,
                             channel: data.channel,
                             sip: 'Unregistered',
-                            phone: data.calleridnum
+                            phone: data.calleridnum,
+                            role: 'user'
                         }
                     }
 
@@ -135,7 +137,8 @@ module.exports = function (ami, conferences, io) {
                             username: data.calleridnum !== '<unknown>' ? data.calleridnum : doc[0].username,
                             channel: data.channel,
                             sip: doc[0].sip,
-                            phone: doc[0].phone
+                            phone: doc[0].phone,
+                            role: doc[0].role
                         };
                         if (!conferences[data.conference]) conferences[data.conference] = {};
                         if (!conferences[data.conference].users) conferences[data.conference].users = [];

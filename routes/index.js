@@ -24,6 +24,7 @@ module.exports = function (app, rooms, ami, confs) {
                 title: "Home",
                 username: req.user.username,
                 sip: req.user.sip,
+                role: req.user.role,
                 password: req.user.password,
                 firstname: req.user.firstname,
                 lastname: req.user.lastname

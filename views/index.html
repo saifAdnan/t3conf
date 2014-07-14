@@ -2,7 +2,8 @@
 <html lang="en" ng-app="t3confApp">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
     <title>T3 Conf - {{title}}</title>
     <link rel="stylesheet" href="/public/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/public/css/bootstrap-theme.min.css"/>
@@ -14,82 +15,43 @@
         var LASTNAME = "{{lastname}}";
         var FIRSTNAME = "{{firstname}}";
         var SIP = "{{sip}}";
+        var ROLE = "{{role}}";
         var ROOM_NAME;
     </script>
 </head>
-<body >
+<body>
 
-<nav role="navigation" class="navbar navbar-top navbar-inverse">
-    <div class="">
-        <div class="navbar-header">
-            <button data-target=".navbar-ex1-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="/" class="navbar-brand">
-                <img src="/public/img/logo.png" alt="Sora Conference"/>
-            </a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse navbar-ex1-collapse" ng-controller="mainController">
-            <div class="nav nav-num navbar-nav pull-left">
-                <span class="icon-usa"></span>
-                <p>+13108070303</p>
+<div class="modal" id="not_supported">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Bring This Experience to Life.
+                </h4>
             </div>
-            <ul class="nav navbar-nav pull-right">
-                <li>
-                    <a href="">
-                        Username: {{username}}
-                        /
-                        SIP: {{sip}}
-                    </a>
-                </li>
-                <li>
-                    <a href="/logout" id="btnUnRegister">logout</a>
-                </li>
-            </ul>
+            <div class="modal-body">
+                <p>You’re using a web browser or platform that is not supported.
+                    Please take a moment to download a modern browser that supports WebRTC or open this site from a workstation computer or a laptop.</p>
 
-            <div class="btn-toolbar pull-right" style="position:relative; top: 7px; margin-right: 50px;">
-                <div id="txtRegStatus" class="pull-right bg-success" ng-bind="status"></div>
-                <!--<div id="txtCallStatus" class="pull-right bg-success" ></div>-->
-                <div class="btn btn-primary pull-right" ng-click="toggleKeypad()" ng-show="$parent.inConference">keypad</div>
-                <div class="btn btn-success pull-right" ng-click="invite()" ng-show="inCall">Invite</div>
-                <div class="btn {%(isMuted ? 'btn-danger' : 'btn-success')%} pull-right" ng-click="mute()" ng-show="inCall">
-                    <span class="glyphicon {%(isMuted ? 'glyphicon-volume-off' : 'glyphicon-volume-up')%}"></span>
-                </div>
-                <div class="btn btn-danger pull-right" ng-click="hangUp()" ng-show="inCall">Hang up</div>
+                <ul class="list-unstyled list-inline text-center">
+                    <li>
+                        <a target="_blank" href="https://www.google.com/intl/en/chrome/browser/"><img width="126" height="126" src="data:image/jpeg;base64,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" alt="Chrome"/></a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="http://www.mozilla.org/en-US/firefox/new/"><img width="126" height="126" src="data:image/jpeg;base64,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" alt="Firefox"/></a>
+                    </li>
+                </ul>
             </div>
         </div>
-        <!-- /.navbar-collapse -->
+        <!-- /.modal-content -->
     </div>
-    <!-- /.container -->
-</nav>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
-
-<div ng-view></div>
-
-
-<!-- load scripts -->
-<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>-->
-<!--<script>
-    if (!window.jQuery) {
-        document.write('<script src="/public/js/lib/jquery.min.js"><\/script>');
-    }
-</script>-->
-<script src="/public/js/lib/jquery.min.js"></script>
-<script src="/public/js/lib/jquery-scrollo.min.js"></script>
-<script src="/public/js/lib/angular.min.js"></script>
-<script src="/public/js/lib/angular-route.min.js"></script>
-<script src="/public/js/lib/angular-animate.min.js"></script>
-<script src="/public/js/lib/ui-bootstrap-tpls-0.10.0.min.js"></script>
-<script src="/public/js/lib/bootstrap.min.js"></script>
-
-<script src="/public/js/lib/SIPml-api.js?svn=224"></script>
-<script src="/public/js/lib/socket.io.js"></script>
-<script src="/public/js/lib/RTCPeerConnection-v1.6.js"></script>
+<div ng-show="supported">
+    <nav-super></nav-super>
+    <div ng-view></div>
+</div>
 
 <div class="sip-devices">
     <div id="tdVideo" class='tab-video'>
@@ -112,6 +74,27 @@
     <audio id="ringbacktone" loop src="sound/ringbacktone.wav" />
     <audio id="dtmfTone" src="sound/dtmf.wav" />
 </div>
+
+<!-- load scripts -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>
+    if (!window.jQuery) {
+        document.write('<script src="/public/js/lib/jquery.min.js"><\/script>');
+    }
+</script>
+
+<script src="/public/js/lib/jquery-scrollo.min.js"></script>
+<script src="/public/js/lib/angular.min.js"></script>
+<script src="/public/js/lib/angular-route.min.js"></script>
+<script src="/public/js/lib/angular-animate.min.js"></script>
+<script src="/public/js/lib/ui-bootstrap-tpls-0.10.0.min.js"></script>
+<script src="/public/js/lib/bootstrap.min.js"></script>
+
+<script src="/public/js/lib/SIPml-api.js?svn=224"></script>
+<script src="/public/js/lib/socket.io.js"></script>
+<script src="/public/js/lib/RTCPeerConnection-v1.6.js"></script>
+
+
 <script src="/public/js/angular/t3confApp.js"></script>
 <!-- Controllers -->
 <script src="/public/js/angular/controllers/mainController.js"></script>
@@ -122,6 +105,7 @@
 
 <!-- Directives -->
 <script src="/public/js/angular/directives/admin.js"></script>
+<script src="/public/js/angular/directives/navSuper.js"></script>
 <script src="/public/js/angular/directives/toNumber.js"></script>
 <script src="/public/js/angular/directives/checklist-model.js"></script>
 

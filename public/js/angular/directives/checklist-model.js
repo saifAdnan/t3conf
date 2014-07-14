@@ -2,7 +2,6 @@
  * Checklist-model
  * AngularJS directive for list of checkboxes
  */
-
 app.directive('checklistModel', ['$parse', '$compile', function($parse, $compile) {
         // contains
         function contains(arr, item) {

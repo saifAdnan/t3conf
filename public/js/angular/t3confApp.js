@@ -35,6 +35,21 @@ app.run(['$rootScope', '$http',
         $rootScope.username = USERNAME;
         $rootScope.enableChat = true;
         $rootScope.inCall = false;
+        $rootScope.role = ROLE;
+
+        var browser = navigator.userAgent;
+
+        if (browser.match(/Chrome/) || browser.match(/Firefox/)) {
+            $rootScope.supported = true;
+            if (browser.match(/Chrome/)) $rootScope.nav = 'chrome';
+            if (browser.match(/Firefox/)) $rootScope.nav = 'firefox';
+        } else {
+            $rootScope.supported = false;
+            $("#not_supported").modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        }
 
         $http.get("/rooms").success(function(data) {
             $rootScope.rooms = data;
