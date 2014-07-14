@@ -31,8 +31,8 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     });
 
     $scope.join = function (num) {
-        $location.url('/conference/' + num);
         $scope.inConference = true;
+        $location.url('/conference/' + num);
     };
 
     $scope.mute = function () {
@@ -121,9 +121,9 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
                 $scope.error = "SIP number is already exists. Please choose another SIP number."
             } else {
                 $location.url("/conference/" + $scope.conf_sip);
-                $scope.inConference = true;
             }
         });
+        $scope.inConference = true;
 
         return false;
     };
