@@ -44,11 +44,11 @@ app.run(['$rootScope', '$http',
             if (browser.match(/Chrome/)) $rootScope.nav = 'chrome';
             if (browser.match(/Firefox/)) $rootScope.nav = 'firefox';
         } else {
-            $rootScope.supported = false;
-            $("#not_supported").modal({
+            $rootScope.supported = true;
+            /*$("#not_supported").modal({
                 backdrop: 'static',
                 keyboard: false
-            });
+            });*/
         }
 
         $http.get("/rooms").success(function(data) {
