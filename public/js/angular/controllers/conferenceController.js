@@ -3,6 +3,7 @@ function conferenceController($scope, $rootScope, $http, watchService, sipServic
     $scope.selectedUsers = [];
     $scope.conf_name = null;
     $scope.conf_sip = $routeParams.name;
+    $rootScope.inConference = true;
 
     $http.get("/action/users").success(function(data) {
         $scope.users = data;

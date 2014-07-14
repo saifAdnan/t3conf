@@ -3,7 +3,6 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     $scope.rooms = null;
     $scope.roomNumber = null;
     $scope.isExist = false;
-    $scope.inConference = false;
     $scope.t3leadsActive = false;
     $scope.isMuted = false;
     $scope.filename = null;
@@ -31,7 +30,6 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     });
 
     $scope.join = function (num) {
-        $scope.inConference = true;
         $location.url('/conference/' + num);
     };
 
@@ -123,7 +121,6 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
                 $location.url("/conference/" + $scope.conf_sip);
             }
         });
-        $scope.inConference = true;
 
         return false;
     };
