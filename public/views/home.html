@@ -152,7 +152,11 @@
                         <i class="glyphicon glyphicon-floppy-remove"></i>
                         Clear records
                     </a>
-                    <input name="daterange"></input>
+                    <div id="reportrange" class="pull-right">
+                        <i class="fa fa-calendar fa-lg"></i>
+                        <span></span>
+                        <b class="caret""></b>
+                    </div>
                 </div>
                 <div class="panel-body" id="rooms">
                     <div class="help-block" ng-show="no_files_message.length > 0">
@@ -176,7 +180,7 @@
                                placeholder="Search"/>
                         <tr ng-repeat="file in files | orderBy: rec_predicate:rec_reverse | filter: {name: sName}">
                             <td>
-                                <a href="/records/{%file.path%}" ng-bind="file.name"></a>
+                                <a href="/records/{%file.name%}-{%file.date%}.wav" ng-bind="file.i_name"></a>
                             </td>
                             <td ng-bind="file.time"></td>
 

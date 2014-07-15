@@ -17,14 +17,14 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         });
     }, 100);
 
-    $http.get("/action/getFiles").success(function (data) {
+    $http.post("/action/getFiles").success(function (data) {
         if (!data.length) $scope.no_files_message = "No records found.";
         for (var i = 0; i < data.length; i++) {
             var d = new Date(data[i].date * 1000);
             data[i].time = d.getHours() + ':' + d.getMinutes();
-            d = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + '-' + d.getHours() + '_' + d.getMinutes();
+            d = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + '-' + d.getHours() + '_' + d.getMinutes();
             data[i].ui_date = d;
-            data[i].name = data[i].name  + d;
+            data[i].i_name = data[i].name + '-' +  d;
         }
         $scope.files = data;
     });
@@ -57,8 +57,8 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     };
 
     $scope.rename = function (e, file) {
-        $scope.filename = file.name.match(/^[\D\d\s]+?-/g)[0].replace("-", "") +"-"+file.date+".wav";
-        $scope.n_filename = file.name.match(/^[\D\d]+?-/g)[0].replace("-", "");
+        $scope.filename = file.name;
+        $scope.n_filename = file.name.replace("-", "");
         $scope.n_filename_date = file.date;
         $("#rename").modal().find("input").focus();
     };
@@ -67,11 +67,13 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         $("#rename").modal('hide');
     };
 
-    $scope.changeFilename = function(e) {
+    $scope.changeFilename = function (e) {
         e.preventDefault();
+
         $http.post("/action/renameRecord", {
             filename: $scope.filename,
-            n_filename: $scope.n_filename + '-' + $scope.n_filename_date + '.wav'
+            date: $scope.n_filename_date,
+            n_filename: $scope.n_filename
         }).success(function (data) {
             window.location.reload();
         });
@@ -153,7 +155,10 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     $scope.clearRecord = function (e, file) {
         e.preventDefault();
         if (confirm("Are you sure to delete this record?")) {
-            $http.post("/action/clearRecord", {filename: file.name.match(/^[\D\d\s]+?-/g)[0].replace("-", "") +"-"+file.date+".wav"});
+            $http.post("/action/clearRecord", {
+                file: file.name + "-" + file.date + ".wav",
+                date: file.date
+            });
             window.location.reload();
             return false
         } else {
@@ -164,6 +169,47 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     sipService.sipHangUp();
 
     sipService.sipLogin();
+
+    $('#reportrange').daterangepicker(
+        {
+            startDate: moment().subtract('days', 29),
+            endDate: moment(),
+            minDate: '01/01/2012',
+            maxDate: '12/31/2014',
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+            },
+            opens: 'left',
+            buttonClasses: ['btn'],
+            applyClass: 'btn-small btn-info btn-block',
+            cancelClass: 'btn-small btn-default btn-block',
+            format: 'MM/DD/YYYY',
+            separator: ' to ',
+            locale: {
+                applyLabel: 'Submit',
+                fromLabel: 'From',
+                toLabel: 'To',
+                customRangeLabel: 'Custom Range',
+                daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                firstDay: 1
+            }
+        },
+        function (start, end) {
+            $http.post('/action/getFiles', {
+                start: start.unix(),
+                end: end.unix()
+            }).success(function (data) {
+                console.warn(data);
+            });
+
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+    );
 }
 
 app.controller("mainController", ['$scope', '$http', '$location', 'watchService', 'sipService', '$rootScope', '$timeout', mainController]);

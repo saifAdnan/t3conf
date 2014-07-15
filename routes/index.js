@@ -1,8 +1,10 @@
-var fs = require('fs');
-var passport = require('passport');
-var Users = require('../models/users');
-var Conferences = require('../models/conferences');
-var settings = require("../settings");
+var fs = require('fs'),
+    passport = require('passport'),
+    Users = require('../models/users'),
+    Conferences = require('../models/conferences'),
+    Records = require("../models/records"),
+    settings = require('../settings');
+
 
 module.exports = function (app, ami, confs) {
     "use strict";
@@ -127,33 +129,13 @@ module.exports = function (app, ami, confs) {
         res.redirect('/login');
     });
 
-    app.get('/action/getFiles', function (req, res) {
-        var from = req.params.from,
-            to = req.params.to;
+    app.post('/action/getFiles', function (req, res) {
+        var from = req.body.start,
+            to = req.body.end;
 
-        fs.readdir(settings.PROJECT_DIR + '/public/records/', function (err, files) { // '/' denotes the root folder
-            var r_files = [];
-            for (var i = 0; i < files.length; i++) {
-                var filename = files[i];
-                var reg = new RegExp(/[\D\d\s]+-/g);
-
-                var unix_time = filename.match(/-\d{10}\./g)[0].replace("-", "").replace(".", "");
-                var name = filename.match(reg)[0];
-
-                r_files.push({
-                    path: filename,
-                    name: name,
-                    date: unix_time
-                });
-            }
-            res.json(r_files);
+        Records.collection.find({}).toArray(function(err, doc) {
+            res.json(doc);
         });
-    });
-
-    app.get('/css/:file', function (req, res) {
-        var file = req.params.file;
-        res.end("saif");
-
     });
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -412,23 +394,45 @@ module.exports = function (app, ami, confs) {
     app.post('/action/renameRecord', function (req, res) {
         var file = req.body.filename;
         var n_file = req.body.n_filename;
+        var date = req.body.date;
 
-        console.log(file, n_file);
+        console.log(file, n_file, parseInt(date, 10));
 
-        fs.rename(settings.PROJECT_DIR + '/public/records/' + file, settings.PROJECT_DIR + '/public/records/' + n_file, function(err) {
+        Records.collection.update(
+            { date: date },
+            { $set: {name: n_file}},
+            function (err, result) {
+                if (err) throw err;
+                console.log(result);
+            }
+        );
+
+        fs.rename(settings.PROJECT_DIR + '/public/records/' + file + '-' + date + '.wav', settings.PROJECT_DIR + '/public/records/' + n_file + '-' + date +'.wav', function(err) {
             if ( err ) console.log('ERROR: ' + err);
         });
         res.end('File has been deleted!');
     });
 
     app.post('/action/clearRecord', function (req, res) {
-        fs.unlinkSync(settings.PROJECT_DIR + '/public/records/' + req.body.filename, function (err) {
+        var unix = req.body.date;
+        var file = req.body.file;
+        Records.collection.remove({ date: unix }, function(err) {
+            if (!err) {
+                console.log(err);
+            }
+        });
+        fs.unlinkSync(settings.PROJECT_DIR + '/public/records/' + file, function (err) {
         });
         res.end('File has been deleted!');
     });
 
     app.post('/action/clearRecords', function (req, res) {
-        fs.readdir('asterisk/monitor/', function (err, files) {
+        Records.collection.remove({}, function(err) {
+            if (!err) {
+                console.log(err);
+            }
+        });
+        fs.readdir(settings.PROJECT_DIR + '/public/records/', function (err, files) {
             files.forEach(function (filename) {
                 fs.unlinkSync('/var/www/t3conf/public/records/' + filename, function (err) {
                 });

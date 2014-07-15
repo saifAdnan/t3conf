@@ -3,7 +3,8 @@ var mongoose = require('mongoose'),
 
 var Records = new Schema({
     name: String,
-    date: Date
+    path: String,
+    date: Number
 });
 
 module.exports = mongoose.model('Records', Records);

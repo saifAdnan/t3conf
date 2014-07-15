@@ -40,7 +40,7 @@ app.use(function(request, response, next) {
 
         client.geolocate(ip, function (err, res) {
             var n = moment.unix(file.match(/[0-9]{10}/g)[0]).zone(res.timeZone).format('DD-MM-YYYY-H_m')
-            response.download(__dirname + '/public' + file, '/records/'+file.match(/[\D\d\s]+-/g)[0]+'-' + n + '.wav');
+            response.download(__dirname + '/public' + file, '/records/'+file.match(/[\D\d\s]+-/g)[0]+ n + '.wav');
         });
     } else {
         next();
@@ -66,8 +66,8 @@ io = require('socket.io').listen(server, settings.IO).set('origins', '*:*');
 app.configure(function () {
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'html');
+    app.use(express.bodyParser());
     app.use(express.static(path.join(__dirname, 'public')));
-    //app.use(express.static(__dirname, 'public/asterisk'));
     app.use(express.json());
     app.use(express.urlencoded());
     app.use(methodOverride());
