@@ -47,7 +47,6 @@ module.exports = function (ami, conferences, io) {
     }
 
     ami.on('ami_data', function (data) {
-
         if (data.event === "ConfbridgeJoin") {
             /*
              { event: 'ConfbridgeJoin',
@@ -208,17 +207,20 @@ module.exports = function (ami, conferences, io) {
              privilege: 'dialplan,all',
              channel: 'ConfBridgeRecorder/conf-4520-uid-465567982',
              variable: 'MIXMONITOR_FILENAME',
-             value: '/var/spool/asterisk/monitor/frt-1404823141.wav',
+             value: '/var/www/t3conf/public/records/frt-1404823141.wav',
              uniqueid: '1404823141.282' }
              */
             if (data.variable === 'MIXMONITOR_FILENAME') {
                 var file = data.value;
-                var reg = new RegExp(/([0-9]{9}.)/g);
-                var date = file.match(reg)[0];
+                var filename = file.split("/var/www/t3conf/public/records/")[1];
+                var unix_time = filename.match(/-\d{10}\./g)[0].replace("-", "").replace(".", "");
+
+                var name = filename.split("-" + unix_time)[0];
 
                 Records.collection.insert({
-                    name: file.split('/var/spool/asterisk/monitor/')[1],
-                    date: date
+                    name: name,
+                    path: file,
+                    date: unix_time
                 }, function (err) {
                     if (err) console.log(err);
                 });
