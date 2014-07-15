@@ -1,5 +1,8 @@
 // export function for listening to the socket
-module.exports = function (socket, io, channel, confs, ami) {
+module.exports = function (socket, io, channel, confs, web_users, web_users_for_names) {
+    var name,
+        usernames,
+        id = 0;
     socket.channel = channel;
 
     // broadcast a user's message to other users
