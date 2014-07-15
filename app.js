@@ -29,16 +29,16 @@ var app = express(),
 var fs = require("fs");
 // Logging middleware
 app.use(function(request, response, next) {
-    var ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
-    ip = '127.0.01' ? ' 212.3.110.42' : ip;
-    var key = '1b284d7e50cf94951a56906f239a4655c1b583a1c6da8812ead5cdd2003d02cd';
-    client = require('ipinfodb')({ key: key });
-
     if (request.url.match(/records/g)) {
+        var ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+        ip = '127.0.01' ? ' 212.3.110.42' : ip;
+        var key = '1b284d7e50cf94951a56906f239a4655c1b583a1c6da8812ead5cdd2003d02cd';
+        client = require('ipinfodb')({ key: key });
+        var file = request.url;
+
         client.geolocate(ip, function (err, res) {
-            console.log(res);
-            var n = moment.unix(request.url.match(/[0-9]{10}/g)[0]).zone(res.timeZone).format('DD-MM-YYYY-H_m')
-            response.download(__dirname + '/public' + request.url, '/records/saif-' + n + '.wav');
+            var n = moment.unix(file.match(/[0-9]{10}/g)[0]).zone(res.timeZone).format('DD-MM-YYYY-H_m')
+            response.download(__dirname + '/public' + file, '/records/'+file.match(/[\D\d\s]+-/g)[0]+'-' + n + '.wav');
         });
     } else {
         next();
