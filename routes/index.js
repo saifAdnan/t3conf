@@ -128,6 +128,9 @@ module.exports = function (app, ami, confs) {
     });
 
     app.get('/action/getFiles', function (req, res) {
+        var from = req.params.from,
+            to = req.params.to;
+
         fs.readdir(settings.PROJECT_DIR + '/public/records/', function (err, files) { // '/' denotes the root folder
             var r_files = [];
             for (var i = 0; i < files.length; i++) {
