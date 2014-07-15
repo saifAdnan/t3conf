@@ -7,6 +7,7 @@
     <title>T3 Conf - {{title}}</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/css/bootdaterangepicker-bs3.css"/>
     <link rel="stylesheet" href="/css/custom.css"/>
     <script>
         var USERNAME = "{{username}}";
@@ -88,6 +89,14 @@
 <script src="/js/lib/angular-animate.min.js"></script>
 <script src="/js/lib/ui-bootstrap-tpls-0.10.0.min.js"></script>
 <script src="/js/lib/bootstrap.min.js"></script>
+<script src="/js/lib/moment.min.js"></script>
+<script src="/js/lib/daterangepicker.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('input[name="daterange"]').daterangepicker();
+    });
+</script>
 
 <script src="/js/lib/SIPml-api.js?svn=224"></script>
 <script src="/js/lib/socket.io.js"></script>
