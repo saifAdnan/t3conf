@@ -66,7 +66,6 @@ io = require('socket.io').listen(server, settings.IO).set('origins', '*:*');
 app.configure(function () {
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'html');
-    app.use(express.bodyParser());
     app.use(express.static(path.join(__dirname, 'public')));
     app.use(express.json());
     app.use(express.urlencoded());
