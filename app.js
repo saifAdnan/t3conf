@@ -19,6 +19,8 @@ var express = require('express'),
 var app = express(),
     conferences = settings.CONFERENCES,
     channels ={},
+    web_users = {},
+    web_users_for_names = {},
     ami = new AsteriskAmi(settings.ASTERISK),
     server, io,
     session_conf = {
@@ -165,7 +167,7 @@ io.sockets.on('connection', function (socket) {
 function onNewNamespace(channel) {
     io.of('/' + channel).on('connection', function (socket) {
         if (io.isConnected) {
-            require('./routes/chat.js')(socket, io, channel, conferences, ami);
+            require('./routes/chat.js')(socket, io, channel, conferences, ami, web_users, web_users_for_names);
             io.isConnected = false;
             socket.emit('connect', true);
         }
