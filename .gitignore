@@ -4,3 +4,5 @@ asterisk/*
 /asterisk
 .idea/
 .idea/*
+public/records
+public/records/*
