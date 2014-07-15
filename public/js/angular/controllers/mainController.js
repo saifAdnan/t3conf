@@ -12,7 +12,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     $rootScope.inConference = false;
 
     $timeout(function () {
-        $http.get("/action/confs").success(function (data) {
+        $http.get("/conferences").success(function (data) {
             $scope.rooms = getValues(data);
         });
     }, 100);
@@ -21,9 +21,10 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         if (!data.length) $scope.no_files_message = "No records found.";
         for (var i = 0; i < data.length; i++) {
             var d = new Date(data[i].date * 1000);
-            d = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes();
-
+            data[i].time = d.getHours() + ':' + d.getMinutes();
+            d = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + '-' + d.getHours() + '_' + d.getMinutes();
             data[i].ui_date = d;
+            data[i].name = data[i].name  + d;
         }
         $scope.files = data;
     });
@@ -56,8 +57,8 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     };
 
     $scope.rename = function (e, file) {
-        $scope.filename = file.name.replace(" ", "");
-        $scope.n_filename = file.name.replace(" ", "").split(file.date)[0].replace("-", "");
+        $scope.filename = file.name.match(/^[\D\d\s]+?-/g)[0].replace("-", "") +"-"+file.date+".wav";
+        $scope.n_filename = file.name.match(/^[\D\d]+?-/g)[0].replace("-", "");
         $scope.n_filename_date = file.date;
         $("#rename").modal().find("input").focus();
     };
@@ -149,10 +150,10 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         }
     };
 
-    $scope.clearRecord = function (e, filename) {
+    $scope.clearRecord = function (e, file) {
         e.preventDefault();
-        if (confirm("Are you sure to deletethis record?")) {
-            $http.post("/action/clearRecord", {filename: filename});
+        if (confirm("Are you sure to delete this record?")) {
+            $http.post("/action/clearRecord", {filename: file.name.match(/^[\D\d\s]+?-/g)[0].replace("-", "") +"-"+file.date+".wav"});
             window.location.reload();
             return false
         } else {

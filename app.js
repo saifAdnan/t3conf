@@ -4,27 +4,46 @@ var express = require('express'),
     mongoose = require('mongoose'),
     mongoStore = require('connect-mongo')(express),
     LocalStrategy = require('passport-local').Strategy,
+    path = require('path'),
     https = require('https'),
     passport = require('passport'),
     Account = require('./models/users'),
     Conferences = require('./models/conferences.js'),
     Records = require('./models/records.js'),
     settings = require('./settings.js'),
-    AsteriskAmi = require('asterisk-ami');
+    AsteriskAmi = require('asterisk-ami'),
+    moment = require('moment-timezone');
+
 
 // Set variables
 var app = express(),
     conferences = settings.CONFERENCES,
-    web_users = {},
-    web_users_for_names = {},
-    channels = {},
-    rooms = [],
+    channels ={},
     ami = new AsteriskAmi(settings.ASTERISK),
     server, io,
     session_conf = {
         db: settings.DB,
         secret: 't3conf'
     };
+
+var fs = require("fs");
+// Logging middleware
+app.use(function(request, response, next) {
+    var ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+    ip = '127.0.01' ? ' 212.3.110.42' : ip;
+    var key = '1b284d7e50cf94951a56906f239a4655c1b583a1c6da8812ead5cdd2003d02cd';
+    client = require('ipinfodb')({ key: key });
+
+    if (request.url.match(/records/g)) {
+        client.geolocate(ip, function (err, res) {
+            console.log(res);
+            var n = moment.unix(request.url.match(/[0-9]{10}/g)[0]).zone(res.timeZone).format('DD-MM-YYYY-H_m')
+            response.download(__dirname + '/public' + request.url, '/records/saif-' + n + '.wav');
+        });
+    } else {
+        next();
+    }
+});
 
 // Development env
 if ('development' == app.get('env')) {
@@ -43,9 +62,10 @@ io = require('socket.io').listen(server, settings.IO).set('origins', '*:*');
 
 // Express configuration
 app.configure(function () {
-    app.set('views', settings.PROJECT_DIR + '/views');
+    app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'html');
-    app.use(express.static(settings.PROJECT_DIR));
+    app.use(express.static(path.join(__dirname, 'public')));
+    //app.use(express.static(__dirname, 'public/asterisk'));
     app.use(express.json());
     app.use(express.urlencoded());
     app.use(methodOverride());
@@ -55,15 +75,13 @@ app.configure(function () {
         maxAge: new Date(Date.now() + 3600000),
         store: new mongoStore(session_conf.db)
     }));
+
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(app.router);
+
     app.engine('html', require('hogan-express'));
 });
-
-if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
-}
 
 // Passport Configuration
 passport.use(new LocalStrategy(Account.authenticate()));
@@ -74,11 +92,11 @@ passport.deserializeUser(Account.deserializeUser());
 mongoose.connect('mongodb://' + settings.DB.host + '/' + settings.DB.db);
 
 require("./routes/asterisk")(ami, conferences, io);
-require("./routes")(app, rooms, ami, conferences);
+require("./routes")(app, ami, conferences);
 
 //Socket.io
 io.sockets.on('connection', function (socket) {
-    require("./routes")(app, rooms, ami, conferences);
+    require("./routes")(app, ami);
     var initiatorChannel = '';
     if (!io.isConnected) {
         io.isConnected = true;
@@ -147,7 +165,7 @@ io.sockets.on('connection', function (socket) {
 function onNewNamespace(channel) {
     io.of('/' + channel).on('connection', function (socket) {
         if (io.isConnected) {
-            require('./routes/chat.js')(socket, io, channel, conferences, web_users, web_users_for_names, ami);
+            require('./routes/chat.js')(socket, io, channel, conferences, ami);
             io.isConnected = false;
             socket.emit('connect', true);
         }

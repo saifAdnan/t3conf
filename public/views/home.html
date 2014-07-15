@@ -177,16 +177,16 @@
                             <td>
                                 <a href="/records/{%file.path%}" ng-bind="file.name"></a>
                             </td>
-                            <td ng-bind="file.ui_date"></td>
+                            <td ng-bind="file.time"></td>
 
-                            <td ng-show="$parent.isAdmin" align="center">
+                            <td ng-show="$parent.isAdmin || moderator" align="center">
                                 <a href="#" ng-click="rename($event, file)">
                                     <i class="glyphicon glyphicon-pencil"></i>
                                 </a>
                             </td>
 
-                            <td ng-show="$parent.isAdmin" align="center">
-                                <a href="#" ng-click="clearRecord($event, file.name)">
+                            <td ng-show="$parent.isAdmin || moderator" align="center">
+                                <a href="#" ng-click="clearRecord($event, file)">
                                     <i class="glyphicon glyphicon-floppy-remove"></i>
                                 </a>
                             </td>
