@@ -27,7 +27,7 @@ function getValues(hash) {
  * Path to angular directory
  * @type {string}
  */
-var PATH = "/public/js/angular/";
+var PATH = "/js/angular/";
 
 //Global variables
 app.run(['$rootScope', '$http',
@@ -51,7 +51,7 @@ app.run(['$rootScope', '$http',
             });*/
         }
 
-        $http.get("/rooms").success(function(data) {
+        $http.get("/conferences").success(function(data) {
             $rootScope.rooms = data;
         });
     }

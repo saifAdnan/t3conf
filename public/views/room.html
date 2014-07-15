@@ -1,0 +1,159 @@
+<div class="clearfix"></div>
+<div class="modal" id="keypad">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Conference
+                    <div class="btn btn-danger pull-right" ng-click="closeKeyPad()">
+                        Close
+                    </div>
+                </h4>
+            </div>
+            <div class="dialPad">
+                <ul class="list-unstyled">
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('1')">1</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('2')">2</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('3')">3</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('4')">4</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('5')">5</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('6')">6</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('7')">7</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('8')">8</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('9')">9</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('*')">*</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('0')">0</li>
+                    <li class="btn btn-sm btn-default" ng-click="sipSendDTMF('#')">#</li>
+                </ul>
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal" id="invite">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Invite users to conference
+                    <div class="btn btn-danger pull-right" ng-click="closeInvite()">
+                        Close
+                    </div>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form action="#" ng-submit="invite($event)">
+                    <ul class="list-unstyled">
+                        <li ng-repeat="user in users">
+                            <label for="{%user.username%}">
+                                <input type="checkbox" name="selectedUsers[]"
+                                       id="{%user.username%}"
+                                       checklist-model="selectedUsers"
+                                       checklist-value="user"
+                                        />
+                                <span ng-bind-template="{%user.firstname%} {%user.lastname%} ( SIP: {%user.sip%} / Phone: {%user.phone%} )"></span>
+                            </label>
+                        </li>
+                    </ul>
+                    <button type="submit" class="btn btn-success btn-sm">INVITE</button>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade in" id="not_found">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="label">
+                <h2 class="text-danger">Conference not found!</h2>
+            </div>
+            <div class="text-center">
+                <a href="/"><strong>Back</strong></a>
+            </div>
+            <br/>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div ng-show="!$parent.inCall">
+    <img src="public/img/chrome.gif" alt="" ng-show="$parent.nav === 'chrome'"/>
+    <img src="public/img/firefox.gif" alt="" ng-show="$parent.nav === 'firefox'"/>
+</div>
+
+<div class="loading" ng-hide="$parent.inCall">
+    <img src="public/img/loading.gif" alt=""/>
+</div>
+<div class="row-fluid" ng-controller="chatController" ng-show="$parent.inCall">
+    <div class="col-sm-9">
+        <div class="chat">
+            <div class="well message-spot" id="messages">
+                <div class="messages">
+                    <div class="messages-container" ng-show="$parent.enableChat">
+                        <p ng-repeat='message in messages' class="{%(message.local ? 'local': '')%}"
+                           ng-class='message.me'>
+                            <span ng-bind="message.from" ng-class=""></span>
+                            <span ng-bind-template="to {%message.to%}" ng-show="message.private"></span>:
+                            <span ng-bind="message.text"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <form action="" ng-submit="sendMessage()" ng-disabled="!$parent.enableChat">
+                    <div class="form-group">
+                        <div class="col-sm-10">
+                            <div id="user-tag" ng-show="private" ng-click="clearPrivate()">
+                                <div class="btn btn-sm btn-default">
+                                    X {%to%}
+                                </div>
+                            </div>
+                            <div class="form-group  {%(msgErr ? 'has-error' : '')%}">
+                                <input type="text"
+                                       id="message"
+                                       ng-model="message"
+                                       class="form-control"
+                                       ng-disabled="!$parent.enableChat"
+                                       autocomplete="off"/>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="submit" value="send" class="btn btn-default"
+                                   ng-disabled="!$parent.enableChat"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <ul class="list-unstyled list-inline" id="videos-container">
+        </ul>
+    </div>
+
+    <div class="col-sm-3">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    Conference <span ng-bind="conf_name"></span> ( <span ng-bind="conf_sip"></span> )
+                </h4>
+            </div>
+            <div class="panel-body">
+                <ul class="list-unstyled room_users">
+                    <li ng-repeat="user in users">
+                        <i class="glyphicon glyphicon-user" data-ng-click="mention(user.username)"></i>
+                            <span ng-bind-template="{%user.username%} ({%user.sip%})"
+                                  data-ng-click="mention(user.username)"></span>
+                        <i class="glyphicon glyphicon-thumbs-down" ng-click="kick(user.username, user.channel)"
+                           ng-show="$parent.$parent.role === 'admin' && user.username !== $parent.username || moderator && user.username !== $parent.username && user.role !== 'admin'"></i>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

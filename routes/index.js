@@ -4,8 +4,12 @@ var Users = require('../models/users');
 var Conferences = require('../models/conferences');
 var settings = require("../settings");
 
-module.exports = function (app, rooms, ami, confs) {
+module.exports = function (app, ami, confs) {
     "use strict";
+
+    app.on("get", function(req) {
+        console.log(req);
+    });
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Get Requests
@@ -40,12 +44,11 @@ module.exports = function (app, rooms, ami, confs) {
     });
 
     /**
-     * route /rooms
+     * route /conferences
      * return JSON for current conferences
      */
-    app.get('/rooms', function (req, res) {
-        var rooms_arr = rooms;
-        res.json(rooms_arr);
+    app.get('/conferences', function (req, res) {
+        res.json(confs);
     });
 
     /**
@@ -83,23 +86,6 @@ module.exports = function (app, rooms, ami, confs) {
                 res.end();
             }
         }
-    });
-
-    app.get('/action/users', function (req, res) {
-       Users.find({approved: true}, function(err,doc) {
-           var rtn = [];
-           for (var i = 0; i < doc.length; i = i + 1) {
-               var a = {};
-               a.username = doc[i].username;
-               a.firstname = doc[i].firstname;
-               a.lastname = doc[i].lastname;
-               a.sip = doc[i].sip;
-               a.phone = doc[i].phone;
-               rtn.push(a);
-           }
-
-           res.json(rtn);
-       });
     });
 
     /**
@@ -141,21 +127,30 @@ module.exports = function (app, rooms, ami, confs) {
         res.redirect('/login');
     });
 
-    /**
-     * /action/roomInfo
-     * return room info JSON
-     */
-    app.get('/action/roomInfo', function (req, res) {
-        var roomName = req.body.roomName;
-        var rooms_arr = rooms;
-        var json;
-        for (var i = 0; i < rooms_arr.length; i++) {
-            if (rooms_arr[i].name == roomName) {
-                json = rooms_arr[i];
-                break;
+    app.get('/action/getFiles', function (req, res) {
+        fs.readdir(settings.PROJECT_DIR + '/public/records/', function (err, files) { // '/' denotes the root folder
+            var r_files = [];
+            for (var i = 0; i < files.length; i++) {
+                var filename = files[i];
+                var reg = new RegExp(/[\D\d\s]+-/g);
+
+                var unix_time = filename.match(/-\d{10}\./g)[0].replace("-", "").replace(".", "");
+                var name = filename.match(reg)[0];
+
+                r_files.push({
+                    path: filename,
+                    name: name,
+                    date: unix_time
+                });
             }
-        }
-        res.json(json);
+            res.json(r_files);
+        });
+    });
+
+    app.get('/css/:file', function (req, res) {
+        var file = req.params.file;
+        res.end("saif");
+
     });
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -378,7 +373,7 @@ module.exports = function (app, rooms, ami, confs) {
                         conferences.write("exten => " + doc[i].name + ",1,Goto(" + doc[i].sip + ", 1)\n");
                         conferences.write("exten => " + doc[i].sip + ",1,Answer()\n");
                         conferences.write("exten => " + doc[i].sip + ",n,Set(CONFBRIDGE(bridge,record_conference)=yes)\n");
-                        conferences.write("exten => " + doc[i].sip + ",n,Set(CONFBRIDGE(bridge,record_file)=/var/spool/asterisk/monitor/"+doc[i].name+".wav)\n");
+                        conferences.write("exten => " + doc[i].sip + ",n,Set(CONFBRIDGE(bridge,record_file)=/var/www/asterisk/records/"+doc[i].name+".wav)\n");
                         conferences.write("exten => " + doc[i].sip + ",n,ConfBridge(" + doc[i].sip + ",,test.user,test.menu)\n");
                         conferences.write("exten => " + doc[i].sip + ",n,Hangup()\n\n");
 
@@ -398,33 +393,6 @@ module.exports = function (app, rooms, ami, confs) {
         res.end("done");
     });
 
-    app.get('/action/confs', function (req, res) {
-        res.json(confs);
-    });
-
-    app.get('/action/getFiles', function (req, res) {
-        fs.readdir('asterisk/monitor', function (err, files) { // '/' denotes the root folder
-            var r_files = [];
-            for (var i = 0; i < files.length; i++) {
-                var filename = files[i];
-
-                r_files.push({
-                    name: filename,
-                    date: new Date()
-                });
-            }
-            res.json(r_files);
-        });
-    });
-
-    app.post('/action/conf_users', function (req, res) {
-        if (confs[req.body.conference]) {
-            res.json(confs[req.body.conference].users);
-        } else {
-            res.end();
-        }
-    });
-
     /**
      * route /action/removeUser
      * Remove user
@@ -438,74 +406,20 @@ module.exports = function (app, rooms, ami, confs) {
 
     });
 
-    /**
-     * route /room/:name
-     * render room.html
-     */
-    app.post('/room/:name', function (req, res) {
-        var roomName = req.body.conf_name,
-            roomPass = req.body.conf_pass,
-            username = req.user.username;
-
-        res.render("index", {
-            title: 'Room ' + roomName,
-            isPost: true,
-            roomName: roomName,
-            roomPass: roomPass,
-            username: username,
-            partials: {
-                yield: 'room.html'
-            }
-        });
-
-    });
-
-    app.get('/room/:name', function (req, res) {
-        if (req.session.passport.user) {
-
-            var roomName = req.params.name,
-                username = req.user.username;
-
-            res.render("index", {
-                title: 'Room ' + roomName,
-                isPost: false,
-                roomName: roomName,
-                username: username,
-                partials: {
-                    yield: 'room.html'
-                }
-            });
-        } else {
-            res.redirect("/login");
-        }
-    });
-
-    app.post("/conference/save", function (req, res) {
-        rooms.push(req.body);
-
-        socket.emit("rooms:update", {
-            users: [req.body.username]
-        });
-
-        socket.broadcast.emit("rooms:update", {
-            users: [req.body.username]
-        });
-    });
-
     app.post('/action/renameRecord', function (req, res) {
         var file = req.body.filename;
         var n_file = req.body.n_filename;
 
         console.log(file, n_file);
 
-        fs.rename(settings.PROJECT_DIR + '/asterisk/monitor/' + file, settings.PROJECT_DIR + '/asterisk/monitor/' + n_file, function(err) {
+        fs.rename(settings.PROJECT_DIR + '/public/records/' + file, settings.PROJECT_DIR + '/public/records/' + n_file, function(err) {
             if ( err ) console.log('ERROR: ' + err);
         });
         res.end('File has been deleted!');
     });
 
     app.post('/action/clearRecord', function (req, res) {
-        fs.unlinkSync(settings.PROJECT_DIR + '/asterisk/monitor/' + req.body.filename, function (err) {
+        fs.unlinkSync(settings.PROJECT_DIR + '/public/records/' + req.body.filename, function (err) {
         });
         res.end('File has been deleted!');
     });
@@ -513,7 +427,7 @@ module.exports = function (app, rooms, ami, confs) {
     app.post('/action/clearRecords', function (req, res) {
         fs.readdir('asterisk/monitor/', function (err, files) {
             files.forEach(function (filename) {
-                fs.unlinkSync('/var/www/t3conf/asterisk/monitor/' + filename, function (err) {
+                fs.unlinkSync('/var/www/t3conf/public/records/' + filename, function (err) {
                 });
             });
         });
