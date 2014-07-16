@@ -12,7 +12,7 @@ var Users = new Schema({
     approved: Boolean,
     moderator: Boolean,
     role: String,
-    date: Date
+    reg_date: Number
 });
 
 Users.plugin(passportLocalMongoose);

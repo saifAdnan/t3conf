@@ -14,9 +14,18 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
+
             <div class="nav nav-num navbar-nav pull-left">
                 <span class="icon-usa"></span>
                 <p>+13108070303</p>
+            </div>
+            <div class="nav nav-num pull-left nav-admin">
+                <ul class="list-unstyled">
+                    <li>
+                        <a href="#!/dashboard/users" class="btn btn-primary" ng-show="role === 'admin'">Dashboard</a>
+                    </li>
+                </ul>
+
             </div>
             <ul class="nav navbar-nav pull-right">
                 <li>

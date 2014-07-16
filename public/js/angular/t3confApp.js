@@ -36,6 +36,7 @@ app.run(['$rootScope', '$http',
         $rootScope.enableChat = true;
         $rootScope.inCall = false;
         $rootScope.role = ROLE;
+        $rootScope.moderator = MODERATOR;
 
         var browser = navigator.userAgent;
 
@@ -67,6 +68,14 @@ app.config(['$routeProvider', '$locationProvider',
             .when('/conference/:name', {
                 templateUrl: '/views/room.html',
                 controller: 'conferenceController'
+            })
+            .when('/dashboard/users', {
+                templateUrl: '/views/users.html',
+                controller: 'dashboardController'
+            })
+            .when('/dashboard/records', {
+                templateUrl: '/views/records.html',
+                controller: 'dashboardController'
             });
 
         $locationProvider

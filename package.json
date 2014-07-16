@@ -32,7 +32,7 @@
     "mongoose": "*",
     "passport": "*",
     "passport-local": "*",
-    "passport-local-mongoose": "*",
+    "passport-local-mongoose": "^0.3.0",
     "promise": "^5.0.0",
     "session.socket.io": "^0.1.6",
     "socket.io": "0.*",

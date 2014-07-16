@@ -1,0 +1,145 @@
+<div class="row" ng-hide="role === 'user'">
+    <div class="col-sm-2">
+        <ul class="nav nav-pills nav-stacked">
+            <li class="active">
+                <a href="#!/dashboard/users" class="active">Users</a>
+            </li>
+            <li>
+                <a href="#!/dashboard/records">Records</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-10">
+        <button class="btn btn-primary" ng-click="newUser()">
+            Add new user <i class="glyphicon glyphicon-plus-sign"></i>
+        </button>
+        <hr/>
+        <table class="table table-bordered">
+            <thead>
+                <th>Username</th>
+                <th>Last name</th>
+                <th>First name</th>
+                <th>Sip</th>
+                <th>Phone</th>
+                <th>Approved</th>
+                <th>Moderator</th>
+                <th>Date</th>
+                <th>Action</th>
+            </thead>
+            <tbody>
+                <tr class="{%(user.role === 'admin' ? 'success' : '')%}" ng-repeat="user in users | orderBy: 'date':true">
+                    <td ng-bind="user.username"></td>
+                    <td ng-bind="user.lastname"></td>
+                    <td ng-bind="user.firstname"></td>
+                    <td ng-bind="user.sip"></td>
+                    <td ng-bind="user.phone"></td>
+                    <td class="text-center">
+                        <div class="inline-block" style="{%(user.role === 'admin' ? 'visibility: hidden' : '')%}">
+                            <div class="onoffswitch">
+                                <input type="checkbox" ng-model="user.approved" name="app-{%user._id%}" class="onoffswitch-checkbox" id="app-{%user._id%}" ng-change="updateUser(user._id)" checked>
+                                <label class="onoffswitch-label" for="app-{%user._id%}">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div class="inline-block" style="{%(user.role === 'admin' ? 'visibility: hidden' : '')%}">
+                            <div class="onoffswitch">
+                                <input type="checkbox" ng-model="user.moderator" name="mod-{%user._id%}" class="onoffswitch-checkbox" id="mod-{%user._id%}" ng-change="updateUser(user._id)" checked>
+                                <label class="onoffswitch-label" for="mod-{%user._id%}">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </td>
+                    <td ng-bind="user.reg_date"></td>
+                    <td>
+                        <button class="btn btn-default" ng-click="editUser(user._id)">Edit</button>
+                        <button class="btn btn-default" ng-click="deleteUser(user._id, user.username);" style="{%(user.role === 'admin' ? 'visibility: hidden' : '')%}">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal" id="edit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span ng-bind="title"></span>
+                        <div class="btn btn-danger pull-right" ng-click="closeEdit()">
+                            Close
+                        </div>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form" ng-submit="updateSubmit($event)">
+                        <div class="bg-danger" ng-show="err">
+                            <ul>
+                                <li class="text-danger" ng-bind="err"></li>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input class="form-control" type="text" ng-model="userToEdit.username" id="username" name="username" ng-disabled="!new" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname">Last name</label>
+                            <input class="form-control" type="text" ng-model="userToEdit.lastname" id="lastname" name="lastname" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname">First name</label>
+                            <input class="form-control" type="text" ng-model="userToEdit.firstname" id="firstname" name="firstname" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sip">SIP</label>
+                            <input class="form-control" type="text" ng-model="userToEdit.sip" id="sip" name="sip" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input class="form-control" type="text" ng-model="userToEdit.phone" id="phone" name="phone" pattern="^\+\s*\d{11,12}\s*$" placeholder="Ex: +1223623658" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input class="form-control" type="password" ng-model="userToEdit.password" id="password" name="password"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="password_c">Password confirm</label>
+                            <input class="form-control" type="password" ng-model="userToEdit.password_c" id="password_c" name="password_c"/>
+                        </div>
+                        <div class="form-group" ng-hide="user.role === 'admin' && $parent.new">
+                            <label for="e_approved">Approved</label>
+                            <div class="onoffswitch">
+                                <input type="checkbox" ng-model="userToEdit.approved" name="e_approved" class="onoffswitch-checkbox" id="e_approved" checked>
+                                <label class="onoffswitch-label" for="e_approved">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-hide="user.role === 'admin' && $parent.new">
+                            <label for="e_moderator">Moderator</label>
+                            <div class="onoffswitch">
+                                <input type="checkbox" ng-model="userToEdit.moderator" name="e_moderator" class="onoffswitch-checkbox" id="e_moderator" checked>
+                                <label class="onoffswitch-label" for="e_moderator">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-footer">
+                            <button class="btn btn-success" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
