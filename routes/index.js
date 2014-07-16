@@ -130,10 +130,10 @@ module.exports = function (app, ami, confs) {
     });
 
     app.post('/action/getFiles', function (req, res) {
-        var from = req.body.start,
-            to = req.body.end;
-
-        Records.collection.find({}).toArray(function(err, doc) {
+        var from = req.body.start.toString(),
+            to = req.body.end.toString();
+        Records.collection.find({date: { $gte: from, $lt: to}}).toArray(function(err, doc) {
+            if (err) console.log(err);
             res.json(doc);
         });
     });

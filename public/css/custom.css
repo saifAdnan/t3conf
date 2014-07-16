@@ -235,3 +235,11 @@ label {
     margin-left: -75px;
     margin-top: -60px;
 }
+
+.applyBtn {
+    clear: both!important;
+}
+
+.cancelBtn {
+    margin-top: -15px!important;
+}
