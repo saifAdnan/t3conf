@@ -31,7 +31,7 @@ var app = express(),
 var fs = require("fs");
 // Logging middleware
 app.use(function(request, response, next) {
-    if (request.url.match(/records/g)) {
+    if (request.url.match(/^records/g)) {
         var ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
         ip = '127.0.01' ? ' 212.3.110.42' : ip;
         var key = '1b284d7e50cf94951a56906f239a4655c1b583a1c6da8812ead5cdd2003d02cd';

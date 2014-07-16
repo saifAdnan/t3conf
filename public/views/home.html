@@ -141,14 +141,14 @@
 
         </div>
 
-        <div class="col-sm-3" ng-controller="adminController">
+        <div class="col-sm-3">
 
             <div class="panel panel-info panel-records">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         Records
                     </h4>
-                    <a href="#" ng-click="clearRecords($event)" ng-show="$parent.isAdmin || moderator">
+                    <a href="#" ng-click="clearRecords($event)" ng-show="$parent.isAdmin">
                         <i class="glyphicon glyphicon-floppy-remove"></i>
                         Clear records
                     </a>
@@ -193,7 +193,7 @@
                                 </a>
                             </td>
 
-                            <td ng-show="$parent.isAdmin || moderator" align="center">
+                            <td ng-show="$parent.isAdmin" align="center">
                                 <a href="#" ng-click="clearRecord($event, file)">
                                     <i class="glyphicon glyphicon-floppy-remove"></i>
                                 </a>
@@ -205,7 +205,6 @@
 
             <div class="clearfix"></div>
 
-            <admin></admin>
 
         </div>
     </div>
