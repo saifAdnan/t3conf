@@ -8,6 +8,8 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     $scope.filename = null;
     $scope.n_filename = null;
     $scope.n_filename_date = null;
+    $scope.isAdmin = ROLE === "admin" ? true : false;
+
 
     $rootScope.inConference = false;
 

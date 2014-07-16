@@ -12,6 +12,8 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
     $scope.private = false;
     $scope.to = null;
 
+    $scope.isAdmin = ROLE === "admin" ? true : false;
+
     watchService.on("user:join", function (data) {
         $scope.rooms = getValues(data);
         for (var i = 0; i < $scope.rooms.length; i++) {
@@ -39,7 +41,7 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
     $http.get("/users").success(function (data) {
         if (!data) return false;
         $scope.moderator = MODERATOR;
-        $scope.isAdmin = ROLE === "admin" ? true : false;
+
     });
 
 
