@@ -11,14 +11,12 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
 
     $rootScope.inConference = false;
 
-    $timeout(function () {
-        $http.get("/conferences").success(function (data) {
-            $scope.rooms = getValues(data);
-        });
-    }, 100);
-
-    $http.post("/action/getFiles").success(function (data) {
-        if (!data.length) $scope.no_files_message = "No records found.";
+    function records(data) {
+        if (!data.length) {
+            $scope.no_files_message = true;
+        } else {
+            $scope.no_files_message = false;
+        }
         for (var i = 0; i < data.length; i++) {
             var d = new Date(data[i].date * 1000);
             data[i].time = d.getHours() + ':' + d.getMinutes();
@@ -27,6 +25,22 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
             data[i].i_name = data[i].name + '-' +  d;
         }
         $scope.files = data;
+    }
+
+    $scope.dateStart = moment(new Date()).subtract("days", 1).unix();
+    $scope.dateEnd = moment(new Date()).unix();
+
+    $timeout(function () {
+        $http.get("/conferences").success(function (data) {
+            $scope.rooms = getValues(data);
+        });
+    }, 100);
+
+    $http.post("/action/getFiles", {
+        start: $scope.dateStart,
+        end: $scope.dateEnd
+    }).success(function (data) {
+       records(data);
     });
 
     watchService.disconnect();
@@ -174,6 +188,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         {
             startDate: moment().subtract('days', 29),
             endDate: moment(),
+            timePicker: false,
             minDate: '01/01/2012',
             maxDate: '12/31/2014',
             ranges: {
@@ -204,12 +219,15 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
                 start: start.unix(),
                 end: end.unix()
             }).success(function (data) {
-                console.warn(data);
+                records(data);
             });
 
             $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         }
     );
+
+    $('#reportrange span').html(moment.unix($scope.dateStart).format('MMMM D, YYYY') + ' - ' + moment.unix($scope.dateEnd).format('MMMM D, YYYY'));
+
 }
 
 app.controller("mainController", ['$scope', '$http', '$location', 'watchService', 'sipService', '$rootScope', '$timeout', mainController]);

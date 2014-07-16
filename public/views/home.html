@@ -159,11 +159,9 @@
                     </div>
                 </div>
                 <div class="panel-body" id="rooms">
-                    <div class="help-block" ng-show="no_files_message.length > 0">
-                        <p class="" ng-bind="no_files_message"></p>
-                    </div>
+
                     <table class="table">
-                        <thead>
+                        <thead ng-hide="no_files_message">
                             <th ng-click="rec_predicate = 'name'; rec_reverse=!rec_reverse">
                                 Filename
                                 <i class="glyphicon {% (rec_predicate == 'name' && rec_reverse ? 'glyphicon-chevron-up': 'glyphicon-chevron-down')%}"></i>
@@ -177,7 +175,12 @@
                         </thead>
 
                         <input class="form-control" type="search" name="sName" id="sName" ng-model="sName"
-                               placeholder="Search"/>
+                               placeholder="Search" ng-hide="no_files_message"/>
+                        <tr>
+                            <td colspan="3" ng-show="no_files_message" class="text-center">
+                                <p class="help-block">No records found.</p>
+                            </td>
+                        </tr>
                         <tr ng-repeat="file in files | orderBy: rec_predicate:rec_reverse | filter: {name: sName}">
                             <td>
                                 <a href="/records/{%file.name%}-{%file.date%}.wav" ng-bind="file.i_name"></a>
