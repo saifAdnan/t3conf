@@ -38,8 +38,8 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
 
     $http.get("/users").success(function (data) {
         if (!data) return false;
-        $scope.moderator = data.moderator;
-        $scope.isAdmin = data.isAdmin;
+        $scope.moderator = MODERATOR;
+        $scope.isAdmin = ROLE === "admin" ? true : false;
     });
 
 
