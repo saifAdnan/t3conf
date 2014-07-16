@@ -1,5 +1,5 @@
 // export function for listening to the socket
-module.exports = function (socket, io, channel, confs, web_users, web_users_for_names) {
+module.exports = function (socket, io, channel, confs, ami, web_users, web_users_for_names) {
     var name,
         usernames,
         id = 0;
