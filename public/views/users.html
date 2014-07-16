@@ -112,7 +112,7 @@
                             <label for="password_c">Password confirm</label>
                             <input class="form-control" type="password" ng-model="userToEdit.password_c" id="password_c" name="password_c"/>
                         </div>
-                        <div class="form-group" ng-hide="user.role === 'admin' && $parent.new">
+                        <div class="form-group" ng-hide="userToEdit.role == $parent.role">
                             <label for="e_approved">Approved</label>
                             <div class="onoffswitch">
                                 <input type="checkbox" ng-model="userToEdit.approved" name="e_approved" class="onoffswitch-checkbox" id="e_approved" checked>
@@ -122,7 +122,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="form-group" ng-hide="user.role === 'admin' && $parent.new">
+                        <div class="form-group" ng-hide="userToEdit.role === 'admin'">
                             <label for="e_moderator">Moderator</label>
                             <div class="onoffswitch">
                                 <input type="checkbox" ng-model="userToEdit.moderator" name="e_moderator" class="onoffswitch-checkbox" id="e_moderator" checked>
