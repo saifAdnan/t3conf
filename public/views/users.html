@@ -1,4 +1,4 @@
-<div class="row" ng-hide="role === 'user'">
+<div class="row">
     <div class="col-sm-2">
         <ul class="nav nav-pills nav-stacked">
             <li class="active">
@@ -10,9 +10,22 @@
         </ul>
     </div>
     <div class="col-sm-10">
-        <button class="btn btn-primary" ng-click="newUser()">
+        <button class="btn btn-primary" ng-click="newUser()" ng-show="role === 'admin'">
             Add new user <i class="glyphicon glyphicon-plus-sign"></i>
         </button>
+        <hr/>
+        <div class="row">
+            <form ng-submit="findUser($event)" class="col-sm-5">
+                <div class="input-group">
+                   <input class="form-control" type="text" name="search" id="search" ng-model="search" placeholder="Search"/>
+                   <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">
+                          Go!
+                      </button>
+                   </span>
+                </div><!-- /input-group -->
+            </form>
+        </div>
         <hr/>
         <table class="table table-bordered">
             <thead>
@@ -24,10 +37,11 @@
                 <th>Approved</th>
                 <th>Moderator</th>
                 <th>Date</th>
-                <th>Action</th>
+                <th ng-show="role === 'admin'">Action</th>
             </thead>
             <tbody>
-                <tr class="{%(user.role === 'admin' ? 'success' : '')%}" ng-repeat="user in users | orderBy: 'date':true">
+                <tr class="{%(user.role === 'admin' ? 'success' : '')%} {%(role === 'user' && user.role==='admin' ? 'hidden' : '')%}"
+                    ng-repeat="user in users | orderBy: 'reg_date':false">
                     <td ng-bind="user.username"></td>
                     <td ng-bind="user.lastname"></td>
                     <td ng-bind="user.firstname"></td>
@@ -56,13 +70,20 @@
                         </div>
                     </td>
                     <td ng-bind="user.reg_date"></td>
-                    <td>
+                    <td ng-show="role==='admin'">
                         <button class="btn btn-default" ng-click="editUser(user._id)">Edit</button>
                         <button class="btn btn-default" ng-click="deleteUser(user._id, user.username);" style="{%(user.role === 'admin' ? 'visibility: hidden' : '')%}">Delete</button>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <pagination
+                total-items="totalUsers"
+                ng-model="currentPage"
+                max-size="maxSize"
+                class="pagination-sm"
+                ng-change="pageChanged()"
+                boundary-links="true"></pagination>
     </div>
 
     <div class="modal" id="edit">

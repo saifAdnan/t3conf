@@ -1,6 +1,6 @@
 var SIGNALING_SERVER = "//trafficdestination.net:2156/";
 
-var app = angular.module('t3confApp', ['ui.bootstrap', 'ngAnimate', 'ngRoute'], ['$interpolateProvider',
+var app = angular.module('t3confApp', ['ui.bootstrap', 'ngRoute'], ['$interpolateProvider',
     function($interpolateProvider) {
         $interpolateProvider.startSymbol('{%');
         $interpolateProvider.endSymbol('%}');
@@ -33,10 +33,11 @@ var PATH = "/js/angular/";
 app.run(['$rootScope', '$http',
     function($rootScope, $http) {
         $rootScope.username = USERNAME;
-        $rootScope.enableChat = true;
-        $rootScope.inCall = false;
         $rootScope.role = ROLE;
         $rootScope.moderator = MODERATOR;
+
+        $rootScope.enableChat = true;
+        $rootScope.inCall = false;
 
         var browser = navigator.userAgent;
 

@@ -1,17 +1,69 @@
 function dashboardController($scope, $http) {
     "use strict";
-    $scope.role = ROLE;
     $scope.new = false;
     $scope.users = [];
     $scope.userToEdit = {};
     $scope.title="Edit User";
 
-    $http.get("/users").success(function (data) {
-       for (var i = 0; i < data.length; i++) {
-           data[i].reg_date = moment.unix(data[i].reg_date).format("MMMM D, YYYY H:m");
+    $scope.maxSize = 10;
+    $scope.totalUsers = 0;
+    $scope.limit = 10;
+    $scope.currentPage = 0;
+
+    $scope.search = null;
+
+
+    $http.get("/users", {
+        params: {
+            from: $scope.currentPage,
+            limit: 10
+        }
+    }).success(function (data) {
+       for (var i = 0; i < data.users.length; i++) {
+           data.users[i].reg_date = moment.unix(data.users[i].reg_date).format("MMMM D, YYYY H:m");
        }
-       $scope.users = data;
+       $scope.users = data.users;
+       $scope.totalUsers = data.total;
     });
+
+    $scope.pageChanged = function() {
+        $http.get("/users", {
+            params: {
+                from: $scope.currentPage - 1,
+                limit: $scope.limit,
+                search: $scope.search
+            }
+        }).success(function (data) {
+            for (var i = 0; i < data.users.length; i++) {
+                data.users[i].reg_date = moment.unix(data.users[i].reg_date).format("MMMM D, YYYY H:m");
+            }
+            $scope.users = data.users;
+            $scope.totalUsers = data.total;
+        });
+    };
+
+    $scope.findUser = function(e) {
+        e.preventDefault();
+        $scope.currentPage = 0;
+
+        $http.get("/users", {
+            params: {
+                from: $scope.currentPage,
+                limit: $scope.limit,
+                search: $scope.search
+            }
+        }).success(function (data) {
+            for (var i = 0; i < data.users.length; i++) {
+                data.users[i].reg_date = moment.unix(data.users[i].reg_date).format("MMMM D, YYYY H:m");
+            }
+
+            $scope.users = data.users;
+            $scope.totalUsers = data.total;
+        });
+
+        return false;
+    };
+
 
     $scope.deleteUser = function(id, username) {
         if (confirm("Are you sure you want to delete "+username+"?")) {

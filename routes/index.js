@@ -42,7 +42,7 @@ module.exports = function (app, ami, confs) {
         });
     }
 
-    app.on("get", function(req) {
+    app.on("get", function (req) {
         console.log(req);
     });
 
@@ -92,11 +92,43 @@ module.exports = function (app, ami, confs) {
      * return JSON for users
      */
     app.get("/users", function (req, res) {
+
+        var from = req.query.from || 0;
+        var limit = req.query.limit || 10;
+        var search = req.query.search || null;
+        var q;
+        var rtn = {};
+        var total;
+
+
         if (req.session.passport.user) {
             if (req.user.role === "admin" || req.user.moderator && req.user.approved) {
-                Users.find({}, function (err, users) {
 
-                    var rtn = [];
+                if (search !== null) {
+                    q = Users.find({
+                        '$or':[
+                            { username: {$regex: search} },
+                            { firstname: {$regex: search} },
+                            { lastname: {$regex: search} }
+                        ]
+                    }).skip(from * limit).limit(limit);
+
+                    total = Users.find({username: {$regex: search}}).sort('reg_date');
+                    total.exec(function(err, users) {
+                        rtn.total = users.length;
+                    });
+                } else {
+                    total = Users.find({}).sort('reg_date');
+
+                    total.exec(function(err, users) {
+                        rtn.total = users.length;
+                    });
+
+                    q = Users.find({}).sort('reg_date').skip(from * limit).limit(limit);
+                }
+
+                q.exec(function (err, users) {
+                    rtn.users = [];
 
                     for (var i = 0; i < users.length; i = i + 1) {
                         var a = {};
@@ -110,7 +142,7 @@ module.exports = function (app, ami, confs) {
                         a.reg_date = users[i].reg_date;
                         a.moderator = users[i].moderator;
                         a.approved = users[i].approved;
-                        rtn.push(a);
+                        rtn.users.push(a);
                     }
 
                     res.json(rtn);
@@ -163,7 +195,7 @@ module.exports = function (app, ami, confs) {
     app.post('/action/getFiles', function (req, res) {
         var from = req.body.start.toString(),
             to = req.body.end.toString();
-        Records.collection.find({date: { $gte: from, $lt: to}}).toArray(function(err, doc) {
+        Records.collection.find({date: { $gte: from, $lt: to}}).toArray(function (err, doc) {
             if (err) console.log(err);
             res.json(doc);
         });
@@ -183,7 +215,7 @@ module.exports = function (app, ami, confs) {
                 approved = req.body.approved,
                 moderator = req.body.moderator;
 
-            if (req.user.role === "admin") {
+            if (req.user.role === "admin" || req.user.moderator) {
                 if (moderator !== undefined && approved !== undefined) {
                     Users.update({_id: _id}, {moderator: moderator}, function (err, update) {
                         res.end("updated");
@@ -213,22 +245,22 @@ module.exports = function (app, ami, confs) {
         }
     });
 
-    app.post("/user/update", function(req, res) {
+    app.post("/user/update", function (req, res) {
         if (req.session.passport.user) {
             if (req.user.role === "admin") {
                 Users.collection.find({
                     username: {
                         '$ne': req.body.username
                     },
-                    sip: parseInt(req.body.sip,10)
+                    sip: parseInt(req.body.sip, 10)
 
-                }).toArray(function(err, doc) {
+                }).toArray(function (err, doc) {
                     if (doc && doc.length) {
                         res.end("SIP is already in use.");
                     } else {
-                        Users.findOne({_id: req.body._id},function(err, user) {
+                        Users.findOne({_id: req.body._id}, function (err, user) {
                             console.log(user, req.body.password);
-                            user.setPassword(req.body.password, function() {
+                            user.setPassword(req.body.password, function () {
                                 user.save();
                             });
                         });
@@ -253,7 +285,7 @@ module.exports = function (app, ami, confs) {
         }
     });
 
-    app.post("/user/new", function(req, res) {
+    app.post("/user/new", function (req, res) {
         var username = req.body.username;
         var errors = [];
         Users.collection.find({sip: parseInt(req.body.sip)}).toArray(function (err, doc) {
@@ -300,7 +332,7 @@ module.exports = function (app, ami, confs) {
                 return res.render("Password doesn't match");
             }
 
-            Users.collection.find({username: req.body.username}).toArray(function(err, doc) {
+            Users.collection.find({username: req.body.username}).toArray(function (err, doc) {
                 if (doc.length) {
                     return res.end("Username is already in use.");
                 } else {
@@ -420,42 +452,42 @@ module.exports = function (app, ami, confs) {
                 });
             }
 
-            Users.collection.find({username: req.body.username}).toArray(function(err, doc) {
-               if (doc.length) {
-                   return res.render('register', {
-                       title: 'Sign up',
-                       username: req.body.username,
-                       firstname: req.body.firstname,
-                       lastname: req.body.lastname,
-                       phone: req.body.phone,
-                       error: "Username is already in use."
-                   });
-               } else {
-                   Users.register(new Users({
-                       username: username,
-                       firstname: req.body.firstname,
-                       lastname: req.body.lastname,
-                       phone: req.body.phone,
-                       sip: req.body.sip,
-                       password: req.body.password,
-                       approved: false,
-                       moderator: false,
-                       role: 'user',
-                       reg_date: parseInt(new Date().getTime() / 1000, 10)
-                   }), req.body.password, function (err, account) {
-                       if (err) {
-                           return res.redirect('/login');
-                       }
-                       passport.authenticate('local')(req, res, function () {
-                           res.render('login', {
-                               title: "Sign in",
-                               message: "You have been successfully singed up! Thank you for signing up to T3Conf. Now you can sign in.",
-                               username: username
-                           });
-                           updateSipUsers();
-                       });
-                   });
-               }
+            Users.collection.find({username: req.body.username}).toArray(function (err, doc) {
+                if (doc.length) {
+                    return res.render('register', {
+                        title: 'Sign up',
+                        username: req.body.username,
+                        firstname: req.body.firstname,
+                        lastname: req.body.lastname,
+                        phone: req.body.phone,
+                        error: "Username is already in use."
+                    });
+                } else {
+                    Users.register(new Users({
+                        username: username,
+                        firstname: req.body.firstname,
+                        lastname: req.body.lastname,
+                        phone: req.body.phone,
+                        sip: req.body.sip,
+                        password: req.body.password,
+                        approved: false,
+                        moderator: false,
+                        role: 'user',
+                        reg_date: parseInt(new Date().getTime() / 1000, 10)
+                    }), req.body.password, function (err, account) {
+                        if (err) {
+                            return res.redirect('/login');
+                        }
+                        passport.authenticate('local')(req, res, function () {
+                            res.render('login', {
+                                title: "Sign in",
+                                message: "You have been successfully singed up! Thank you for signing up to T3Conf. Now you can sign in.",
+                                username: username
+                            });
+                            updateSipUsers();
+                        });
+                    });
+                }
             });
         });
     });
@@ -490,7 +522,7 @@ module.exports = function (app, ami, confs) {
                         conferences.write("exten => " + doc[i].name + ",1,Goto(" + doc[i].sip + ", 1)\n");
                         conferences.write("exten => " + doc[i].sip + ",1,Answer()\n");
                         conferences.write("exten => " + doc[i].sip + ",n,Set(CONFBRIDGE(bridge,record_conference)=yes)\n");
-                        conferences.write("exten => " + doc[i].sip + ",n,Set(CONFBRIDGE(bridge,record_file)=/var/www/asterisk/records/"+doc[i].name+".wav)\n");
+                        conferences.write("exten => " + doc[i].sip + ",n,Set(CONFBRIDGE(bridge,record_file)=/var/www/asterisk/records/" + doc[i].name + ".wav)\n");
                         conferences.write("exten => " + doc[i].sip + ",n,ConfBridge(" + doc[i].sip + ",,test.user,test.menu)\n");
                         conferences.write("exten => " + doc[i].sip + ",n,Hangup()\n\n");
 
@@ -540,8 +572,8 @@ module.exports = function (app, ami, confs) {
             }
         );
 
-        fs.rename(settings.PROJECT_DIR + '/public/records/' + file + '-' + date + '.wav', settings.PROJECT_DIR + '/public/records/' + n_file + '-' + date +'.wav', function(err) {
-            if ( err ) console.log('ERROR: ' + err);
+        fs.rename(settings.PROJECT_DIR + '/public/records/' + file + '-' + date + '.wav', settings.PROJECT_DIR + '/public/records/' + n_file + '-' + date + '.wav', function (err) {
+            if (err) console.log('ERROR: ' + err);
         });
         res.end('File has been deleted!');
     });
@@ -549,7 +581,7 @@ module.exports = function (app, ami, confs) {
     app.post('/action/clearRecord', function (req, res) {
         var unix = req.body.date;
         var file = req.body.file;
-        Records.collection.remove({ date: unix }, function(err) {
+        Records.collection.remove({ date: unix }, function (err) {
             if (!err) {
                 console.log(err);
             }
@@ -560,7 +592,7 @@ module.exports = function (app, ami, confs) {
     });
 
     app.post('/action/clearRecords', function (req, res) {
-        Records.collection.remove({}, function(err) {
+        Records.collection.remove({}, function (err) {
             if (!err) {
                 console.log(err);
             }
