@@ -12,18 +12,19 @@ function dashboardController($scope, $http) {
 
     $scope.search = null;
 
-
     $http.get("/users", {
         params: {
             from: $scope.currentPage,
             limit: 10
         }
     }).success(function (data) {
-       for (var i = 0; i < data.users.length; i++) {
-           data.users[i].reg_date = moment.unix(data.users[i].reg_date).format("MMMM D, YYYY H:m");
+       if (data.users) {
+           for (var i = 0; i < data.users.length; i++) {
+               data.users[i].reg_date = moment.unix(data.users[i].reg_date).format("MMMM D, YYYY H:m");
+           }
+           $scope.users = data.users;
+           $scope.totalUsers = data.total;
        }
-       $scope.users = data.users;
-       $scope.totalUsers = data.total;
     });
 
     $scope.pageChanged = function() {

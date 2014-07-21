@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-show="users">
     <div class="col-sm-2">
         <ul class="nav nav-pills nav-stacked">
             <li class="active">
@@ -163,4 +163,12 @@
         </div>
         <!-- /.modal-dialog -->
     </div><!-- /.modal -->
+</div>
+
+<div class="text-center" ng-hide="users">
+    <h2 class="text-danger well">
+        You have no permission to view this page!
+        <br/>
+        <a href="#!/">Go back</a>
+    </h2>
 </div>
