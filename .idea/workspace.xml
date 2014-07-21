@@ -46,8 +46,8 @@
       <file leaf-file-name="register.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/views/register.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.45578232" vertical-offset="1236" max-vertical-offset="3003">
-              <caret line="293" column="86" selection-start-line="293" selection-start-column="86" selection-end-line="293" selection-end-column="86" />
+            <state vertical-scroll-proportion="0.7414966" vertical-offset="984" max-vertical-offset="3003">
+              <caret line="293" column="82" selection-start-line="293" selection-start-column="82" selection-end-line="293" selection-end-column="82" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#form#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="tag#optgroup#0;tag#select#0;tag#div#0;tag#div#5;tag#form#0;tag#div#0;tag#div#0;tag#div#0;tag#div#0;tag#div#1;tag#div#0;tag#div#0;tag#div#0;tag#body#0;tag#html#0" expanded="false" />
@@ -900,8 +900,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/views/register.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45578232" vertical-offset="1236" max-vertical-offset="3003">
-          <caret line="293" column="86" selection-start-line="293" selection-start-column="86" selection-end-line="293" selection-end-column="86" />
+        <state vertical-scroll-proportion="0.7414966" vertical-offset="984" max-vertical-offset="3003">
+          <caret line="293" column="82" selection-start-line="293" selection-start-column="82" selection-end-line="293" selection-end-column="82" />
           <folding>
             <element signature="n#style#0;n#div#1;n#form#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="tag#optgroup#0;tag#select#0;tag#div#0;tag#div#5;tag#form#0;tag#div#0;tag#div#0;tag#div#0;tag#div#0;tag#div#1;tag#div#0;tag#div#0;tag#div#0;tag#body#0;tag#html#0" expanded="false" />
