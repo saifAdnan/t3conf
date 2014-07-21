@@ -304,11 +304,6 @@ module.exports = function (app, ami, confs) {
                 errors.push({error: "please enter SIP number!"});
             }
 
-            if (doc.length > 0) {
-                errors.push({error: "SIP number already been registered!"});
-            }
-
-
             if (req.body.password === "") {
                 errors.push({error: "Please enter your password!"});
             }
@@ -324,6 +319,10 @@ module.exports = function (app, ami, confs) {
             if (req.body.password !== req.body.password_c) {
                 return res.render("Password doesn't match");
             }
+
+            Users.collection.find().sort({$natural:1}).exec(function(err, user) {
+                console.log(user.sip);
+            });
 
             Users.collection.find({username: req.body.username}).toArray(function (err, doc) {
                 if (doc.length) {
@@ -387,8 +386,8 @@ module.exports = function (app, ami, confs) {
     app.post('/register', function (req, res) {
         var username = req.body.username;
         var errors = [];
-        Users.collection.find({sip: parseInt(req.body.sip)}).toArray(function (err, doc) {
 
+        Users.collection.find().sort({$natural:-1}).toArray(function(err, user) {
             if (req.body.username === "") {
                 errors.push({error: "Please enter your username!"});
             }
@@ -405,15 +404,9 @@ module.exports = function (app, ami, confs) {
                 errors.push({error: "Please enter your phone number!"});
             }
 
-
             if (req.body.sip === "") {
                 errors.push({error: "please enter SIP number!"});
             }
-
-            if (doc.length > 0) {
-                errors.push({error: "SIP number already been registered!"});
-            }
-
 
             if (req.body.password === "") {
                 errors.push({error: "Please enter your password!"});
@@ -445,6 +438,8 @@ module.exports = function (app, ami, confs) {
                 });
             }
 
+            var sip = parseInt(user[0].sip, 10) + 1;
+
             Users.collection.find({username: req.body.username}).toArray(function (err, doc) {
                 if (doc.length) {
                     return res.render('register', {
@@ -460,8 +455,8 @@ module.exports = function (app, ami, confs) {
                         username: username,
                         firstname: req.body.firstname,
                         lastname: req.body.lastname,
-                        phone: req.body.phone,
-                        sip: req.body.sip,
+                        phone: req.body.ext + req.body.phone,
+                        sip: sip,
                         password: req.body.password,
                         approved: false,
                         moderator: false,

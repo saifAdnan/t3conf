@@ -1,8 +1,5 @@
 node_modules/*
-/node_modules
 asterisk/*
-/asterisk
-.idea/
 .idea/*
-public/records
 public/records/*
+*.conf
