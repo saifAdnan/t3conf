@@ -42,10 +42,6 @@ module.exports = function (app, ami, confs) {
         });
     }
 
-    app.on("get", function (req) {
-        console.log(req);
-    });
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Get Requests
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,9 +53,6 @@ module.exports = function (app, ami, confs) {
     app.get('/', function (req, res) {
         if (req.session.passport.user && req.user.approved) {
             res.render("index", {
-                partials: {
-                    yield: 'home.html'
-                },
                 title: "Home",
                 username: req.user.username,
                 sip: req.user.sip,
