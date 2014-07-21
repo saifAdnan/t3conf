@@ -31,9 +31,39 @@
                 <li>
                     <a href="">
                         Username: {{username}}
-                        /
-                        SIP: {{sip}}
                     </a>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle sip-settings"  href="#">
+                        <span class="btn btn-primary" data-toggle="dropdown">
+                            SIP SETTINGS <span class="caret"></span>
+                        </span>
+                    </a>
+                    <table class="dropdown-menu table sip-table" role="menu">
+                        <tr>
+                            <td>Server</td>
+                            <td>46.36.223.131</td>
+                        </tr>
+                        <tr>
+                            <td>SIP</td>
+                            <td ng-bind="sip"></td>
+                        </tr>
+                        <tr>
+                            <td>Password</td>
+                            <td ng-bind="password"></td>
+                        </tr>
+                    </table>
+                    <!--<ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="#">Server: 46.36.223.131</a>
+                        </li>
+                        <li>
+                            <a href="#">SIP: <span ng-bind="sip"></span></a>
+                        </li>
+                        <li>
+                            <a href="#">Password: <span ng-bind="password"></span></a>
+                        </li>
+                    </ul>-->
                 </li>
                 <li>
                     <a href="/logout" id="btnUnRegister">logout</a>
