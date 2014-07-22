@@ -49,6 +49,23 @@ app.run(['$rootScope', '$http',
             }
         };
 
+        $rootScope.hangUp = function () {
+            sipService.sipHangUp();
+            $location.url("/");
+        };
+
+        $rootScope.invite = function () {
+            var invite = $("#invite");
+            if (invite.length) {
+                invite.modal();
+            }
+        };
+
+        $rootScope.mute = function () {
+            sipService.sipSendDTMF("1");
+            $scope.isMuted = !$scope.isMuted;
+        };
+
         var browser = navigator.userAgent;
 
         if (browser.match(/Chrome/) || browser.match(/Firefox/)) {
