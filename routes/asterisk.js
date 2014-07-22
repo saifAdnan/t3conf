@@ -126,7 +126,7 @@ module.exports = function (ami, conferences, io) {
                         }
                         conferences[data.conference].users.push(user);
                         io.sockets.emit('user:join', conferences);
-                        //console.log('\n\nJOIN', conferences);
+                        console.log('\n\nJOIN', conferences);
                     });
                 });
             } else {
