@@ -6,8 +6,7 @@ function conferenceController($scope, $rootScope, $http, watchService, sipServic
     $rootScope.inConference = true;
 
     $http.get("/users").success(function(data) {
-        $scope.users = data;
-        console.log($scope.users);
+        $scope.users = data.users;
     });
 
     watchService.on('user:left', function(data) {

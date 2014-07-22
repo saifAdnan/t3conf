@@ -93,8 +93,8 @@
       <file leaf-file-name="conferenceController.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/conferenceController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.20723684" vertical-offset="0" max-vertical-offset="1428">
-              <caret line="9" column="34" selection-start-line="9" selection-start-column="34" selection-end-line="9" selection-end-column="34" />
+            <state vertical-scroll-proportion="0.20723684" vertical-offset="0" max-vertical-offset="1407">
+              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -969,8 +969,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/conferenceController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20723684" vertical-offset="0" max-vertical-offset="1428">
-          <caret line="9" column="34" selection-start-line="9" selection-start-column="34" selection-end-line="9" selection-end-column="34" />
+        <state vertical-scroll-proportion="0.20723684" vertical-offset="0" max-vertical-offset="1407">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
           <folding />
         </state>
       </provider>
