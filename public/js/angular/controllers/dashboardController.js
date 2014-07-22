@@ -5,6 +5,7 @@ function dashboardController($scope, $http) {
     $scope.userToEdit = {};
     $scope.title="Edit User";
 
+
     $scope.maxSize = 10;
     $scope.totalUsers = 0;
     $scope.limit = 10;

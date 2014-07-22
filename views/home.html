@@ -48,7 +48,7 @@
                               ng-disabled="!$parent.connected"
                               method="POST"
                               autocomplete='off'>
-                            <div class="text-danger" ng-show="error.length">
+                            <div class="text-danger" ng-show="error.length > 0">
                                 <ul>
                                     <li ng-bind="error"></li>
                                 </ul>

@@ -7,6 +7,7 @@ var app = angular.module('t3confApp', ['ui.bootstrap', 'ngRoute'], ['$interpolat
     }
 ]);
 
+
 function getValues(hash) {
     var values = [];
     for (var key in hash) {
