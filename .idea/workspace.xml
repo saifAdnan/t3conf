@@ -73,8 +73,8 @@
       <file leaf-file-name="nav.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/angular/templates/nav.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-19.6" vertical-offset="861" max-vertical-offset="1806">
-              <caret line="79" column="111" selection-start-line="79" selection-start-column="99" selection-end-line="79" selection-end-column="111" />
+            <state vertical-scroll-proportion="-13.3" vertical-offset="1050" max-vertical-offset="1806">
+              <caret line="79" column="91" selection-start-line="79" selection-start-column="91" selection-end-line="79" selection-end-column="91" />
               <folding>
                 <element signature="e#2505#2983#0" expanded="false" />
               </folding>
@@ -82,20 +82,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="t3confApp.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="t3confApp.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/angular/t3confApp.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3482587" vertical-offset="588" max-vertical-offset="1974">
-              <caret line="38" column="40" selection-start-line="38" selection-start-column="40" selection-end-line="38" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="588" max-vertical-offset="1974">
+              <caret line="38" column="18" selection-start-line="38" selection-start-column="8" selection-end-line="38" selection-end-column="18" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="conferenceController.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="conferenceController.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/conferenceController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1407">
+            <state vertical-scroll-proportion="0.1779661" vertical-offset="0" max-vertical-offset="1407">
               <caret line="5" column="27" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="27" />
               <folding />
             </state>
@@ -191,10 +191,10 @@
         <option value="$PROJECT_DIR$/public/js/angular/directives/sipServieces.js" />
         <option value="$PROJECT_DIR$/public/js/angular/directives/sipServices.js" />
         <option value="$PROJECT_DIR$/views/home.html" />
-        <option value="$PROJECT_DIR$/public/js/angular/templates/nav.html" />
         <option value="$PROJECT_DIR$/views/index.html" />
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/public/js/angular/t3confApp.js" />
+        <option value="$PROJECT_DIR$/public/js/angular/templates/nav.html" />
       </list>
     </option>
   </component>
@@ -929,26 +929,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/angular/templates/nav.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-19.6" vertical-offset="861" max-vertical-offset="1806">
-          <caret line="79" column="111" selection-start-line="79" selection-start-column="99" selection-end-line="79" selection-end-column="111" />
+        <state vertical-scroll-proportion="-13.3" vertical-offset="1050" max-vertical-offset="1806">
+          <caret line="79" column="91" selection-start-line="79" selection-start-column="91" selection-end-line="79" selection-end-column="91" />
           <folding>
             <element signature="e#2505#2983#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/conferenceController.js">
+    <entry file="file://$PROJECT_DIR$/public/js/angular/t3confApp.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1407">
-          <caret line="5" column="27" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="27" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="588" max-vertical-offset="1974">
+          <caret line="38" column="18" selection-start-line="38" selection-start-column="8" selection-end-line="38" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/angular/t3confApp.js">
+    <entry file="file://$PROJECT_DIR$/public/js/angular/controllers/conferenceController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3482587" vertical-offset="588" max-vertical-offset="1974">
-          <caret line="38" column="40" selection-start-line="38" selection-start-column="40" selection-end-line="38" selection-end-column="40" />
+        <state vertical-scroll-proportion="0.1779661" vertical-offset="0" max-vertical-offset="1407">
+          <caret line="5" column="27" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="27" />
           <folding />
         </state>
       </provider>
