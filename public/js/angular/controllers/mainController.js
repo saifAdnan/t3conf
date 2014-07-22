@@ -59,7 +59,10 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         $location.url('/conference/' + num);
     };
 
-
+    $scope.mute = function () {
+        sipService.sipSendDTMF("1");
+        $scope.isMuted = !$scope.isMuted;
+    };
 
     $scope.sipHangUp = function () {
         sipService.sipHangUp();
@@ -92,6 +95,26 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         });
 
         return false;
+    };
+
+    $scope.toggleKeypad = function () {
+        var keypad = $("#keypad");
+
+        if (keypad.length) {
+            keypad.modal();
+        }
+    };
+
+    $scope.hangUp = function () {
+        sipService.sipHangUp();
+        $location.url("/");
+    };
+
+    $scope.invite = function () {
+        var invite = $("#invite");
+        if (invite.length) {
+            invite.modal();
+        }
     };
 
     $scope.createConference = function (e) {
