@@ -15,6 +15,7 @@ function chatController($scope, $rootScope, $http, watchService, $routeParams, $
     $scope.isAdmin = ROLE === "admin" ? true : false;
 
     watchService.on("user:join", function (data) {
+        console.log("user join", data);
         $scope.rooms = getValues(data);
         $rootScope.inCall = true;
         for (var i = 0; i < $scope.rooms.length; i++) {
