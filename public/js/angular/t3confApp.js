@@ -41,6 +41,14 @@ app.run(['$rootScope', '$http',
         $rootScope.enableChat = true;
         $rootScope.inCall = false;
 
+        $rootScope.toggleKeypad = function () {
+            var keypad = $("#keypad");
+
+            if (keypad.length) {
+                keypad.modal();
+            }
+        };
+
         var browser = navigator.userAgent;
 
         if (browser.match(/Chrome/) || browser.match(/Firefox/)) {

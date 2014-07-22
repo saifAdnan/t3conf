@@ -97,13 +97,7 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
         return false;
     };
 
-    $scope.toggleKeypad = function () {
-        var keypad = $("#keypad");
 
-        if (keypad.length) {
-            keypad.modal();
-        }
-    };
 
     $scope.hangUp = function () {
         sipService.sipHangUp();
