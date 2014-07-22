@@ -28,10 +28,8 @@ var app = express(),
         secret: 't3conf'
     };
 
-var fs = require("fs");
 // Logging middleware
 app.use(function(request, response, next) {
-    console.log(request.url);
     if (request.url.match(/^\/records\//g)) {
         var ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
         ip = '127.0.01' ? ' 212.3.110.42' : ip;
