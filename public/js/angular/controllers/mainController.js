@@ -45,8 +45,6 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
        records(data);
     });
 
-    watchService.disconnect();
-
     watchService.on("user:join", function (data) {
         $scope.rooms = getValues(data);
     });
