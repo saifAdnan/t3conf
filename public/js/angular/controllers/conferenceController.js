@@ -34,6 +34,14 @@ function conferenceController($scope, $rootScope, $http, watchService, sipServic
         }
     });
 
+    $scope.toggleKeypad = function () {
+        var keypad = $("#keypad");
+
+        if (keypad.length) {
+            keypad.modal();
+        }
+    };
+
     $scope.closeKeyPad = function () {
         if ($("#keypad").length) {
             $("#keypad").modal('hide');
