@@ -46,8 +46,10 @@
             </div>
             <div class="modal-body">
                 <form action="#" ng-submit="invite($event)">
-                    <ul class="list-unstyled">
-                        <li ng-repeat="user in users">
+                    <input class="form-control" type="search" name="bName" id="bName" ng-model="bName"
+                           placeholder="Search"/>
+                    <ul class="list-unstyled div-invite">
+                        <li ng-repeat="user in users | filter: {username: bName}">
                             <label for="{%user.username%}">
                                 <input type="checkbox" name="selectedUsers[]"
                                        id="{%user.username%}"

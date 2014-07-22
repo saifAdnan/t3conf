@@ -343,3 +343,8 @@ label {
 .form-phone {
     width: 59%;
 }
+
+.div-invite {
+    max-height: 300px;
+    overflow-y: scroll;
+}
