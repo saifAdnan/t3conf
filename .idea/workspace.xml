@@ -123,8 +123,8 @@
       <file leaf-file-name="room.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/views/room.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5155351" vertical-offset="602" max-vertical-offset="3486">
-              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.5397008" vertical-offset="602" max-vertical-offset="3486">
+              <caret line="51" column="114" selection-start-line="51" selection-start-column="114" selection-end-line="51" selection-end-column="114" />
               <folding />
             </state>
           </provider>
@@ -969,8 +969,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/views/room.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5155351" vertical-offset="602" max-vertical-offset="3486">
-          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.5397008" vertical-offset="602" max-vertical-offset="3486">
+          <caret line="51" column="114" selection-start-line="51" selection-start-column="114" selection-end-line="51" selection-end-column="114" />
           <folding />
         </state>
       </provider>
