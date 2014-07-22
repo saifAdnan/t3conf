@@ -36,6 +36,7 @@ app.run(['$rootScope', '$http',
         $rootScope.username = USERNAME;
         $rootScope.role = ROLE;
         $rootScope.moderator = MODERATOR;
+        $rootScope.inConference = false;
 
         $rootScope.enableChat = true;
         $rootScope.inCall = false;
