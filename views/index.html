@@ -22,7 +22,7 @@
 
 
         <div>
-            <div class="not_s" ng-hide="supported">
+            <div class="not_s" style="display: none; {%(supported ? '' : 'display: block')%}">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
