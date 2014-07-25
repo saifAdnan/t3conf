@@ -1,7 +1,7 @@
 <nav role="navigation" class="navbar navbar-top navbar-inverse">
-    <div class="">
+    <div class="container-fluid">
         <div class="navbar-header">
-            <button data-target=".navbar-ex1-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+            <button data-target="#navbar1" data-toggle="collapse" class="navbar-toggle" type="button">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -13,76 +13,72 @@
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-
-            <div class="nav nav-num navbar-nav pull-left">
-                <span class="icon-usa"></span>
-                <p>+13108070303</p>
-            </div>
-            <div class="nav nav-num pull-left nav-admin">
-                <ul class="list-unstyled">
+        <div class="collapse navbar-collapse navbar-ex1-collapse" id="navbar1">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" data-ng-controller="mainController">
+                <ul class="nav navbar-nav">
                     <li>
-                        <a href="#!/dashboard/users" class="btn btn-primary" ng-show="role === 'admin' || moderator">Dashboard</a>
-                    </li>
-                </ul>
+                        <a href="#">
+                            <span class="icon-usa">
+                                +13108070303
+                            </span>
 
-            </div>
-            <ul class="nav navbar-nav pull-right">
-                <li>
-                    <a href="">
-                        Username: {{username}}
-                    </a>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle sip-settings"  href="#">
-                        <span class="btn btn-primary" data-toggle="dropdown">
+                        </a>
+                    </li>
+                    <li ng-show="role === 'admin' || moderator">
+                        <div class="btn navbar-btn btn-sm btn-primary" data-ng-click="goToDashBoard()">Dashboard</div>
+                    </li>
+
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <div class="btn navbar-btn btn-sm btn-primary" ng-click="toggleKeypad()" ng-show="inConference">keypad</div>
+                    </li>
+                    <li>
+                        <div class="btn navbar-btn btn-sm btn-success" ng-click="invite()" ng-show="inCall">Invite</div>
+                    </li>
+                    <li>
+                        <div class="btn navbar-btn btn-sm {%(isMuted ? 'btn-danger' : 'btn-success')%}" ng-click="mute()" ng-show="inCall">
+                            <span class="glyphicon {%(isMuted ? 'glyphicon-volume-off' : 'glyphicon-volume-up')%}"></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="btn navbar-btn btn-sm btn-danger" ng-click="hangUp()" ng-show="inCall">Hang up</div>
+                    </li>
+                    <li>
+                        <button id="txtRegStatus" class="btn bg-success navbar-btn btn-sm btn-st" ng-bind="status"></buttn>
+                    </li>
+                    <li class="dropdown">
+                        <span class="btn btn-info navbar-btn btn-sm" data-toggle="dropdown">
                             SIP SETTINGS <span class="caret"></span>
                         </span>
-                    </a>
-                    <table class="dropdown-menu table sip-table" role="menu">
-                        <tr>
-                            <td>Server</td>
-                            <td>46.36.223.131</td>
-                        </tr>
-                        <tr>
-                            <td>SIP</td>
-                            <td ng-bind="sip"></td>
-                        </tr>
-                        <tr>
-                            <td>Username</td>
-                            <td ng-bind="username"></td>
-                        </tr>
-                        <tr>
-                            <td>Password</td>
-                            <td ng-bind="password"></td>
-                        </tr>
-                    </table>
-                    <!--<ul class="dropdown-menu" role="menu">
-                        <li>
-                            <a href="#">Server: 46.36.223.131</a>
-                        </li>
-                        <li>
-                            <a href="#">SIP: <span ng-bind="sip"></span></a>
-                        </li>
-                        <li>
-                            <a href="#">Password: <span ng-bind="password"></span></a>
-                        </li>
-                    </ul>-->
-                </li>
-                <li>
-                    <a href="/logout" id="btnUnRegister">logout</a>
-                </li>
-            </ul>
-
-            <div class="btn-toolbar pull-right" style="position:relative; top: 7px; margin-right: 50px;" ng-controller="mainController">
-                <div id="txtRegStatus" class="pull-right bg-success" ng-bind="status"></div>
-                <!--<div id="txtCallStatus" class="pull-right bg-success" ></div>-->
-                <div class="btn btn-primary pull-right" ng-click="toggleKeypad()" ng-show="inConference">keypad</div>
-                <div class="btn btn-success pull-right" ng-click="invite()" ng-show="inCall">Invite</div>
-                <div class="btn {%(isMuted ? 'btn-danger' : 'btn-success')%} pull-right" ng-click="mute()" ng-show="inCall">
-                    <span class="glyphicon {%(isMuted ? 'glyphicon-volume-off' : 'glyphicon-volume-up')%}"></span>
-                </div>
-                <div class="btn btn-danger pull-right" ng-click="hangUp()" ng-show="inCall">Hang up</div>
+                        <table class="dropdown-menu table sip-table" role="menu">
+                            <tr>
+                                <td>Server</td>
+                                <td>46.36.223.131</td>
+                            </tr>
+                            <tr>
+                                <td>SIP</td>
+                                <td ng-bind="sip"></td>
+                            </tr>
+                            <tr>
+                                <td>Username</td>
+                                <td ng-bind="username"></td>
+                            </tr>
+                            <tr>
+                                <td>Password</td>
+                                <td ng-bind="password"></td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li>
+                        <a href="">
+                            Username: {{username}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/logout" id="btnUnRegister">logout</a>
+                    </li>
+                </ul>
             </div>
         </div>
         <!-- /.navbar-collapse -->

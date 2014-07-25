@@ -42,17 +42,14 @@ app.run(['$rootScope', '$http',
         $rootScope.inCall = false;
 
         var browser = navigator.userAgent;
-
-        if (browser.match(/Chrome/) || browser.match(/Firefox/)) {
-            $rootScope.supported = true;
-            if (browser.match(/Chrome/)) $rootScope.nav = 'chrome';
-            if (browser.match(/Firefox/)) $rootScope.nav = 'firefox';
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            $rootScope.supported = false;
+            $("#not_supported").modal({
+             backdrop: 'static',
+             keyboard: false
+             });
         } else {
             $rootScope.supported = true;
-            /*$("#not_supported").modal({
-                backdrop: 'static',
-                keyboard: false
-            });*/
         }
 
         $http.get("/conferences").success(function(data) {

@@ -10,7 +10,6 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
     $scope.n_filename_date = null;
     $scope.isAdmin = $rootScope.role === "admin" ? true : false;
 
-
     $rootScope.inConference = false;
 
     function records(data) {
@@ -27,6 +26,10 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
             data[i].i_name = data[i].name + '-' +  d;
         }
         $scope.files = data;
+    }
+
+    $scope.goToDashBoard = function () {
+        $location.url("/dashboard/users");
     }
 
     $scope.dateStart = moment(new Date()).subtract("days", 1).unix();
@@ -222,11 +225,11 @@ function mainController($scope, $http, $location, watchService, sipService, $roo
                 records(data);
             });
 
-            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            $('#reportrange span').html(start.format('D MMMM') + ' - ' + end.format('D MMMM'));
         }
     );
 
-    $('#reportrange span').html(moment.unix($scope.dateStart).format('MMMM D, YYYY') + ' - ' + moment.unix($scope.dateEnd).format('MMMM D, YYYY'));
+    $('#reportrange span').html(moment.unix($scope.dateStart).format('D MMMM') + ' - ' + moment.unix($scope.dateEnd).format('D MMMM'));
 
 }
 

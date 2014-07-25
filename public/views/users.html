@@ -4,9 +4,6 @@
             <li class="active">
                 <a href="#!/dashboard/users" class="active">Users</a>
             </li>
-            <li>
-                <a href="#!/dashboard/records">Records</a>
-            </li>
         </ul>
     </div>
     <div class="col-sm-10">
@@ -15,8 +12,8 @@
         </button>
         <hr/>
         <div class="row">
-            <form ng-submit="findUser($event)" class="col-sm-5">
-                <div class="input-group">
+            <form ng-submit="findUser($event)" class="col-sm-8">
+                <div class="input-group col-sm-4 pull-left">
                    <input class="form-control" type="text" name="search" id="search" ng-model="search" placeholder="Search"/>
                    <span class="input-group-btn">
                       <button class="btn btn-default" type="button">
@@ -24,6 +21,15 @@
                       </button>
                    </span>
                 </div><!-- /input-group -->
+                <div class="form-group col-sm-4 pull-left">
+                    <label class="btn btn-default btn-sm inline-block" for="unapproved">
+                        <input type="checkbox"
+                               name="unapproved"
+                               id="unapproved"
+                               ng-model="unapproved"
+                               ng-change="showUnapproved()"/> show unapproved
+                    </label>
+                </div>
             </form>
         </div>
         <hr/>
@@ -164,8 +170,7 @@
         <!-- /.modal-dialog -->
     </div><!-- /.modal -->
 </div>
-
-<div class="text-center" ng-hide="users">
+<div class="text-center" style="{%(role == 'user' && moderator === 'false' ? '' : 'display: none;')%}">
     <h2 class="text-danger well">
         Access Denied, you don't have permission to access this page!
         <br/>

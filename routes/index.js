@@ -89,10 +89,10 @@ module.exports = function (app, ami, confs) {
         var from = req.query.from || 0;
         var limit = req.query.limit || 10;
         var search = req.query.search || null;
+        var unapproved = req.query.unapproved || 'true';
         var q;
         var rtn = {};
         var total;
-
 
         if (req.session.passport.user) {
             if (req.user.role === "admin" || req.user.moderator && req.user.approved) {
@@ -110,7 +110,7 @@ module.exports = function (app, ami, confs) {
                     total.exec(function(err, users) {
                         rtn.total = users.length;
                     });
-                } else {
+                } else if (search === null && unapproved == 'true' || unapproved == undefined) {
                     total = Users.find({}).sort('reg_date');
 
                     total.exec(function(err, users) {
@@ -118,6 +118,14 @@ module.exports = function (app, ami, confs) {
                     });
 
                     q = Users.find({}).sort('reg_date').skip(from * limit).limit(limit);
+                } else if (unapproved == 'false'){
+                    total = Users.find({approved: false});
+
+                    total.exec(function(err, users) {
+                        rtn.total = users.length;
+                    });
+
+                    q = Users.find({approved: false}).sort('reg_date').skip(0).limit(limit);
                 }
 
                 q.exec(function (err, users) {
