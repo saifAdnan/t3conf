@@ -5,7 +5,7 @@ function dashboardController($scope, $http) {
     $scope.userToEdit = {};
     $scope.title="Edit User";
 
-    $scope.unapproved = false;
+    $scope.approved = false;
 
     $scope.maxSize = 10;
     $scope.totalUsers = 0;
@@ -17,7 +17,7 @@ function dashboardController($scope, $http) {
     $scope.showUnapproved = function() {
         $http.get("/users", {
             params: {
-                unapproved: !$scope.unapproved
+                approved: $scope.approved
             }
         }).success(function (data) {
             if (data.users) {
@@ -51,14 +51,13 @@ function dashboardController($scope, $http) {
                 from: $scope.currentPage - 1,
                 limit: $scope.limit,
                 search: $scope.search,
-                unapproved: $scope.unapproved
+                approved: $scope.approved
             }
         }).success(function (data) {
             for (var i = 0; i < data.users.length; i++) {
                 data.users[i].reg_date = moment.unix(data.users[i].reg_date).format("MMMM D, YYYY H:m");
             }
             $scope.users = data.users;
-            $scope.totalUsers = data.total;
         });
     };
 

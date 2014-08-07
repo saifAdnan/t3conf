@@ -89,14 +89,13 @@ module.exports = function (app, ami, confs) {
         var from = req.query.from || 0;
         var limit = req.query.limit || 10;
         var search = req.query.search || null;
-        var unapproved = req.query.unapproved || 'true';
+        var approved = req.query.approved;
         var q;
         var rtn = {};
         var total;
 
         if (req.session.passport.user) {
             if (req.user.role === "admin" || req.user.moderator && req.user.approved) {
-
                 if (search !== null) {
                     q = Users.find({
                         '$or':[
@@ -110,40 +109,41 @@ module.exports = function (app, ami, confs) {
                     total.exec(function(err, users) {
                         rtn.total = users.length;
                     });
-                } else if (search === null && unapproved == 'true' || unapproved == undefined) {
-                    total = Users.find({}).sort('reg_date');
+                } else if (search === null && approved == 'false' || approved == undefined) {
+                    total = Users.find().sort('reg_date');
 
                     total.exec(function(err, users) {
                         rtn.total = users.length;
                     });
 
                     q = Users.find({}).sort('reg_date').skip(from * limit).limit(limit);
-                } else if (unapproved == 'false'){
-                    total = Users.find({approved: false});
+                } else if (approved == 'true') {
+                    total = Users.find({approved: false}).sort('reg_date');
 
                     total.exec(function(err, users) {
                         rtn.total = users.length;
                     });
 
-                    q = Users.find({approved: false}).sort('reg_date').skip(0).limit(limit);
+                    q = Users.find({approved: false}).sort('reg_date').skip(from * limit).limit(limit);
                 }
 
                 q.exec(function (err, users) {
                     rtn.users = [];
-
-                    for (var i = 0; i < users.length; i = i + 1) {
-                        var a = {};
-                        a._id = users[i]._id;
-                        a.username = users[i].username;
-                        a.firstname = users[i].firstname;
-                        a.lastname = users[i].lastname;
-                        a.role = users[i].role;
-                        a.sip = users[i].sip;
-                        a.phone = users[i].phone;
-                        a.reg_date = users[i].reg_date;
-                        a.moderator = users[i].moderator;
-                        a.approved = users[i].approved;
-                        rtn.users.push(a);
+                    if (users && users.length) {
+                        for (var i = 0; i < users.length; i = i + 1) {
+                            var a = {};
+                            a._id = users[i]._id;
+                            a.username = users[i].username;
+                            a.firstname = users[i].firstname;
+                            a.lastname = users[i].lastname;
+                            a.role = users[i].role;
+                            a.sip = users[i].sip;
+                            a.phone = users[i].phone;
+                            a.reg_date = users[i].reg_date;
+                            a.moderator = users[i].moderator;
+                            a.approved = users[i].approved;
+                            rtn.users.push(a);
+                        }
                     }
 
                     res.json(rtn);

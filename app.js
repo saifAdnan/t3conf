@@ -174,7 +174,6 @@ function onNewNamespace(channel) {
 
 //Server listen o port
 server.listen(settings.PORT);
-
 // App listen to port
 app.listen(settings.PORT + 1, function () {
     console.log(("Express server listening on port " + settings.PORT))
